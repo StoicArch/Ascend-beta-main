@@ -1,0 +1,446 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#050505;
+  font-family:Inter,sans-serif;
+  color:white;
+}
+
+.landing{
+  width:100%;
+  min-height:100vh;
+  background:
+  radial-gradient(circle at top right,#ff2b2b22,transparent 30%),
+  radial-gradient(circle at bottom left,#7c3aed22,transparent 30%),
+  #050505;
+}
+
+/* NAVBAR */
+
+.navbar{
+  width:100%;
+  padding:24px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:100;
+  backdrop-filter:blur(14px);
+  background:rgba(5,5,5,0.7);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.logo{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.nav-links{
+  display:flex;
+  gap:30px;
+  color:#b3b3b3;
+}
+
+.nav-links span{
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav-links span:hover{
+  color:white;
+}
+
+.nav-btn{
+  padding:12px 22px;
+  border:none;
+  border-radius:14px;
+  background:#ff2b2b;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav-btn:hover{
+  transform:translateY(-2px);
+}
+
+/* HERO */
+
+.hero{
+  width:100%;
+  min-height:90vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:80px 6%;
+  gap:60px;
+}
+
+.hero-left h1{
+  font-size:72px;
+  line-height:1;
+  margin:24px 0;
+  max-width:700px;
+}
+
+.hero-left p{
+  color:#b3b3b3;
+  font-size:18px;
+  line-height:1.8;
+  max-width:600px;
+}
+
+.hero-badge{
+  display:inline-flex;
+  padding:10px 18px;
+  border-radius:999px;
+  background:#111;
+  border:1px solid rgba(255,255,255,0.08);
+  color:#ff2b2b;
+  font-size:14px;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:18px;
+  margin-top:40px;
+}
+
+.primary-btn,
+.secondary-btn{
+  padding:16px 28px;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.primary-btn{
+  border:none;
+  background:#ff2b2b;
+  color:white;
+}
+
+.secondary-btn{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.12);
+  color:white;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover{
+  transform:translateY(-3px);
+}
+
+.hero-stats{
+  display:flex;
+  gap:50px;
+  margin-top:60px;
+}
+
+.stat h2{
+  font-size:36px;
+}
+
+.stat span{
+  color:#9a9a9a;
+}
+
+/* PREVIEW */
+
+.dashboard-preview{
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:30px;
+  overflow:hidden;
+  box-shadow:
+  0 0 60px rgba(255,43,43,0.15);
+}
+
+.preview-top{
+  padding:18px;
+  display:flex;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+}
+
+.red{background:#ff4b4b;}
+.yellow{background:#ffcc00;}
+.green{background:#00d26a;}
+
+.preview-content{
+  padding:24px;
+}
+
+.preview-card{
+  background:#151515;
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.preview-card h3{
+  margin-bottom:16px;
+}
+
+.exercise-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:14px;
+  color:#d4d4d4;
+}
+
+.preview-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.ai-card{
+  background:
+  linear-gradient(
+    135deg,
+    #ff2b2b22,
+    #7c3aed22
+  );
+}
+
+/* SECTION */
+
+.section-header{
+  text-align:center;
+  margin-bottom:60px;
+}
+
+.section-header span{
+  color:#ff2b2b;
+  letter-spacing:2px;
+}
+
+.section-header h2{
+  margin-top:18px;
+  font-size:48px;
+}
+
+.problem-section,
+.features,
+.pricing,
+.cta{
+  padding:120px 6%;
+}
+
+.problem-text{
+  max-width:800px;
+}
+
+.problem-text h2{
+  font-size:56px;
+  margin:20px 0;
+}
+
+.problem-text p{
+  color:#b3b3b3;
+  line-height:1.9;
+  font-size:18px;
+  margin-bottom:20px;
+}
+
+/* FEATURES */
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:30px;
+}
+
+.feature-card{
+  background:#111;
+  padding:32px;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,0.05);
+  transition:0.3s;
+}
+
+.feature-card:hover{
+  transform:translateY(-6px);
+  border-color:#ff2b2b55;
+}
+
+.feature-card h3{
+  margin-bottom:16px;
+}
+
+.feature-card p{
+  color:#b3b3b3;
+  line-height:1.8;
+}
+
+/* PRICING */
+
+.pricing-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+
+.price-card{
+  background:#111;
+  padding:40px;
+  border-radius:30px;
+  position:relative;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.price-card h3{
+  font-size:32px;
+}
+
+.price{
+  font-size:52px;
+  margin:20px 0;
+}
+
+.price-card ul{
+  list-style:none;
+}
+
+.price-card li{
+  margin-bottom:18px;
+  color:#d4d4d4;
+}
+
+.price-card button{
+  width:100%;
+  padding:16px;
+  margin-top:30px;
+  border:none;
+  border-radius:16px;
+  background:#ff2b2b;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.premium{
+  border:1px solid #ff2b2b55;
+  box-shadow:
+  0 0 40px rgba(255,43,43,0.12);
+}
+
+.premium-badge{
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:#ff2b2b;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:12px;
+}
+
+/* CTA */
+
+.cta{
+  text-align:center;
+}
+
+.cta h2{
+  font-size:64px;
+  max-width:900px;
+  margin:auto;
+}
+
+.cta p{
+  color:#b3b3b3;
+  margin:24px 0;
+  font-size:18px;
+}
+
+.cta button{
+  padding:18px 34px;
+  border:none;
+  border-radius:18px;
+  background:#ff2b2b;
+  color:white;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* FOOTER */
+
+.footer{
+  padding:60px 6%;
+  border-top:1px solid rgba(255,255,255,0.05);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.footer p{
+  color:#9a9a9a;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+  .hero{
+    grid-template-columns:1fr;
+  }
+
+  .hero-left h1{
+    font-size:52px;
+  }
+
+  .pricing-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero-stats{
+    flex-wrap:wrap;
+  }
+
+  .cta h2{
+    font-size:42px;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .hero-left h1{
+    font-size:42px;
+  }
+
+  .section-header h2,
+  .problem-text h2{
+    font-size:38px;
+  }
+
+}
+
+.landing {
+  overflow-x: hidden;
+}
+
+.hero {
+  padding-top: 120px;
+}

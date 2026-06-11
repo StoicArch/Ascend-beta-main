@@ -1,0 +1,287 @@
+import React from "react";
+import "./dashboard.css";
+import { useNavigate } from "react-router-dom";
+import DashboardEngine from "../../engine/DashboardEngine";
+import UserProfileEngine from "../../engine/UserProfileEngine";
+import WorkoutEngine from "../../engine/WorkoutEngine";
+import ProgramEngine from "../../engine/ProgramEngine";
+import WeightEngine from "../../engine/WeightEngine";
+import ProgressEngine from "../../engine/ProgressEngine";
+
+export default function Dashboard() {
+  const navigate = useNavigate();
+
+  const profile = UserProfileEngine.getProfile();
+  const todayWorkout = WorkoutEngine.getOrCreateTodayWorkout();
+
+  const workoutCount = todayWorkout.length;
+  const recovery = DashboardEngine.getRecoveryScore();
+  const streak = DashboardEngine.getStreak();
+  const calories = DashboardEngine.getCalories();
+  const protein = DashboardEngine.getProtein();
+  const sleep = DashboardEngine.getSleep();
+  const insight = DashboardEngine.getAIInsight();
+
+  const programStatus = ProgramEngine.getProgramStatus();
+  const currentProgram = programStatus.program;
+
+  const currentWeight = WeightEngine.getCurrentWeight();
+  const weightChange = WeightEngine.getWeightChange();
+
+  const completedWorkouts = ProgressEngine.getCompletedCount();
+
+  return (
+    <div className="dashboard-main app-page">
+      <aside className="sidebar desktop-sidebar">
+        <div className="sidebar-logo">ASCEND</div>
+
+        <div className="sidebar-links">
+          <button onClick={() => navigate("/dashboard")}>Dashboard</button>
+          <button onClick={() => navigate("/workout")}>Workouts</button>
+          <button onClick={() => navigate("/programs")}>Programs</button>
+          <button onClick={() => navigate("/library")}>Exercise Library</button>
+          <button onClick={() => navigate("/settings")}>Settings</button>
+          <button onClick={() => navigate("/ai-coach")}>AI Coach</button>
+        </div>
+      </aside>
+
+      <main className="dashboard-main">
+        <div className="dashboard-topbar">
+          <div>
+            <h1>Welcome Back, {profile.name || "Athlete"}</h1>
+            <p>
+              Goal: {profile.goal || "Build Muscle"} • Training Days:{" "}
+              {profile.trainingDays || 4}
+            </p>
+          </div>
+
+          <div className="topbar-actions">
+            <button
+    className="settings-icon-btn"
+    onClick={() => navigate("/settings")}
+  >
+    ⚙️
+  </button>
+
+  <button
+    className="top-btn"
+    onClick={() => navigate("/workout")}
+  >
+    Start Workout
+  </button>
+
+          </div>
+        </div>
+
+        <section className="current-program-card">
+          <div>
+            <span>Current Program</span>
+
+            <h2>{currentProgram?.name || "No Program Selected"}</h2>
+
+            <p>
+              {currentProgram
+                ? `Week ${programStatus.week} • ${currentProgram.goal}`
+                : "Choose a program to begin your transformation."}
+            </p>
+
+            {currentProgram && (
+              <p>
+                {programStatus.isRestDay
+  ? `Today is recovery. Next workout: ${
+      programStatus.nextWorkout?.day || "Soon"
+    }`
+  : `Today: ${programStatus.todayWorkout.length} exercises`}
+              </p>
+            )}
+          </div>
+
+          <button
+            onClick={() => navigate(currentProgram ? "/program" : "/programs")}
+          >
+            {currentProgram ? "View Program" : "Choose Program"}
+          </button>
+        </section>
+
+        <section className="metrics-grid">
+
+          <div
+  className="metric-card clickable"
+  onClick={() => navigate("/weight")}
+>
+  <span>Weight</span>
+
+  <h2>
+    {currentWeight
+      ? `${currentWeight}kg`
+      : "--"}
+  </h2>
+
+  <p>
+    {currentWeight
+      ? `${weightChange > 0 ? "+" : ""}${weightChange}kg change`
+      : "Add your first weight entry."}
+  </p>
+</div>
+          <div
+            className="metric-card clickable"
+            onClick={() => navigate("/weight")}
+          >
+            <span>Weight</span>
+            <h2>{currentWeight ? `${currentWeight}kg` : "--"}</h2>
+            <p>
+              {currentWeight
+                ? `${weightChange > 0 ? "+" : ""}${weightChange}kg change`
+                : "Add your first weight entry."}
+            </p>
+          </div>
+
+          <div className="metric-card">
+            <span>Completed</span>
+            <h2>{completedWorkouts}</h2>
+            <p>Workouts Finished</p>
+          </div>
+
+          <div className="metric-card recovery">
+            <span>Recovery Score</span>
+            <h2>{recovery}%</h2>
+            <p>
+              {recovery >= 80
+                ? "Ready to push intensity today."
+                : "Manage intensity and recover well."}
+            </p>
+          </div>
+
+          <div className="metric-card">
+            <span>Calories</span>
+            <h2>{calories}</h2>
+            <p>Daily nutrition target.</p>
+          </div>
+
+          <div className="metric-card">
+            <span>Protein</span>
+            <h2>{protein}g</h2>
+            <p>Muscle recovery target.</p>
+          </div>
+
+          <div className="metric-card">
+            <span>Sleep</span>
+            <h2>{sleep}h</h2>
+            <p>Sleep recovery target.</p>
+          </div>
+        </section>
+
+        <section className="dashboard-grid">
+          <div className="dashboard-card workout-card">
+            <div className="card-header">
+              <h2>Today's Workout</h2>
+              <span>{workoutCount} Exercises</span>
+            </div>
+
+            {todayWorkout.length === 0 ? (
+              <div className="empty-workout">
+                <p>
+                  Today is a recovery day or no workout has been generated yet.
+                </p>
+                <button onClick={() => navigate("/workout")}>
+                  Open Workout
+                </button>
+              </div>
+            ) : (
+              <div className="exercise-list">
+                {todayWorkout.slice(0, 5).map((exercise, index) => (
+                  <div className="exercise" key={index}>
+                    <div>
+                      <h3>{exercise.name}</h3>
+                      <p>{exercise.muscle || "Training"} • Today</p>
+                    </div>
+
+                    <span>
+                      {exercise.sets || 3} × {exercise.reps || 10}
+                    </span>
+                  </div>
+                ))}
+
+                {todayWorkout.length > 5 && (
+                  <button
+                    className="view-more-workout"
+                    onClick={() => navigate("/workout")}
+                  >
+                    View full workout
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="dashboard-card ai-card">
+            <div className="card-header">
+              <h2>AI Coach</h2>
+              <span>Adaptive Intelligence</span>
+            </div>
+
+            <div className="ai-message">
+              <p>{insight}</p>
+
+              <button
+                className="ai-action"
+                onClick={() => navigate("/ai-coach")}
+              >
+                Ask AI Coach
+              </button>
+            </div>
+
+            <div className="ai-stats">
+              <div>
+                <h3>Volume</h3>
+                <p>{workoutCount * 3} sets</p>
+              </div>
+
+              <div>
+                <h3>Streak</h3>
+                <p>{streak}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="quote-section">
+          <p>“Whatever you do, work at it with all your heart.”</p>
+          <span>Colossians 3:23</span>
+        </section>
+      </main>
+
+      <nav className="mobile-nav">
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="mobile-active"
+        >
+          <span>🏠</span>
+          Home
+        </button>
+
+        <button onClick={() => navigate("/programs")}>
+          <span>📚</span>
+          Programs
+        </button>
+
+        <button
+          className="center-button"
+          onClick={() => navigate("/workout")}
+        >
+          <span>＋</span>
+        </button>
+
+        <button onClick={() => navigate("/library")}>
+          <span>🏋️</span>
+          Library
+        </button>
+
+        <button onClick={() => navigate("/ai-coach")}>
+          <span>🤖</span>
+          AI
+        </button>
+      </nav>
+    </div>
+  );
+}

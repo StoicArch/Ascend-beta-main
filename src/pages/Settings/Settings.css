@@ -1,0 +1,104 @@
+.settings {
+  min-height: 100vh;
+  background: #f5f6fa;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.settings.dark {
+  background: #0f0f0f;
+  color: white;
+}
+
+.settings .settings-header {
+  margin-bottom: 20px;
+}
+
+.settings .settings-header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.settings .settings-header p {
+  color: gray;
+  font-size: 14px;
+}
+
+.settings .card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.settings.dark .card {
+  background: #1c1c1c;
+}
+
+.settings input,
+.settings select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.settings .toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: black;
+  color: white;
+  cursor: pointer;
+}
+
+.settings .save-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: #2d6cdf;
+  font-size: 16px;
+}
+
+.settings {
+  padding-bottom: 160px;
+}
+
+.settings-day-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.settings-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.settings-focus-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.settings-focus-grid button {
+  padding: 0.6rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: transparent;
+  color: inherit;
+}
+
+.settings-focus-grid button.active {
+  background: #fff;
+  color: #000;
+}

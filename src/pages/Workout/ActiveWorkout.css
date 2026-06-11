@@ -1,0 +1,235 @@
+/* =========================
+   PAGE
+========================= */
+
+.active-workout-page{
+  min-height:100vh;
+  background:#0b0b0b;
+  color:white;
+  padding:24px;
+}
+
+/* =========================
+   TOP
+========================= */
+
+.active-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+  gap:20px;
+}
+
+.active-top h1{
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:4px;
+}
+
+.active-top p{
+  color:#9a9a9a;
+  font-size:14px;
+}
+
+.session-time{
+  background:white;
+  color:black;
+  padding:14px 18px;
+  border-radius:18px;
+  font-size:20px;
+  font-weight:700;
+}
+
+/* =========================
+   REST
+========================= */
+
+.rest-card{
+  background:#111111;
+  border:1px solid #1f1f1f;
+  border-radius:24px;
+  padding:24px;
+  margin-bottom:24px;
+  text-align:center;
+}
+
+.rest-card span{
+  display:block;
+  color:#9a9a9a;
+  margin-bottom:8px;
+}
+
+.rest-card h2{
+  font-size:48px;
+  font-weight:700;
+}
+
+/* =========================
+   LIST
+========================= */
+
+.active-list{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.active-card{
+  background:#111111;
+  border:1px solid #1f1f1f;
+  border-radius:28px;
+  padding:22px;
+}
+
+/* =========================
+   HEAD
+========================= */
+
+.exercise-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+  gap:20px;
+}
+
+.exercise-head h2{
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.exercise-head span{
+  color:#9a9a9a;
+}
+
+.exercise-badge{
+  background:#181818;
+  border:1px solid #262626;
+  padding:10px 14px;
+  border-radius:14px;
+  font-size:14px;
+}
+
+/* =========================
+   SETS
+========================= */
+
+.sets-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.set-row{
+  background:#181818;
+  border:1px solid #252525;
+  border-radius:18px;
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:0.2s;
+}
+
+.set-row.done{
+  border-color:#00ff88;
+  opacity:0.8;
+}
+
+.set-row h4{
+  margin-bottom:5px;
+  font-size:16px;
+}
+
+.set-row span{
+  color:#9a9a9a;
+  font-size:14px;
+}
+
+.set-row button{
+  background:white;
+  color:black;
+  border:none;
+  border-radius:14px;
+  padding:12px 18px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.set-row button:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
+/* =========================
+   FINISH
+========================= */
+
+.finish-btn{
+  width:100%;
+  margin-top:28px;
+  background:white;
+  color:black;
+  border:none;
+  border-radius:22px;
+  padding:20px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .active-workout-page{
+    padding:18px;
+  }
+
+  .active-top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .session-time{
+    width:100%;
+    text-align:center;
+  }
+
+  .exercise-head{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .set-row{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+  }
+
+  .set-row button{
+    width:100%;
+  }
+
+}
+.set-inputs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.set-inputs input {
+  width: 80px;
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: transparent;
+  color: inherit;
+}

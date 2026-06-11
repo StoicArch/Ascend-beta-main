@@ -1,0 +1,107 @@
+.program-setup-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #111827, #020617);
+  color: white;
+  padding: 22px 22px 120px;
+  font-family: system-ui, sans-serif;
+}
+
+.program-setup-header span {
+  color: #818cf8;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.program-setup-header h1 {
+  margin: 8px 0;
+  font-size: 32px;
+}
+
+.program-setup-header p,
+.setup-card p {
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.setup-card {
+  margin-top: 18px;
+  background: #0b1220;
+  border: 1px solid #1f2937;
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.track-grid,
+.days-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.track-grid button,
+.days-grid button {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #334155;
+  background: #111827;
+  color: #cbd5e1;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.track-grid button.active,
+.days-grid button.active {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: white;
+}
+
+.start-setup-btn {
+  width: 100%;
+  margin-top: 22px;
+  padding: 15px;
+  border: none;
+  border-radius: 16px;
+  background: #4f46e5;
+  color: white;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+@media (max-width: 700px) {
+  .track-grid,
+  .days-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.focus-row {
+  margin-top: 1rem;
+}
+
+.focus-row strong {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.focus-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.focus-grid button {
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid #333;
+  background: transparent;
+  color: inherit;
+}
+
+.focus-grid button.active {
+  background: #ffffff;
+  color: #000000;
+}

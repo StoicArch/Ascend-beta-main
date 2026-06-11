@@ -1,0 +1,14 @@
+:root{
+  --bg:#050505;
+  --card:#111111;
+  --soft-card:#161616;
+  --border:#262626;
+
+  --text:#ffffff;
+  --muted:#9a9a9a;
+
+  --primary:#ff2b2b;
+  --primary-soft:#ff4d4d;
+
+  --glow:0 0 30px rgba(255,43,43,0.35);
+}

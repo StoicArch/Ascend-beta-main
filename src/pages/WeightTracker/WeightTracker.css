@@ -1,0 +1,143 @@
+.weight-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #111827, #020617);
+  color: white;
+  padding: 22px 22px 120px;
+  font-family: system-ui, sans-serif;
+}
+
+.weight-header span {
+  color: #818cf8;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.weight-header h1 {
+  margin: 8px 0;
+  font-size: 32px;
+}
+
+.weight-header p {
+  color: #94a3b8;
+}
+
+.weight-summary-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.weight-card,
+.weight-input-card,
+.weight-chart-card,
+.weight-history {
+  background: #0b1220;
+  border: 1px solid #1f2937;
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.weight-card span {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.weight-card h2 {
+  margin: 8px 0 0;
+}
+
+.weight-input-card {
+  margin-top: 18px;
+}
+
+.weight-input-card input {
+  width: 100%;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: white;
+  outline: none;
+}
+
+.weight-input-card button {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 14px;
+  background: #4f46e5;
+  color: white;
+  font-weight: 800;
+}
+
+.weight-chart-card {
+  margin-top: 18px;
+}
+
+.empty-chart {
+  color: #94a3b8;
+}
+
+.weight-chart {
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  border-left: 1px solid #334155;
+  border-bottom: 1px solid #334155;
+  padding: 14px;
+  position: relative;
+  overflow-x: auto;
+}
+
+.chart-column {
+  height: 100%;
+  min-width: 50px;
+  position: relative;
+}
+
+.chart-dot {
+  width: 12px;
+  height: 12px;
+  background: #818cf8;
+  border-radius: 999px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.chart-column span {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.weight-history {
+  margin-top: 18px;
+}
+
+.weight-history-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #1f2937;
+}
+
+.weight-history-item span {
+  color: #94a3b8;
+}
+
+@media (max-width: 700px) {
+  .weight-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
