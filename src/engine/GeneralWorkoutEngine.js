@@ -11,10 +11,28 @@ class GeneralWorkoutEngine {
     const profile = this.getProfile();
 
     if (!profile.equipment || profile.equipment.length === 0) {
-      return ["Bodyweight", "Dumbbells", "Barbell", "Machine", "Cable", "Smith Machine"];
+      return ["Dumbbells", "Barbell", "Machine", "Cable", "Smith Machine"];
     }
 
     return profile.equipment;
+  }
+
+  static shouldExcludeBodyweight() {
+    const profile = this.getProfile();
+    const equipment = this.getUserEquipment();
+
+    const gymEquipment = [
+      "Dumbbells",
+      "Barbell",
+      "Machine",
+      "Cable",
+      "Smith Machine",
+    ];
+
+    return (
+      profile.location === "Gym" ||
+      equipment.some((item) => gymEquipment.includes(item))
+    );
   }
 
   static normalizeFocus(focus) {
@@ -35,6 +53,10 @@ class GeneralWorkoutEngine {
       Quads: "Legs",
       Hamstrings: "Legs",
       Calves: "Legs",
+      Glutes: "Glutes",
+
+      Cardio: "Conditioning",
+      FullBody: "Full Body",
     };
 
     return map[focus] || focus;
@@ -45,15 +67,33 @@ class GeneralWorkoutEngine {
     const trainingDays = Number(profile.trainingDays || 4);
 
     const splits = {
-      3: [["Chest", "Triceps"], ["Back", "Biceps"], ["Legs", "Glutes"]],
-      4: [["Chest", "Triceps"], ["Back", "Biceps"], ["Legs"], ["Shoulders", "Abs"]],
-      5: [["Chest"], ["Back"], ["Legs"], ["Shoulders"], ["Biceps", "Triceps", "Abs"]],
+      3: [
+        ["Chest", "Back", "Shoulders"],
+        ["Legs", "Glutes", "Abs"],
+        ["Chest", "Back", "Arms"],
+      ],
+
+      4: [
+        ["Chest", "Triceps"],
+        ["Back", "Biceps"],
+        ["Legs", "Glutes"],
+        ["Shoulders", "Abs"],
+      ],
+
+      5: [
+        ["Chest"],
+        ["Back"],
+        ["Legs", "Glutes"],
+        ["Shoulders"],
+        ["Biceps", "Triceps", "Abs"],
+      ],
+
       6: [
         ["Chest", "Triceps"],
         ["Back", "Biceps"],
         ["Legs"],
         ["Shoulders", "Abs"],
-        ["Legs", "Glutes"],
+        ["Glutes", "Hamstrings"],
         ["Biceps", "Triceps"],
       ],
     };
@@ -73,7 +113,7 @@ class GeneralWorkoutEngine {
     const profile = this.getProfile();
     const weeklyPlan = profile.weeklyPlan;
 
-    if (!weeklyPlan) {
+    if (!weeklyPlan || Object.keys(weeklyPlan).length === 0) {
       const split = this.getDefaultSplit();
       const index = this.getWorkoutIndexForToday();
 
@@ -88,6 +128,10 @@ class GeneralWorkoutEngine {
 
     if (!todayPlan || todayPlan.rest) {
       return [];
+    }
+
+    if (Array.isArray(todayPlan.focus)) {
+      return todayPlan.focus;
     }
 
     const focus = [];
@@ -107,46 +151,98 @@ class GeneralWorkoutEngine {
 
   static getExercisesForMuscle(muscle) {
     const equipment = this.getUserEquipment();
+    const excludeBodyweight = this.shouldExcludeBodyweight();
 
-    return EXERCISES.filter(
-      (exercise) =>
-        exercise.muscle === muscle && equipment.includes(exercise.equipment)
-    );
+    return EXERCISES.filter((exercise) => {
+      const muscleMatch = exercise.muscle === muscle;
+      const equipmentMatch = equipment.includes(exercise.equipment);
+      const bodyweightBlocked =
+        excludeBodyweight && exercise.equipment === "Bodyweight";
+
+      return muscleMatch && equipmentMatch && !bodyweightBlocked;
+    });
   }
 
   static getRandomExercise(exercises, usedIds) {
-    const available = exercises.filter((exercise) => !usedIds.includes(exercise.id));
+    const available = exercises.filter(
+      (exercise) => !usedIds.includes(exercise.id)
+    );
 
     if (available.length === 0) return null;
 
     return available[Math.floor(Math.random() * available.length)];
   }
 
+  static getVolumeForMuscle(muscle, focusList) {
+    const normalizedFocus = focusList.map((focus) => this.normalizeFocus(focus));
+
+    const isSingleMuscle = normalizedFocus.length === 1;
+
+    if (isSingleMuscle) {
+      if (muscle === "Chest") return 7;
+      if (muscle === "Back") return 7;
+      if (muscle === "Legs") return 7;
+      if (muscle === "Shoulders") return 6;
+      if (muscle === "Glutes") return 6;
+      if (muscle === "Biceps") return 5;
+      if (muscle === "Triceps") return 5;
+      if (muscle === "Abs") return 4;
+      return 5;
+    }
+
+    if (muscle === "Chest") return 5;
+    if (muscle === "Back") return 5;
+    if (muscle === "Legs") return 5;
+    if (muscle === "Shoulders") return 4;
+    if (muscle === "Glutes") return 4;
+    if (muscle === "Biceps") return 3;
+    if (muscle === "Triceps") return 3;
+    if (muscle === "Abs") return 3;
+
+    return 3;
+  }
+
   static generateWorkoutFromFocus(focusList) {
     const workout = [];
     const usedIds = [];
 
-    focusList.forEach((focus) => {
-      const muscle = this.normalizeFocus(focus);
-      const rules = WorkoutRules[muscle];
+    const normalizedMuscles = [
+      ...new Set(focusList.map((focus) => this.normalizeFocus(focus))),
+    ];
 
-      if (!rules) return;
+    normalizedMuscles.forEach((muscle) => {
+      if (muscle === "Full Body") {
+        ["Chest", "Back", "Legs", "Shoulders", "Abs"].forEach((fullMuscle) => {
+          const options = this.getExercisesForMuscle(fullMuscle);
+          const selected = this.getRandomExercise(options, usedIds);
 
-      const maxPerMuscle = focusList.length > 1 ? 2 : 4;
+          if (selected) {
+            usedIds.push(selected.id);
+            workout.push({
+              ...selected,
+              focus: focusList,
+            });
+          }
+        });
 
-      rules.slice(0, maxPerMuscle).forEach(() => {
-        const options = this.getExercisesForMuscle(muscle);
+        return;
+      }
+
+      const targetVolume = this.getVolumeForMuscle(muscle, focusList);
+      const options = this.getExercisesForMuscle(muscle);
+
+      for (let i = 0; i < targetVolume; i++) {
         const selected = this.getRandomExercise(options, usedIds);
 
-        if (selected) {
-          usedIds.push(selected.id);
+        if (!selected) break;
 
-          workout.push({
-            ...selected,
-            focus: focusList,
-          });
-        }
-      });
+        usedIds.push(selected.id);
+
+        workout.push({
+          ...selected,
+          focus: focusList,
+        });
+      }
     });
 
     return workout;
