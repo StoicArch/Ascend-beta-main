@@ -39,9 +39,7 @@ export default function LandingPage() {
               Start Free
             </button>
 
-            <button className="secondary-btn">
-              Watch Demo
-            </button>
+            
 
           </div>
 
@@ -265,16 +263,21 @@ export default function LandingPage() {
             <h3>Premium</h3>
 
             <p className="price">
-              $37/mo
+              $9.99/mo
             </p>
 
             <ul>
-              <li>Stateful AI Coach</li>
-              <li>Adaptive Programming</li>
-              <li>Fatigue Intelligence</li>
-              <li>Weekly Reviews</li>
-              <li>Advanced Recovery</li>
-              <li>Physique Analysis</li>
+              
+              <li> Premium Programs</li>
+              <li>Unlimited AI Coach</li>
+              <li>Build Muscle Faster</li>
+              <li>Lose Fat Faster</li>
+              <li>Track Your Progress</li>
+              <li>Weekly Progressions</li>
+              <li>Early Access Features</li>
+              <li>AI Calorie Tracker (Soon)</li>
+              <li>Sleep Tracker (Soon)</li>
+              <li>Future Programs Included</li> 
             </ul>
 
             <button
