@@ -2,9 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Landing.css";
 import Navbar from "../../components/ui/Navbar";
+
 export default function LandingPage() {
 
   const navigate = useNavigate();
+
 
   return (
     <div className="landing">

@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
+
 import { AuthProvider } from "./context/AuthContext";
 
 import MobileNav from "./components/MobileNav/MobileNav";
@@ -23,6 +24,7 @@ import Support from "./pages/Support/Support";
 
 export default function App() {
   return (
+    
     <AuthProvider>
       <Routes>
         <Route path="/" element={<LandingPage />} />

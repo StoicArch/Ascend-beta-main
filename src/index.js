@@ -22,7 +22,7 @@ ReactDOM.createRoot(
       <UserProvider>
 
         <App />
-
+            
       </UserProvider>
 
     </BrowserRouter>
