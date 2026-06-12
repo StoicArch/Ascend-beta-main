@@ -21,10 +21,23 @@ class UserProfileEngine {
     recovery: "",
     stress: "",
     sleepQuality: "",
-    splitMode: "",
-    weeklyPlan: {},
-    exerciseHistory: [],
-  };
+      splitMode: "",
+  weeklyPlan: {},
+  exerciseHistory: [],
+
+  startingWeight: null,
+
+  weeklyReview: {
+    lastReviewDate: "",
+    currentCalories: 2400,
+    currentProtein: 160,
+    currentPhase: "Build",
+    aiNotes: "",
+    weeklyWeightChange: 0,
+    workoutsCompleted: 0,
+    prsHit: 0,
+  },
+};
 
   static getProfile() {
     try {
@@ -39,15 +52,27 @@ class UserProfileEngine {
     }
   }
 
-  static saveProfile(profile) {
-    const updatedProfile = {
-      ...this.defaultProfile,
-      ...profile,
-    };
+ static saveProfile(profile) {
+  const updatedProfile = {
+    ...this.defaultProfile,
+    ...profile,
+  };
 
-    localStorage.setItem("profile", JSON.stringify(updatedProfile));
-    return updatedProfile;
+  if (
+    !updatedProfile.startingWeight &&
+    updatedProfile.weight
+  ) {
+    updatedProfile.startingWeight =
+      updatedProfile.weight;
   }
+
+  localStorage.setItem(
+    "profile",
+    JSON.stringify(updatedProfile)
+  );
+
+  return updatedProfile;
+}
 
   static updateField(field, value) {
     const profile = this.getProfile();

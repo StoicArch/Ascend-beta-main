@@ -125,19 +125,296 @@ export const PROGRAMS = [
   },
 },
 
-  {
-    id: "skinny-to-jacked",
-    name: "Skinny To Jacked",
-    duration: "6 months",
-    totalWeeks: 24,
-    freeWeeks: 8,
-    goal: "Build muscle",
-    type: "Calorie surplus",
-    access: "freemium",
-    status: "locked",
-    description:
-      "A six month muscle-building program for skinny guys who want to gain size,strength and confidence. If younger me had this, he would have made such faster progress so i made the first 8 weeks of this program free, then if you get premium all your progress will be saved.",
+ {
+  id: "skinny-to-jacked",
+  name: "Skinny To Jacked",
+  duration: "24 weeks",
+  totalWeeks: 24,
+  freeWeeks: 8,
+  goal: "Build muscle",
+  type: "Calorie surplus",
+  access: "freemium",
+  status: "available",
+  description:
+    "A muscle-building program for skinny guys who want to gain size, strength, and confidence without guessing what to train.",
+
+  bestFor: [
+    "Skinny guys who want to build visible muscle",
+    "Beginners who need structure",
+    "People who want to gain weight and strength",
+  ],
+
+  notFor: [
+    "People trying to cut aggressively",
+    "People who only want random workouts",
+  ],
+
+  tracks: {
+    3: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 24 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Upper Body Size`,
+                  exercises: [
+                    "Incline Dumbbell Press",
+                    "Machine Chest Press",
+                    "Lat Pulldown",
+                    "Seated Cable Row",
+                    "Shoulder Press",
+                    "Lateral Raise",
+                    "Dumbbell Curl",
+                    "Tricep Pushdown",
+                  ],
+                },
+                {
+                  name: `Week ${week} Lower Body Growth`,
+                  exercises: [
+                    "Leg Press",
+                    "Squat",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Chest Back Arms`,
+                  exercises: [
+                    "Flat Bench Press",
+                    "Pec Deck",
+                    "Barbell Row",
+                    "Machine Row",
+                    "Hammer Curl",
+                    "Overhead Tricep Extension",
+                    "Cable Crunch",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
+
+    4: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 24 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Chest & Triceps`,
+                  exercises: [
+                    "Incline Dumbbell Press",
+                    "Flat Bench Press",
+                    "Machine Chest Press",
+                    "Pec Deck",
+                    "Cable Fly",
+                    "Tricep Pushdown",
+                    "Overhead Tricep Extension",
+                  ],
+                },
+                {
+                  name: `Week ${week} Back & Biceps`,
+                  exercises: [
+                    "Lat Pulldown",
+                    "Seated Cable Row",
+                    "Barbell Row",
+                    "Machine Row",
+                    "Dumbbell Curl",
+                    "Hammer Curl",
+                  ],
+                },
+                {
+                  name: `Week ${week} Legs`,
+                  exercises: [
+                    "Squat",
+                    "Leg Press",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Shoulders & Arms`,
+                  exercises: [
+                    "Shoulder Press",
+                    "Lateral Raise",
+                    "Rear Delt Fly",
+                    "Face Pull",
+                    "Dumbbell Curl",
+                    "Tricep Pushdown",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
+
+    5: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 24 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Chest`,
+                  exercises: [
+                    "Incline Dumbbell Press",
+                    "Flat Bench Press",
+                    "Machine Chest Press",
+                    "Pec Deck",
+                    "Cable Fly",
+                    "Chest Dips",
+                  ],
+                },
+                {
+                  name: `Week ${week} Back`,
+                  exercises: [
+                    "Lat Pulldown",
+                    "Seated Cable Row",
+                    "Barbell Row",
+                    "Machine Row",
+                    "Wide Grip Pulldown",
+                    "Dumbbell Shrug",
+                  ],
+                },
+                {
+                  name: `Week ${week} Legs`,
+                  exercises: [
+                    "Squat",
+                    "Leg Press",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Shoulders`,
+                  exercises: [
+                    "Shoulder Press",
+                    "Arnold Press",
+                    "Lateral Raise",
+                    "Cable Lateral Raise",
+                    "Rear Delt Fly",
+                    "Face Pull",
+                  ],
+                },
+                {
+                  name: `Week ${week} Arms & Abs`,
+                  exercises: [
+                    "Dumbbell Curl",
+                    "Hammer Curl",
+                    "Cable Curl",
+                    "Tricep Pushdown",
+                    "Overhead Tricep Extension",
+                    "Cable Crunch",
+                    "Plank",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
+
+    6: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 24 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Chest`,
+                  exercises: [
+                    "Incline Dumbbell Press",
+                    "Flat Bench Press",
+                    "Machine Chest Press",
+                    "Pec Deck",
+                    "Cable Fly",
+                  ],
+                },
+                {
+                  name: `Week ${week} Back`,
+                  exercises: [
+                    "Lat Pulldown",
+                    "Seated Cable Row",
+                    "Barbell Row",
+                    "Machine Row",
+                    "Wide Grip Pulldown",
+                  ],
+                },
+                {
+                  name: `Week ${week} Legs`,
+                  exercises: [
+                    "Squat",
+                    "Leg Press",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Shoulders`,
+                  exercises: [
+                    "Shoulder Press",
+                    "Lateral Raise",
+                    "Cable Lateral Raise",
+                    "Rear Delt Fly",
+                    "Face Pull",
+                  ],
+                },
+                {
+                  name: `Week ${week} Arms`,
+                  exercises: [
+                    "Dumbbell Curl",
+                    "Hammer Curl",
+                    "Cable Curl",
+                    "Tricep Pushdown",
+                    "Overhead Tricep Extension",
+                    "Skull Crusher",
+                  ],
+                },
+                {
+                  name: `Week ${week} Upper Pump`,
+                  exercises: [
+                    "Incline Machine Press",
+                    "Machine High Row",
+                    "Machine Pec Fly",
+                    "Cable Row Wide Grip",
+                    "Lateral Raise",
+                    "Cable Crunch",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
   },
+},
 
   {
     id: "home-chest-builder",
@@ -152,18 +429,295 @@ export const PROGRAMS = [
       "A no-gym chest program based on simple home training and progression.",
   },
 
-  {
-    id: "bulking-journey",
-    name: "Bulking Journey",
-    duration: "4 months",
-    totalWeeks: 16,
-    goal: "Gain size",
-    type: "Calorie surplus",
-    access: "premium",
-    status: "coming soon",
-    description:
-      "A structured bulking program for users who want to gain weight and build muscle.",
+ {
+  id: "bulking-journey",
+  name: "Bulking Journey",
+  duration: "16 weeks",
+  totalWeeks: 16,
+  goal: "Gain size",
+  type: "Calorie surplus",
+  access: "premium",
+  status: "available",
+  description:
+    "A structured bulking program for users who want to gain weight, build muscle, and get stronger through progressive training.",
+
+  bestFor: [
+    "People who want to gain weight",
+    "People trying to build size",
+    "People who can eat in a calorie surplus",
+  ],
+
+  notFor: [
+    "People trying to lose fat fast",
+    "People who are not ready to eat more food",
+  ],
+
+  tracks: {
+    3: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 16 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Heavy Upper`,
+                  exercises: [
+                    "Flat Bench Press",
+                    "Incline Dumbbell Press",
+                    "Lat Pulldown",
+                    "Barbell Row",
+                    "Shoulder Press",
+                    "Dumbbell Curl",
+                    "Tricep Pushdown",
+                  ],
+                },
+                {
+                  name: `Week ${week} Heavy Lower`,
+                  exercises: [
+                    "Squat",
+                    "Leg Press",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Full Body Bulk`,
+                  exercises: [
+                    "Machine Chest Press",
+                    "Seated Cable Row",
+                    "Shoulder Press",
+                    "Leg Press",
+                    "Pec Deck",
+                    "Hammer Curl",
+                    "Overhead Tricep Extension",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
+
+    4: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 16 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Push Bulk`,
+                  exercises: [
+                    "Flat Bench Press",
+                    "Incline Dumbbell Press",
+                    "Machine Chest Press",
+                    "Shoulder Press",
+                    "Lateral Raise",
+                    "Tricep Pushdown",
+                    "Overhead Tricep Extension",
+                  ],
+                },
+                {
+                  name: `Week ${week} Pull Bulk`,
+                  exercises: [
+                    "Lat Pulldown",
+                    "Barbell Row",
+                    "Seated Cable Row",
+                    "Machine Row",
+                    "Dumbbell Shrug",
+                    "Dumbbell Curl",
+                    "Hammer Curl",
+                  ],
+                },
+                {
+                  name: `Week ${week} Legs Bulk`,
+                  exercises: [
+                    "Squat",
+                    "Leg Press",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Upper Volume`,
+                  exercises: [
+                    "Incline Machine Press",
+                    "Machine High Row",
+                    "Pec Deck",
+                    "Cable Row Wide Grip",
+                    "Cable Lateral Raise",
+                    "Cable Curl",
+                    "Skull Crusher",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
+
+    5: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 16 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Chest Bulk`,
+                  exercises: [
+                    "Flat Bench Press",
+                    "Incline Dumbbell Press",
+                    "Machine Chest Press",
+                    "Pec Deck",
+                    "Cable Fly",
+                    "Chest Dips",
+                  ],
+                },
+                {
+                  name: `Week ${week} Back Bulk`,
+                  exercises: [
+                    "Lat Pulldown",
+                    "Barbell Row",
+                    "Seated Cable Row",
+                    "Machine Row",
+                    "Wide Grip Pulldown",
+                    "Dumbbell Shrug",
+                  ],
+                },
+                {
+                  name: `Week ${week} Legs Bulk`,
+                  exercises: [
+                    "Squat",
+                    "Leg Press",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Shoulders Bulk`,
+                  exercises: [
+                    "Shoulder Press",
+                    "Arnold Press",
+                    "Lateral Raise",
+                    "Cable Lateral Raise",
+                    "Rear Delt Fly",
+                    "Face Pull",
+                  ],
+                },
+                {
+                  name: `Week ${week} Arms Bulk`,
+                  exercises: [
+                    "Dumbbell Curl",
+                    "Hammer Curl",
+                    "Cable Curl",
+                    "Tricep Pushdown",
+                    "Overhead Tricep Extension",
+                    "Skull Crusher",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
+
+    6: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 16 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Chest Heavy`,
+                  exercises: [
+                    "Flat Bench Press",
+                    "Incline Dumbbell Press",
+                    "Machine Chest Press",
+                    "Pec Deck",
+                    "Cable Fly",
+                  ],
+                },
+                {
+                  name: `Week ${week} Back Heavy`,
+                  exercises: [
+                    "Lat Pulldown",
+                    "Barbell Row",
+                    "Seated Cable Row",
+                    "Machine Row",
+                    "Wide Grip Pulldown",
+                  ],
+                },
+                {
+                  name: `Week ${week} Legs Heavy`,
+                  exercises: [
+                    "Squat",
+                    "Leg Press",
+                    "Romanian Deadlift",
+                    "Leg Extension",
+                    "Lying Leg Curl",
+                    "Standing Calf Raise",
+                  ],
+                },
+                {
+                  name: `Week ${week} Shoulders Heavy`,
+                  exercises: [
+                    "Shoulder Press",
+                    "Arnold Press",
+                    "Lateral Raise",
+                    "Cable Lateral Raise",
+                    "Rear Delt Fly",
+                  ],
+                },
+                {
+                  name: `Week ${week} Arms Heavy`,
+                  exercises: [
+                    "Dumbbell Curl",
+                    "Hammer Curl",
+                    "Cable Curl",
+                    "Tricep Pushdown",
+                    "Overhead Tricep Extension",
+                    "Skull Crusher",
+                  ],
+                },
+                {
+                  name: `Week ${week} Upper Volume`,
+                  exercises: [
+                    "Incline Machine Press",
+                    "Machine High Row",
+                    "Machine Pec Fly",
+                    "Cable Row Wide Grip",
+                    "Face Pull",
+                    "Cable Crunch",
+                  ],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
   },
+},
 
   {
     id: "greek-god-physique",
