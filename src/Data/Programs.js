@@ -134,7 +134,7 @@ export const PROGRAMS = [
   goal: "Build muscle",
   type: "Calorie surplus",
   access: "freemium",
-  status: "available",
+  status: "coming soon",
   description:
     "A muscle-building program for skinny guys who want to gain size, strength, and confidence without guessing what to train.",
 
@@ -437,7 +437,7 @@ export const PROGRAMS = [
   goal: "Gain size",
   type: "Calorie surplus",
   access: "premium",
-  status: "available",
+  status: "coming soon",
   description:
     "A structured bulking program for users who want to gain weight, build muscle, and get stronger through progressive training.",
 
