@@ -160,7 +160,7 @@ export const PROGRAMS = [
     goal: "Gain size",
     type: "Calorie surplus",
     access: "premium",
-    status: "available",
+    status: "coming soon",
     description:
       "A structured bulking program for users who want to gain weight and build muscle.",
   },
