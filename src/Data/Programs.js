@@ -136,7 +136,7 @@ export const PROGRAMS = [
   access: "freemium",
   status: "coming soon",
   description:
-    "A muscle-building program for skinny guys who want to gain size, strength, and confidence without guessing what to train.",
+    "A muscle-building program for skinny guys who want to stay relatively lean, gain size, strength, and confidence without guessing what to train.",
 
   bestFor: [
     "Skinny guys who want to build visible muscle",
@@ -450,6 +450,7 @@ export const PROGRAMS = [
   notFor: [
     "People trying to lose fat fast",
     "People who are not ready to eat more food",
+    "People who hope to stay lean while bulking",
   ],
 
   tracks: {
