@@ -1,6 +1,6 @@
 import UserProfileEngine from "./UserProfileEngine";
 import { EXERCISES } from "../Data/exercises";
-import WorkoutRules from "./WorkoutRules";
+
 
 class GeneralWorkoutEngine {
   static getProfile() {
