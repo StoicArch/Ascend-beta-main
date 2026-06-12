@@ -1,10 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-
 import { AuthProvider } from "./context/AuthContext";
 
 import MobileNav from "./components/MobileNav/MobileNav";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+
 import LandingPage from "./pages/Landing/Landing";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Workout from "./pages/Workout/Workout";
@@ -21,32 +22,124 @@ import WeightTracker from "./pages/WeightTracker/WeightTracker";
 import Premium from "./pages/Premium/Premium/Premium";
 import Support from "./pages/Support/Support";
 
-
 export default function App() {
   return (
-    
     <AuthProvider>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-
         <Route path="/auth" element={<Auth />} />
-        <Route path="/onboarding" element={<Onboarding />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/workout" element={<Workout />} />
-        <Route path="/library" element={<Library />} />
-        <Route path="/settings" element={<Setting />} />
-        <Route path="/active-workout" element={<ActiveWorkout />} />
-        <Route path="/ai-coach" element={<AICoach />} />
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute requireOnboarding={false}>
+              <Onboarding />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/program" element={<Program />} />
-        <Route path="/programs" element={<Programs />} />
-        <Route path="/program-setup/:id" element={<ProgramSetup />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/weight" element={<WeightTracker />} />
+        <Route
+          path="/workout"
+          element={
+            <ProtectedRoute>
+              <Workout />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/premium" element={<Premium />} />
-<Route path="/support" element={<Support />} />
+        <Route
+          path="/library"
+          element={
+            <ProtectedRoute>
+              <Library />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Setting />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/active-workout"
+          element={
+            <ProtectedRoute>
+              <ActiveWorkout />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/ai-coach"
+          element={
+            <ProtectedRoute>
+              <AICoach />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/program"
+          element={
+            <ProtectedRoute>
+              <Program />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/programs"
+          element={
+            <ProtectedRoute>
+              <Programs />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/program-setup/:id"
+          element={
+            <ProtectedRoute>
+              <ProgramSetup />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/weight"
+          element={
+            <ProtectedRoute>
+              <WeightTracker />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/premium"
+          element={
+            <ProtectedRoute requireOnboarding={false}>
+              <Premium />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/support" element={<Support />} />
+
+        <Route path="*" element={<LandingPage />} />
       </Routes>
 
       <MobileNav />
