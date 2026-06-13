@@ -7,7 +7,7 @@ import WorkoutEngine from "../../engine/WorkoutEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
 import WeightEngine from "../../engine/WeightEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
-
+import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
 export default function Dashboard() {
   const navigate = useNavigate();
 
@@ -29,6 +29,12 @@ export default function Dashboard() {
   const weightChange = WeightEngine.getWeightChange();
 
   const completedWorkouts = ProgressEngine.getCompletedCount();
+
+  const latestReview =
+  WeeklyReviewEngine.getLatestReview() ||
+  WeeklyReviewEngine.saveReview();
+
+const hasWeeklyReviewAlert = true;
 
   return (
     <div className="dashboard-main app-page">
@@ -102,6 +108,32 @@ export default function Dashboard() {
             {currentProgram ? "View Program" : "Choose Program"}
           </button>
         </section>
+
+        <section
+  className="weekly-review-banner"
+  onClick={() => navigate("/weekly-review")}
+>
+  <div>
+    <span>Weekly Review</span>
+
+    <h2>
+      Your progress check is ready
+      {hasWeeklyReviewAlert && (
+        <span className="review-red-dot" />
+      )}
+    </h2>
+
+    <p>
+      {latestReview.weightChange > 0 ? "+" : ""}
+      {latestReview.weightChange}kg this week •{" "}
+      {latestReview.workoutsCompleted}/
+      {latestReview.expectedWorkouts}
+      {" "}workouts completed
+    </p>
+  </div>
+
+  <button>View Review</button>
+</section>
 
         <section className="metrics-grid">
 
@@ -272,9 +304,9 @@ export default function Dashboard() {
           <span>＋</span>
         </button>
 
-        <button onClick={() => navigate("/library")}>
-          <span>🏋️</span>
-          Library
+        <button onClick={() => navigate("/weekly-review")}>
+          <span>📊</span>
+          Weekly Review
         </button>
 
         <button onClick={() => navigate("/ai-coach")}>

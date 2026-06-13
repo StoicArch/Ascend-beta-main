@@ -3,6 +3,7 @@ import "./ProgramSetup.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { PROGRAMS } from "../../Data/Programs";
 import UserProfileEngine from "../../engine/UserProfileEngine";
+import NutritionEngine from "../../engine/NutritionEngine";
 
 const DAYS = [
   "Monday",
@@ -99,6 +100,13 @@ export default function ProgramSetup() {
 
     const profile = UserProfileEngine.getProfile();
 
+    const nutrition = NutritionEngine.getProgramNutrition({
+      programId: program.id,
+      goal: program.goal,
+      weight: profile.weight,
+      trainingDays: track,
+    });
+
     UserProfileEngine.saveProfile({
       ...profile,
       program: program.name,
@@ -108,6 +116,19 @@ export default function ProgramSetup() {
       programSchedule,
       currentWeek: 1,
       trainingDays: track,
+
+      calories: nutrition.calories,
+      protein: nutrition.protein,
+      nutritionPhase: nutrition.nutritionPhase,
+      nutritionNote: nutrition.nutritionNote,
+
+      weeklyReview: {
+        ...profile.weeklyReview,
+        currentCalories: nutrition.calories,
+        currentProtein: nutrition.protein,
+        currentPhase: nutrition.nutritionPhase,
+        aiNotes: nutrition.nutritionNote,
+      },
     });
 
     localStorage.removeItem("workout");

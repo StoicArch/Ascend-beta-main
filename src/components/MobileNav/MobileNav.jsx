@@ -26,11 +26,11 @@ if (hiddenRoutes.includes(location.pathname)) {
     </button>
 
     <button
-      onClick={() => navigate("/program")}
-      className={isActive("/program") ? "mobile-active" : ""}
+      onClick={() => navigate("/programs")}
+      className={isActive("/programs") ? "mobile-active" : ""}
     >
       <span>📅</span>
-      Program
+      Programs
     </button>
 
     <button

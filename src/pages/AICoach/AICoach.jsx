@@ -3,6 +3,8 @@ import "./AICoach.css";
 import UserProfileEngine from "../../engine/UserProfileEngine";
 import DashboardEngine from "../../engine/DashboardEngine";
 import WorkoutEngine from "../../engine/WorkoutEngine";
+import AIUsageEngine from "../../engine/AIUsageEngine";
+import PremiumEngine from "../../engine/PremiumEngine";
 
 export default function AICoach() {
   const savedChat = JSON.parse(localStorage.getItem("ai-chat")) || [];
@@ -10,6 +12,11 @@ export default function AICoach() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState(savedChat);
   const [loading, setLoading] = useState(false);
+  const [remainingMessages, setRemainingMessages] = useState(
+    AIUsageEngine.getRemainingMessages()
+  );
+
+  const isPremium = PremiumEngine.isPremium();
 
   const saveChat = (updatedChat) => {
     setChat(updatedChat);
@@ -19,9 +26,22 @@ export default function AICoach() {
   const askAI = async () => {
     if (!message.trim() || loading) return;
 
+    if (!AIUsageEngine.canSendMessage()) {
+      const limitMessage = {
+        role: "ai",
+        text:
+          "You've used your 10 free AI messages for today. Upgrade to Premium for unlimited AI coaching.",
+      };
+
+      saveChat([...chat, limitMessage]);
+      return;
+    }
+
+    const userText = message;
+
     const userMessage = {
       role: "user",
-      text: message,
+      text: userText,
     };
 
     const updatedChat = [...chat, userMessage];
@@ -38,25 +58,33 @@ export default function AICoach() {
       ...profile,
       recoveryScore,
       todayWorkout,
+      programId: profile.programId,
+      currentProgram: profile.program,
+      nutritionPhase: profile.nutritionPhase,
+      nutritionNote: profile.nutritionNote,
+      weeklyReview: profile.weeklyReview,
     };
 
     try {
       const response = await fetch(
-  "https://ascend-backend-v27s.onrender.com/ai",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message,
-      profile: aiProfile,
-      history: updatedChat.slice(-8),
-    }),
-  }
-);
+        "https://ascend-backend-v27s.onrender.com/ai",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: userText,
+            profile: aiProfile,
+            history: updatedChat.slice(-8),
+          }),
+        }
+      );
 
       const data = await response.json();
+
+      AIUsageEngine.recordMessage();
+      setRemainingMessages(AIUsageEngine.getRemainingMessages());
 
       const aiMessage = {
         role: "ai",
@@ -89,6 +117,12 @@ export default function AICoach() {
         <div>
           <h1>AI Coach</h1>
           <p>Ask about training, recovery, sleep, or nutrition.</p>
+
+          <p className="ai-limit-text">
+            {isPremium
+              ? "Premium: Unlimited AI messages"
+              : `${remainingMessages} free AI messages left today`}
+          </p>
         </div>
 
         {chat.length > 0 && (
@@ -113,9 +147,7 @@ export default function AICoach() {
           <div
             key={index}
             className={
-              item.role === "user"
-                ? "chat-row user-row"
-                : "chat-row ai-row"
+              item.role === "user" ? "chat-row user-row" : "chat-row ai-row"
             }
           >
             <div
@@ -139,7 +171,11 @@ export default function AICoach() {
 
       <div className="chat-input-box">
         <textarea
-          placeholder="Message your AI coach..."
+          placeholder={
+            isPremium
+              ? "Message your AI coach..."
+              : `${remainingMessages} messages left today...`
+          }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {

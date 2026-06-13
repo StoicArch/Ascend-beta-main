@@ -21,6 +21,7 @@ import ProgramSetup from "./pages/ProgramSetup/ProgramSetup";
 import WeightTracker from "./pages/WeightTracker/WeightTracker";
 import Premium from "./pages/Premium/Premium/Premium";
 import Support from "./pages/Support/Support";
+import WeeklyReview from "./pages/WeeklyReview/WeeklyReview";
 
 export default function App() {
   return (
@@ -106,6 +107,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Programs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/weekly-review"
+          element={
+            <ProtectedRoute>
+              <WeeklyReview />
             </ProtectedRoute>
           }
         />

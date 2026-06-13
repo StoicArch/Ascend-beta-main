@@ -546,3 +546,41 @@
   font-size:20px;
   cursor:pointer;
 }
+
+.weekly-review-banner {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 18px;
+  background: #111;
+  border: 1px solid rgba(255,255,255,.08);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  cursor: pointer;
+}
+
+.weekly-review-banner h2 {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: .3rem 0;
+}
+
+.review-red-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: red;
+  display: inline-block;
+}
+
+.weekly-review-banner button {
+  border: none;
+  border-radius: 999px;
+  padding: .8rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}

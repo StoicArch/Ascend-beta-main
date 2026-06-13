@@ -29,7 +29,7 @@ export default function Programs() {
         <h1>Choose Your Path</h1>
         <p>
           Pick the result you want. ASCEND will handle the workouts, calories,
-          and progression.
+          and progression (Your calories are modified based on the program you select).
         </p>
       </div>
 

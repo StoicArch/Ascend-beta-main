@@ -2,7 +2,7 @@ import UserProfileEngine from "./UserProfileEngine";
 import { PROGRAMS } from "../Data/Programs";
 import { EXERCISES } from "../Data/exercises";
 import PremiumEngine from "./PremiumEngine";
-import WorkoutRules from "./WorkoutRules";
+
 
 class ProgramEngine {
   static getTodayName() {
@@ -55,46 +55,67 @@ class ProgramEngine {
   }
 
   static getUserEquipment() {
-    const profile = UserProfileEngine.getProfile();
+  const profile = UserProfileEngine.getProfile();
 
-    if (!profile.equipment || profile.equipment.length === 0) {
-      return ["Bodyweight", "Dumbbells", "Barbell", "Machine", "Cable", "Smith Machine"];
-    }
-
-    return profile.equipment;
+  if (profile.location === "Gym") {
+    return [
+      "Dumbbells",
+      "Barbell",
+      "Machine",
+      "Cable",
+      "Smith Machine",
+    ];
   }
+
+  if (!profile.equipment || profile.equipment.length === 0) {
+    return ["Dumbbells", "Barbell", "Machine", "Cable", "Smith Machine"];
+  }
+
+  return profile.equipment;
+}
 
   static normalizeFocus(focus) {
-    const map = {
-      "Upper Chest": "Chest",
-      "Mid Chest": "Chest",
-      "Lower Chest": "Chest",
+  const map = {
+    "Upper Chest": "Chest",
+    "Mid Chest": "Chest",
+    "Lower Chest": "Chest",
 
-      "Front Delts": "Shoulders",
-      "Side Delts": "Shoulders",
-      "Rear Delts": "Shoulders",
+    "Front Delts": "Shoulders",
+    "Side Delts": "Shoulders",
+    "Rear Delts": "Shoulders",
 
-      Lats: "Back",
-      "Upper Back": "Back",
-      "Lower Back": "Back",
-      Traps: "Back",
+    Lats: "Back",
+    "Upper Back": "Back",
+    "Lower Back": "Back",
+    Traps: "Back",
 
-      Quads: "Legs",
-      Hamstrings: "Legs",
-      Calves: "Legs",
-    };
+    Quads: "Quads",
+    Hamstrings: "Hamstrings",
+    Calves: "Calves",
+    Glutes: "Glutes",
 
-    return map[focus] || focus;
-  }
+    Biceps: "Biceps",
+    Triceps: "Triceps",
+    Abs: "Abs",
+    Conditioning: "Conditioning",
+  };
 
+  return map[focus] || focus;
+}
+
+
+  
   static getExercisesForMuscle(muscle) {
-    const equipment = this.getUserEquipment();
+  const equipment = this.getUserEquipment();
 
-    return EXERCISES.filter(
-      (exercise) =>
-        exercise.muscle === muscle && equipment.includes(exercise.equipment)
+  return EXERCISES.filter((exercise) => {
+    return (
+      exercise.muscle === muscle &&
+      equipment.includes(exercise.equipment) &&
+      exercise.equipment !== "Bodyweight"
     );
-  }
+  });
+}
 
   static getRandomExercise(exercises, usedIds) {
     const available = exercises.filter((exercise) => !usedIds.includes(exercise.id));
@@ -104,35 +125,41 @@ class ProgramEngine {
     return available[Math.floor(Math.random() * available.length)];
   }
 
-  static generateWorkoutFromFocus(focusList) {
-    const workout = [];
-    const usedIds = [];
+ static generateWorkoutFromFocus(focusList) {
+  const workout = [];
+  const usedIds = [];
 
-    focusList.forEach((focus) => {
-      const muscle = this.normalizeFocus(focus);
-      const rules = WorkoutRules[muscle];
+  focusList.forEach((focus) => {
+    const muscle = this.normalizeFocus(focus);
 
-      if (!rules) return;
+    let targetVolume = 3;
 
-      const maxPerMuscle = focusList.length > 1 ? 2 : 4;
+    if (focusList.length === 1) targetVolume = 6;
+    if (["Biceps", "Triceps", "Abs", "Calves"].includes(muscle)) {
+      targetVolume = focusList.length === 1 ? 5 : 2;
+    }
+    if (["Quads", "Hamstrings", "Glutes"].includes(muscle)) {
+      targetVolume = focusList.length === 1 ? 5 : 3;
+    }
 
-      rules.slice(0, maxPerMuscle).forEach(() => {
-        const options = this.getExercisesForMuscle(muscle);
-        const selected = this.getRandomExercise(options, usedIds);
+    const options = this.getExercisesForMuscle(muscle);
 
-        if (selected) {
-          usedIds.push(selected.id);
+    for (let i = 0; i < targetVolume; i++) {
+      const selected = this.getRandomExercise(options, usedIds);
 
-          workout.push({
-            ...selected,
-            focus: focusList,
-          });
-        }
+      if (!selected) break;
+
+      usedIds.push(selected.id);
+
+      workout.push({
+        ...selected,
+        focus: focusList,
       });
-    });
+    }
+  });
 
-    return workout;
-  }
+  return workout;
+}
 
   static getWorkoutIndexForToday() {
     const today = this.getTodayName();
@@ -219,6 +246,16 @@ class ProgramEngine {
   }
 
   static getCurrentTrackWorkouts() {
+  const schedule = this.getProgramSchedule();
+
+  if (schedule.length > 0) {
+    return schedule.map((item) => ({
+      name: item.focus.join(" & "),
+      focus: item.focus,
+      exercises: this.generateWorkoutFromFocus(item.focus),
+    }));
+  }
+
   const program = this.getCurrentProgram();
   const week = this.getCurrentWeek();
   const track = this.getCurrentTrack();

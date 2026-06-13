@@ -1,0 +1,143 @@
+.weekly-review-page {
+  padding: 1rem;
+  padding-bottom: 6rem;
+}
+
+.weekly-review-header {
+  margin-bottom: 1.2rem;
+}
+
+.weekly-review-header span {
+  font-size: 0.8rem;
+  opacity: 0.75;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.weekly-review-header h1 {
+  margin: 0.35rem 0;
+  font-size: 1.8rem;
+}
+
+.weekly-review-header p {
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.review-card {
+  position: relative;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.2rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.review-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.review-grid div {
+  background: rgba(255, 255, 255, 0.055);
+  border-radius: 0.9rem;
+  padding: 0.8rem;
+}
+
+.review-grid span {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.7;
+  margin-bottom: 0.35rem;
+}
+
+.review-grid strong {
+  font-size: 1.05rem;
+}
+
+.review-note {
+  margin: 0.7rem 0 0;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.premium-review-card {
+  min-height: 260px;
+}
+
+.blurred-review {
+  filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.65;
+}
+
+.premium-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: center;
+  padding: 1.2rem;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.5),
+    rgba(10, 10, 10, 0.92)
+  );
+}
+
+.premium-overlay h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.premium-overlay p {
+  max-width: 320px;
+  margin: 0;
+  opacity: 0.86;
+  line-height: 1.45;
+}
+
+.premium-overlay button,
+.refresh-review-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.premium-overlay button {
+  background: #fff;
+  color: #000;
+}
+
+.refresh-review-btn {
+  width: 100%;
+  background: #f5f5f5;
+  color: #000;
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 520px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .weekly-review-header h1 {
+    font-size: 1.55rem;
+  }
+}
