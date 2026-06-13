@@ -34,6 +34,7 @@ export default function AICoach() {
       };
 
       saveChat([...chat, limitMessage]);
+      setRemainingMessages(AIUsageEngine.getRemainingMessages());
       return;
     }
 
@@ -82,6 +83,10 @@ export default function AICoach() {
       );
 
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "AI request failed");
+      }
 
       AIUsageEngine.recordMessage();
       setRemainingMessages(AIUsageEngine.getRemainingMessages());

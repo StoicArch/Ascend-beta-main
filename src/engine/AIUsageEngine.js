@@ -1,68 +1,53 @@
-import PremiumEngine from "./PremiumEngine";
-
 class AIUsageEngine {
   static DAILY_LIMIT = 10;
 
-  static getTodayKey() {
+  static getToday() {
     return new Date().toDateString();
   }
 
   static getUsage() {
-    return (
-      JSON.parse(localStorage.getItem("aiUsage")) || {
-        date: this.getTodayKey(),
-        count: 0,
-      }
-    );
-  }
+    const saved =
+      JSON.parse(localStorage.getItem("aiUsage")) || {};
 
-  static resetIfNewDay() {
-    const usage = this.getUsage();
-
-    if (usage.date !== this.getTodayKey()) {
-      const freshUsage = {
-        date: this.getTodayKey(),
+    if (saved.date !== this.getToday()) {
+      return {
+        date: this.getToday(),
         count: 0,
       };
-
-      localStorage.setItem("aiUsage", JSON.stringify(freshUsage));
-      return freshUsage;
     }
 
-    return usage;
+    return saved;
   }
 
-  static canSendMessage() {
-    if (PremiumEngine.isPremium()) return true;
-
-    const usage = this.resetIfNewDay();
-
-    return usage.count < this.DAILY_LIMIT;
+  static getCount() {
+    return this.getUsage().count;
   }
 
-  static recordMessage() {
-    if (PremiumEngine.isPremium()) {
-      return this.getUsage();
-    }
+  static increment() {
+    const usage = this.getUsage();
 
-    const usage = this.resetIfNewDay();
-
-    const updatedUsage = {
-      ...usage,
+    const updated = {
+      date: this.getToday(),
       count: usage.count + 1,
     };
 
-    localStorage.setItem("aiUsage", JSON.stringify(updatedUsage));
+    localStorage.setItem(
+      "aiUsage",
+      JSON.stringify(updated)
+    );
 
-    return updatedUsage;
+    return updated.count;
   }
 
-  static getRemainingMessages() {
-    if (PremiumEngine.isPremium()) return "Unlimited";
+  static remaining() {
+    return Math.max(
+      0,
+      this.DAILY_LIMIT - this.getCount()
+    );
+  }
 
-    const usage = this.resetIfNewDay();
-
-    return Math.max(0, this.DAILY_LIMIT - usage.count);
+  static hasReachedLimit() {
+    return this.getCount() >= this.DAILY_LIMIT;
   }
 }
 
