@@ -41,11 +41,11 @@ if (hiddenRoutes.includes(location.pathname)) {
     </button>
 
     <button
-      onClick={() => navigate("/library")}
-      className={isActive("/library") ? "mobile-active" : ""}
+      onClick={() => navigate("/weekly-review")}
+      className={isActive("/weekly-review") ? "mobile-active" : ""}
     >
-      <span>📚</span>
-      Library
+      <span>�</span>
+      Weekly Review
     </button>
 
     <button
