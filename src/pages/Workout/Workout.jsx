@@ -21,6 +21,9 @@ import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 
 export default function Workout() {
+  const activeSession = JSON.parse(
+  localStorage.getItem("activeWorkoutSession")
+);
 
   const navigate = useNavigate();
 
@@ -287,6 +290,18 @@ if (active && workout.length > 0) {
         </div>
 
       )}
+
+      {activeSession && (
+  <div className="program-status-card">
+    <span>Workout Paused</span>
+    <h2>Resume your workout</h2>
+    <p>You have an unfinished workout session.</p>
+
+    <button onClick={() => navigate("/active-workout")}>
+      Resume Workout
+    </button>
+  </div>
+)}
 
       {/* LIST */}
 
