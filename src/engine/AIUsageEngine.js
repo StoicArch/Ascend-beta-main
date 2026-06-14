@@ -23,7 +23,7 @@ class AIUsageEngine {
     return this.getUsage().count;
   }
 
-  static increment() {
+  static recordMessage() {
     const usage = this.getUsage();
 
     const updated = {
@@ -39,15 +39,15 @@ class AIUsageEngine {
     return updated.count;
   }
 
-  static remaining() {
+  static getRemainingMessages() {
     return Math.max(
       0,
       this.DAILY_LIMIT - this.getCount()
     );
   }
 
-  static hasReachedLimit() {
-    return this.getCount() >= this.DAILY_LIMIT;
+  static canSendMessage() {
+    return this.getCount() < this.DAILY_LIMIT;
   }
 }
 
