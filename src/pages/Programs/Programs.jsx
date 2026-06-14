@@ -38,11 +38,13 @@ export default function Programs() {
           <div className="program-card" key={program.id}>
             <div className="program-card-top">
              <span className={`access-badge ${program.access}`}>
-  {program.access === "free"
-    ? "Free"
-    : program.access === "freemium"
-    ? "First 8 Weeks Free"
-    : "Premium"}
+ {program.access === "free"
+  ? "Free"
+  : program.id === "skinny-to-jacked"
+  ? "First 3 Workouts Free"
+  : program.access === "premium"
+  ? "Premium Only"
+  : "Premium"}
 </span>
               <span className={`status-badge ${program.status}`}>
                 {program.status === "available" ? "Available" : "Coming Soon"}
@@ -83,12 +85,28 @@ export default function Programs() {
           <div className="program-modal" onClick={(e) => e.stopPropagation()}>
             <span className="modal-eyebrow">
               {selectedProgram.access === "free"
-                ? "Free Program"
-                : "Premium Program"}
+  ? "Free Program"
+  : selectedProgram.id === "skinny-to-jacked"
+  ? "First 3 Workouts Free"
+  : "Premium Program"}
             </span>
 
             <h2>{selectedProgram.name}</h2>
             <p>{selectedProgram.description}</p>
+
+            {selectedProgram.id === "skinny-to-jacked" && (
+  <div className="modal-info">
+    <p><strong>Free Preview:</strong> First 3 workouts unlocked</p>
+    <p><strong>Premium Unlocks:</strong> Full 24-week transformation</p>
+  </div>
+)}
+
+{selectedProgram.id === "bulking-journey" && (
+  <div className="modal-info">
+    <p><strong>Premium Only:</strong> Full program unlock required</p>
+    <p><strong>Built For:</strong> Faster size, strength, and weight gain</p>
+  </div>
+)}
 
             <div className="modal-info">
               <p>

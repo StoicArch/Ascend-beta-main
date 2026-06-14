@@ -230,20 +230,20 @@ class ProgramEngine {
   }
 
   static canAccessCurrentWeek() {
-    const program = this.getCurrentProgram();
-    const week = this.getCurrentWeek();
+  const program = this.getCurrentProgram();
 
-    if (!program) return false;
-    if (program.access === "free") return true;
-    if (program.access === "premium") return PremiumEngine.isPremium();
+  if (!program) return false;
+  if (program.access === "free") return true;
+  if (PremiumEngine.isPremium()) return true;
 
-    if (program.access === "freemium") {
-      if (week <= (program.freeWeeks || 0)) return true;
-      return PremiumEngine.isPremium();
-    }
+  if (program.access === "premium") return false;
 
-    return false;
+  if (program.access === "freemium") {
+    return true;
   }
+
+  return false;
+}
 
   static getCurrentTrackWorkouts() {
   const schedule = this.getProgramSchedule();
@@ -265,7 +265,54 @@ class ProgramEngine {
   return program.tracks?.[track]?.weeks?.[week]?.workouts || [];
 }
 
+static getGlobalWorkoutNumber(week, workoutIndex, track) {
+  return (Number(week || 1) - 1) * Number(track || 4) + workoutIndex + 1;
+}
+
+static canAccessWorkout(week, workoutIndex) {
+  const program = this.getCurrentProgram();
+  const track = this.getCurrentTrack();
+
+  if (!program) return false;
+
+  if (program.access === "free") return true;
+
+  if (PremiumEngine.isPremium()) return true;
+
+  if (program.access === "premium") return false;
+
+  if (program.access === "freemium") {
+    const workoutNumber = this.getGlobalWorkoutNumber(
+      week,
+      workoutIndex,
+      track
+    );
+
+    return workoutNumber <= (program.freeWorkouts || 0);
+  }
+
+  return false;
+}
+
+static canAccessTodayWorkout() {
+  const program = this.getCurrentProgram();
+
+  if (!program) return false;
+  if (program.access === "free") return true;
+  if (PremiumEngine.isPremium()) return true;
+  if (program.access === "premium") return false;
+
+  if (program.access === "freemium") {
+    return true;
+  }
+
+  return true;
+}
+
+
+
   static getProgramStatus() {
+    const canAccessTodayWorkout = this.canAccessTodayWorkout();
     const program = this.getCurrentProgram();
     const week = this.getCurrentWeek();
     const today = this.getTodayName();
@@ -289,6 +336,7 @@ class ProgramEngine {
       isRestDay: todayWorkout.length === 0,
       nextWorkout,
       canAccessCurrentWeek,
+      canAccessTodayWorkout,
     };
   }
 }

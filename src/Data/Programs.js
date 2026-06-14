@@ -130,11 +130,13 @@ export const PROGRAMS = [
   name: "Skinny To Jacked",
   duration: "24 weeks",
   totalWeeks: 24,
-  freeWeeks: 8,
+  freeWorkouts: 3,
+  freeWeeks: 0,
   goal: "Build muscle",
   type: "Calorie surplus",
   access: "freemium",
-  status: "coming soon",
+  status: "available",
+  previewType:"first-3-workouts",
   description:
     "A muscle-building program for skinny guys who want to stay relatively lean, gain size, strength, and confidence without guessing what to train.",
 
@@ -437,7 +439,8 @@ export const PROGRAMS = [
   goal: "Gain size",
   type: "Calorie surplus",
   access: "premium",
-  status: "coming soon",
+  status: "available",
+  previewType:"premium-only",
   description:
     "A structured bulking program for users who want to gain weight, build muscle, and get stronger through progressive training.",
 

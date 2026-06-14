@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Program.css";
 import UserProfileEngine from "../../engine/UserProfileEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
 import NutritionEngine from "../../engine/NutritionEngine";
 
 export default function Program() {
+  const navigate = useNavigate();
   const profile = UserProfileEngine.getProfile();
   const status = ProgramEngine.getProgramStatus();
 
@@ -102,6 +104,23 @@ export default function Program() {
         <p>{progressPercent}% complete</p>
       </div>
 
+      {!status.canAccessCurrentWeek && (
+  <div className="program-summary-card">
+    <h2>Premium Required 🔒</h2>
+
+    <p>
+      You have completed the free preview of this program.
+      Upgrade to continue.
+    </p>
+
+    <button onClick={() => navigate("/premium")}>
+      Unlock Premium
+    </button>
+  </div>
+)}
+
+
+
       <div className="program-summary-card">
         <h2>Overview</h2>
         <p>Goal: {currentProgram.goal}</p>
@@ -136,9 +155,6 @@ export default function Program() {
   className="goal-weight-input"
 />
 
-<button className="save-goal-btn" onClick={saveWeightGoals}>
-  Save Weight Goals
-</button>
 
           <button className="save-goal-btn" onClick={saveWeightGoals}>
             Save Weight Goals
@@ -217,24 +233,46 @@ export default function Program() {
         )}
       </div>
 
-      <div className="program-section">
-        <h2>Week {status.week} Schedule</h2>
+      <div className="program-week">
+  {workouts.map((workout, index) => {
+    const canAccessWorkout = ProgramEngine.canAccessWorkout(
+      status.week,
+      index
+    );
 
-        <div className="program-week">
-          {workouts.map((workout, index) => (
-            <div className="program-day-card" key={index}>
-              <div>
-                <h3>{workoutDays[index] || `Workout ${index + 1}`}</h3>
-                <p>
-                  {workout.name} • {workout.exercises.length} exercises
-                </p>
-              </div>
+    return (
+      <div
+        className={`program-day-card ${
+          canAccessWorkout ? "" : "locked-program-day"
+        }`}
+        key={index}
+      >
+        <div>
+          <h3>
+            {workoutDays[index] || `Workout ${index + 1}`}
+            {!canAccessWorkout && " 🔒"}
+          </h3>
 
-              <span>Workout</span>
-            </div>
-          ))}
+          <p>
+            {workout.name} • {workout.exercises.length} exercises
+          </p>
         </div>
+
+        {canAccessWorkout ? (
+          <span>Workout</span>
+        ) : (
+          <button
+  onClick={() =>
+    window.location.href = "https://nattyjoshua.gumroad.com/l/cqeme"
+  }
+>
+  Get Full Program
+</button>
+        )}
       </div>
+    );
+  })}
+</div>
 
       <div className="program-section">
         <h2>Program Overview</h2>

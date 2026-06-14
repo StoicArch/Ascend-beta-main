@@ -497,3 +497,30 @@
 .workout-completed-card p {
   color: #cbd5e1;
 }
+
+.workout-locked-card {
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+
+.workout-locked-card h2 {
+  margin-bottom: 0.5rem;
+}
+
+.workout-locked-card p {
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.workout-locked-card button {
+  margin-top: 0.8rem;
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+}

@@ -1,13 +1,14 @@
 .programs-page {
   min-height: 100vh;
-  background: radial-gradient(circle at top, #111827, #020617);
+  background: radial-gradient(circle at top, #18181b, #050505);
   color: white;
   padding: 22px 22px 120px;
   font-family: system-ui, sans-serif;
 }
 
-.programs-header span {
-  color: #818cf8;
+.programs-header span,
+.modal-eyebrow {
+  color: #facc15;
   font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
@@ -20,7 +21,7 @@
 }
 
 .programs-header p {
-  color: #94a3b8;
+  color: #a1a1aa;
   line-height: 1.5;
 }
 
@@ -31,9 +32,14 @@
   gap: 18px;
 }
 
+.program-card,
+.program-modal,
+.modal-info {
+  background: #0f0f10;
+  border: 1px solid #27272a;
+}
+
 .program-card {
-  background: #0b1220;
-  border: 1px solid #1f2937;
   border-radius: 22px;
   padding: 18px;
 }
@@ -57,14 +63,19 @@
   color: #86efac;
 }
 
-.access-badge.premium {
+.access-badge.freemium {
   background: rgba(250, 204, 21, 0.15);
   color: #fde047;
 }
 
+.access-badge.premium {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
 .status-badge.available {
-  background: rgba(79, 70, 229, 0.2);
-  color: #a5b4fc;
+  background: rgba(34, 197, 94, 0.13);
+  color: #86efac;
 }
 
 .status-badge.coming {
@@ -76,8 +87,10 @@
   margin: 18px 0 8px;
 }
 
-.program-card p {
-  color: #cbd5e1;
+.program-card p,
+.program-modal p,
+.program-modal li {
+  color: #d4d4d8;
   line-height: 1.5;
 }
 
@@ -89,9 +102,9 @@
 }
 
 .program-info span {
-  background: #111827;
-  border: 1px solid #334155;
-  color: #cbd5e1;
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  color: #d4d4d8;
   padding: 7px 10px;
   border-radius: 999px;
   font-size: 12px;
@@ -114,13 +127,14 @@
 }
 
 .program-actions button {
-  background: #111827;
-  border: 1px solid #334155;
+  background: #18181b;
+  border: 1px solid #3f3f46;
 }
 
 .program-actions .start-program-btn,
 .modal-start-btn {
-  background: #4f46e5;
+  background: #facc15;
+  color: #111;
 }
 
 button:disabled {
@@ -131,7 +145,7 @@ button:disabled {
 .program-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.86);
+  background: rgba(0, 0, 0, 0.88);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,17 +158,8 @@ button:disabled {
   max-width: 470px;
   max-height: 88vh;
   overflow-y: auto;
-  background: #0b1220;
-  border: 1px solid #334155;
   border-radius: 24px;
   padding: 22px;
-}
-
-.modal-eyebrow {
-  color: #818cf8;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
 }
 
 .program-modal h2 {
@@ -162,19 +167,11 @@ button:disabled {
   font-size: 28px;
 }
 
-.program-modal p,
-.program-modal li {
-  color: #cbd5e1;
-  line-height: 1.5;
-}
-
 .program-modal h3 {
   margin-top: 18px;
 }
 
 .modal-info {
-  background: #111827;
-  border: 1px solid #1f2937;
   border-radius: 16px;
   padding: 12px;
   margin: 16px 0;
@@ -183,8 +180,8 @@ button:disabled {
 .modal-close-btn {
   width: 100%;
   margin-top: 10px;
-  background: #111827;
-  border: 1px solid #334155 !important;
+  background: #18181b;
+  border: 1px solid #3f3f46 !important;
 }
 
 .modal-start-btn {
@@ -200,9 +197,4 @@ button:disabled {
   .programs-header h1 {
     font-size: 28px;
   }
-}
-
-.access-badge.freemium {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
 }

@@ -22,12 +22,16 @@ class WorkoutEngine {
   }
 
   static generateTodayWorkout() {
-    if (this.hasActiveProgram()) {
-      return ProgramEngine.getTodayWorkout();
+  if (this.hasActiveProgram()) {
+    if (!ProgramEngine.canAccessTodayWorkout()) {
+      return [];
     }
 
-    return GeneralWorkoutEngine.getTodayWorkout();
+    return ProgramEngine.getTodayWorkout();
   }
+
+  return GeneralWorkoutEngine.getTodayWorkout();
+}
 
   static getOrCreateTodayWorkout() {
     const today = this.getTodayDate();
@@ -88,10 +92,12 @@ class WorkoutEngine {
   }
 
   static refreshWorkout() {
-    const workout = this.generateTodayWorkout();
-    localStorage.setItem("workoutDate", this.getTodayDate());
-    return this.saveWorkout(workout);
-  }
+  const workout = this.generateTodayWorkout();
+
+  localStorage.setItem("workoutDate", this.getTodayDate());
+
+  return this.saveWorkout(workout);
+}
 
   static refreshFromProgram() {
     return this.refreshWorkout();

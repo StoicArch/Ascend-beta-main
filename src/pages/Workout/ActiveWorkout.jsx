@@ -5,11 +5,12 @@ import { WorkoutStore } from "../../store/workoutstore";
 import UserProfileEngine from "../../engine/UserProfileEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
+import { useNavigate } from "react-router-dom";
 
 const ACTIVE_SESSION_KEY = "activeWorkoutSession";
 
 export default function ActiveWorkout() {
- 
+  const navigate = useNavigate();
   const [workout, setWorkout] = useState([]);
   const [completedSets, setCompletedSets] = useState({});
   const [setLogs, setSetLogs] = useState({});
@@ -18,21 +19,29 @@ export default function ActiveWorkout() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const savedSession = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY));
+  if (!ProgramEngine.canAccessTodayWorkout()) {
+    localStorage.removeItem(ACTIVE_SESSION_KEY);
+    localStorage.removeItem("workout");
+    navigate("/premium", { replace: true });
+    return;
+  }
 
-    if (savedSession) {
-      setWorkout(savedSession.workout || []);
-      setCompletedSets(savedSession.completedSets || {});
-      setSetLogs(savedSession.setLogs || {});
-      setSeconds(savedSession.seconds || 0);
-      setRestTimer(savedSession.restTimer ?? null);
-    } else {
-      const savedWorkout = JSON.parse(localStorage.getItem("workout")) || [];
-      setWorkout(savedWorkout.length > 0 ? savedWorkout : WorkoutStore.get());
-    }
+  const savedSession = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY));
 
-    setLoaded(true);
-  }, []);
+  if (savedSession) {
+    setWorkout(savedSession.workout || []);
+    setCompletedSets(savedSession.completedSets || {});
+    setSetLogs(savedSession.setLogs || {});
+    setSeconds(savedSession.seconds || 0);
+    setRestTimer(savedSession.restTimer ?? null);
+  } else {
+    const savedWorkout = JSON.parse(localStorage.getItem("workout")) || [];
+    setWorkout(savedWorkout.length > 0 ? savedWorkout : WorkoutStore.get());
+  }
+
+  setLoaded(true);
+}, [navigate]);
+
 
   useEffect(() => {
     if (!loaded) return;
