@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 
 import { AuthProvider } from "./context/AuthContext";
 
@@ -22,8 +23,13 @@ import WeightTracker from "./pages/WeightTracker/WeightTracker";
 import Premium from "./pages/Premium/Premium/Premium";
 import Support from "./pages/Support/Support";
 import WeeklyReview from "./pages/WeeklyReview/WeeklyReview";
+import ProfileMigrationEngine from "./engine/ProfileMigrationEngine";
 
 export default function App() {
+  useEffect(() => {
+    ProfileMigrationEngine.migrate();
+  }, []);
+
   return (
     <AuthProvider>
       <Routes>

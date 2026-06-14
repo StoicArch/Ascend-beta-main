@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Program.css";
 import UserProfileEngine from "../../engine/UserProfileEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
+import NutritionEngine from "../../engine/NutritionEngine";
 
 export default function Program() {
   const profile = UserProfileEngine.getProfile();
@@ -9,6 +10,11 @@ export default function Program() {
 
   const currentProgram = status.program;
   const nextWorkout = status.nextWorkout;
+  
+  const [currentWeightInput, setCurrentWeightInput] = useState(profile.weight || 70);
+  const [goalWeightInput, setGoalWeightInput] = useState(
+    profile.goalWeight || ""
+  );
 
   if (!currentProgram) {
     return (
@@ -26,10 +32,51 @@ export default function Program() {
     );
   }
 
+  const saveWeightGoals = () => {
+  if (!currentWeightInput || Number(currentWeightInput) <= 0) {
+    alert("Please enter your current weight.");
+    return;
+  }
+
+  if (!goalWeightInput || Number(goalWeightInput) <= 0) {
+    alert("Please enter your goal weight.");
+    return;
+  }
+
+  const nutrition = NutritionEngine.getProgramNutrition({
+    programId: profile.programId,
+    goal: currentProgram.goal,
+    weight: currentWeightInput,
+    goalWeight: goalWeightInput,
+    trainingDays: profile.trainingDays,
+  });
+
+  UserProfileEngine.saveProfile({
+    ...profile,
+    weight: nutrition.currentWeight,
+    startingWeight: profile.startingWeight || nutrition.currentWeight,
+    goalWeight: nutrition.goalWeight,
+    calories: nutrition.calories,
+    protein: nutrition.protein,
+    carbs: nutrition.carbs,
+    fat: nutrition.fat,
+    nutritionPhase: nutrition.nutritionPhase,
+    nutritionNote: nutrition.nutritionNote,
+    weeklyTargetChange: nutrition.weeklyTargetChange,
+    estimatedWeeksToGoal: nutrition.estimatedWeeksToGoal,
+    maintenanceCalories: nutrition.maintenanceCalories,
+  });
+
+  window.location.reload();
+};
+
   const totalWeeks = currentProgram.totalWeeks || 8;
   const progressPercent = Math.round((status.week / totalWeeks) * 100);
   const workouts = ProgramEngine.getCurrentTrackWorkouts();
   const workoutDays = status.workoutDays || [];
+
+  const needsGoalWeight =
+    !profile.goalWeight || Number(profile.goalWeight) === Number(profile.weight);
 
   return (
     <div className="program-page app-page">
@@ -62,6 +109,95 @@ export default function Program() {
         <p>Nutrition: {currentProgram.type}</p>
         <p>Track: {status.track} days/week</p>
         <p>Training Days: {profile.trainingDays || "Not set"}</p>
+      </div>
+
+      {needsGoalWeight && (
+        <div className="program-summary-card">
+          <h2>Set Goal Weight</h2>
+
+          <p>
+            Enter your target weight so ASCEND can calculate your calories,
+            macros, and estimated timeline.
+          </p>
+
+          <input
+  type="number"
+  value={currentWeightInput}
+  onChange={(e) => setCurrentWeightInput(e.target.value)}
+  placeholder="Current Weight (kg)"
+  className="goal-weight-input"
+/>
+
+<input
+  type="number"
+  value={goalWeightInput}
+  onChange={(e) => setGoalWeightInput(e.target.value)}
+  placeholder="Goal Weight (kg)"
+  className="goal-weight-input"
+/>
+
+<button className="save-goal-btn" onClick={saveWeightGoals}>
+  Save Weight Goals
+</button>
+
+          <button className="save-goal-btn" onClick={saveWeightGoals}>
+            Save Weight Goals
+          </button>
+        </div>
+      )}
+
+      <div className="program-summary-card">
+        <h2>Nutrition Targets</h2>
+
+        <p>Phase: {profile.nutritionPhase || "Not set"}</p>
+        <p>Current Weight: {profile.weight ? `${profile.weight}kg` : "--"}</p>
+        <p>
+          Goal Weight: {profile.goalWeight ? `${profile.goalWeight}kg` : "--"}
+        </p>
+        <p>
+          Total Target Change:{" "}
+          {profile.goalWeight && profile.weight
+            ? `${Number(profile.goalWeight - profile.weight).toFixed(1)}kg`
+            : "--"}
+        </p>
+        <p>
+          Weekly Target:{" "}
+          {profile.weeklyTargetChange
+            ? `${profile.weeklyTargetChange > 0 ? "+" : ""}${
+                profile.weeklyTargetChange
+              }kg/week`
+            : "--"}
+        </p>
+        <p>
+          Estimated Time:{" "}
+          {profile.estimatedWeeksToGoal
+            ? `${profile.estimatedWeeksToGoal} weeks`
+            : "--"}
+        </p>
+
+        <div className="program-nutrition-grid">
+          <div>
+            <span>Calories</span>
+            <strong>{profile.calories || "--"}</strong>
+          </div>
+
+          <div>
+            <span>Protein</span>
+            <strong>{profile.protein || "--"}g</strong>
+          </div>
+
+          <div>
+            <span>Carbs</span>
+            <strong>{profile.carbs || "--"}g</strong>
+          </div>
+
+          <div>
+            <span>Fat</span>
+            <strong>{profile.fat || "--"}g</strong>
+          </div>
+        </div>
+
+        <p>{profile.nutritionNote}</p>
       </div>
 
       <div className="program-status-card">

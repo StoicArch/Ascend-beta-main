@@ -8,6 +8,9 @@ import ProgramEngine from "../../engine/ProgramEngine";
 import WeightEngine from "../../engine/WeightEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
+import GoalEngine from "../../engine/GoalEngine";
+
+
 export default function Dashboard() {
   const navigate = useNavigate();
 
@@ -29,6 +32,9 @@ export default function Dashboard() {
   const weightChange = WeightEngine.getWeightChange();
 
   const completedWorkouts = ProgressEngine.getCompletedCount();
+
+  const goalStatus = GoalEngine.getGoalStatus();
+const goalMessage = GoalEngine.getGoalMessage();
 
   const latestReview =
   WeeklyReviewEngine.getLatestReview() ||
@@ -136,25 +142,7 @@ const hasWeeklyReviewAlert = true;
 </section>
 
         <section className="metrics-grid">
-
-          <div
-  className="metric-card clickable"
-  onClick={() => navigate("/weight")}
->
-  <span>Weight</span>
-
-  <h2>
-    {currentWeight
-      ? `${currentWeight}kg`
-      : "--"}
-  </h2>
-
-  <p>
-    {currentWeight
-      ? `${weightChange > 0 ? "+" : ""}${weightChange}kg change`
-      : "Add your first weight entry."}
-  </p>
-</div>
+          
           <div
             className="metric-card clickable"
             onClick={() => navigate("/weight")}
@@ -167,6 +155,17 @@ const hasWeeklyReviewAlert = true;
                 : "Add your first weight entry."}
             </p>
           </div>
+
+          <div
+  className="metric-card clickable"
+  onClick={() => navigate("/weight")}
+>
+  <span>Goal Progress</span>
+
+  <h2>{goalStatus.progressPercent}%</h2>
+
+  <p>{goalMessage}</p>
+</div>
 
           <div className="metric-card">
             <span>Completed</span>

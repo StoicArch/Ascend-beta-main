@@ -147,3 +147,33 @@
   border-radius: 999px;
   font-size: 12px;
 }
+
+.program-nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+
+.program-nutrition-grid div {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 0.9rem;
+  padding: 0.8rem;
+}
+
+.program-nutrition-grid span {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.75;
+  margin-bottom: 0.35rem;
+}
+
+.program-nutrition-grid strong {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 520px) {
+  .program-nutrition-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
