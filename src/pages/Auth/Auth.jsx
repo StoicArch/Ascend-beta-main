@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 
@@ -13,6 +13,19 @@ export default function Auth() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const onboardingCompleted = localStorage.getItem("onboardingCompleted");
+
+    if (token) {
+      if (onboardingCompleted === "true") {
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/onboarding", { replace: true });
+      }
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,9 +39,7 @@ export default function Auth() {
           : "https://ascend-backend-v27s.onrender.com/users/login";
 
       const body =
-        mode === "signup"
-          ? { name, email, password }
-          : { email, password };
+        mode === "signup" ? { name, email, password } : { email, password };
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -48,11 +59,12 @@ export default function Auth() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("lastLogin", String(Date.now()));
 
       if (mode === "signup") {
-        navigate("/onboarding");
+        navigate("/onboarding", { replace: true });
       } else {
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       }
     } catch (err) {
       setError("Could not connect to server");
@@ -68,9 +80,7 @@ export default function Auth() {
           {mode === "login" ? "Welcome Back" : "Create Your Body System"}
         </h1>
 
-        <p className="auth-subtitle">
-          ASCEND — AI fitness that adapts to you
-        </p>
+        <p className="auth-subtitle">ASCEND — AI fitness that adapts to you</p>
 
         <form onSubmit={handleSubmit} className="auth-form">
           {mode === "signup" && (

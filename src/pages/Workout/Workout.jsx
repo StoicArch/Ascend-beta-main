@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import "./Workout.css";
 
 import WorkoutEngine from "../../engine/WorkoutEngine";
@@ -19,6 +21,8 @@ import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 
 export default function Workout() {
+
+  const navigate = useNavigate();
 
   const programStatus = ProgramEngine.getProgramStatus();
 
@@ -308,11 +312,10 @@ if (active && workout.length > 0) {
       {workout.length > 0 && !completedToday && (
   <button
     className="start-workout-btn"
-    onClick={() => {
-      setActive(true);
-      setCurrentIndex(0);
-      setCurrentSet(1);
-    }}
+   onClick={() => {
+  localStorage.removeItem("activeWorkoutSession");
+  navigate("/active-workout");
+}}
   >
     Start Workout
   </button>

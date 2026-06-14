@@ -1,21 +1,54 @@
 import React, { useEffect, useState } from "react";
+
 import "./ActiveWorkout.css";
 import { WorkoutStore } from "../../store/workoutstore";
 import UserProfileEngine from "../../engine/UserProfileEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 
+const ACTIVE_SESSION_KEY = "activeWorkoutSession";
+
 export default function ActiveWorkout() {
+ 
   const [workout, setWorkout] = useState([]);
   const [completedSets, setCompletedSets] = useState({});
   const [setLogs, setSetLogs] = useState({});
   const [seconds, setSeconds] = useState(0);
   const [restTimer, setRestTimer] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const savedWorkout = JSON.parse(localStorage.getItem("workout")) || [];
-    setWorkout(savedWorkout.length > 0 ? savedWorkout : WorkoutStore.get());
+    const savedSession = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY));
+
+    if (savedSession) {
+      setWorkout(savedSession.workout || []);
+      setCompletedSets(savedSession.completedSets || {});
+      setSetLogs(savedSession.setLogs || {});
+      setSeconds(savedSession.seconds || 0);
+      setRestTimer(savedSession.restTimer ?? null);
+    } else {
+      const savedWorkout = JSON.parse(localStorage.getItem("workout")) || [];
+      setWorkout(savedWorkout.length > 0 ? savedWorkout : WorkoutStore.get());
+    }
+
+    setLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+
+    localStorage.setItem(
+      ACTIVE_SESSION_KEY,
+      JSON.stringify({
+        workout,
+        completedSets,
+        setLogs,
+        seconds,
+        restTimer,
+        updatedAt: new Date().toISOString(),
+      })
+    );
+  }, [loaded, workout, completedSets, setLogs, seconds, restTimer]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,22 +83,22 @@ export default function ActiveWorkout() {
   const updateSetLog = (exerciseIndex, setIndex, field, value) => {
     const key = `${exerciseIndex}-${setIndex}`;
 
-    setSetLogs({
-      ...setLogs,
+    setSetLogs((prev) => ({
+      ...prev,
       [key]: {
-        ...setLogs[key],
+        ...prev[key],
         [field]: value,
       },
-    });
+    }));
   };
 
   const completeSet = (exerciseIndex, setIndex) => {
     const key = `${exerciseIndex}-${setIndex}`;
 
-    setCompletedSets({
-      ...completedSets,
+    setCompletedSets((prev) => ({
+      ...prev,
       [key]: true,
-    });
+    }));
 
     setRestTimer(workout[exerciseIndex]?.rest || 90);
   };
@@ -122,37 +155,57 @@ export default function ActiveWorkout() {
   };
 
   const finishWorkout = () => {
-  const exerciseHistory = saveWorkoutHistory();
-  const profile = UserProfileEngine.getProfile();
-  const programStatus = ProgramEngine.getProgramStatus();
+    const exerciseHistory = saveWorkoutHistory();
+    const profile = UserProfileEngine.getProfile();
+    const programStatus = ProgramEngine.getProgramStatus();
 
-  const completedSession = {
-    workout,
-    time: seconds,
-    completedSets,
-    setLogs,
-    exerciseHistory,
-    date: new Date().toISOString(),
+    const completedSession = {
+      workout,
+      time: seconds,
+      completedSets,
+      setLogs,
+      exerciseHistory,
+      date: new Date().toISOString(),
+    };
+
+    WorkoutStore.saveSession(completedSession);
+
+    ProgressEngine.completeWorkout({
+      program: profile.program || "",
+      programId: profile.programId || "",
+      week: profile.currentWeek || 1,
+      day: programStatus.today || "",
+      workout: programStatus.todayTemplate?.name || "Workout",
+      exercises: workout.length,
+      duration: seconds,
+      exerciseHistory,
+    });
+
+    localStorage.removeItem(ACTIVE_SESSION_KEY);
+
+    alert("Workout Completed");
+
+    window.location.href = "/dashboard";
   };
 
-  WorkoutStore.saveSession(completedSession);
+  const abandonWorkout = () => {
+    const confirmEnd = window.confirm(
+      "End this workout? Your active session will be cleared."
+    );
 
-  ProgressEngine.completeWorkout({
-    program: profile.program || "",
-    programId: profile.programId || "",
-    week: profile.currentWeek || 1,
-    day: programStatus.today || "",
-    workout: programStatus.todayTemplate?.name || "Workout",
-    exercises: workout.length,
-    duration: seconds,
-    exerciseHistory,
-  });
+    if (!confirmEnd) return;
 
-  alert("Workout Completed");
+    localStorage.removeItem(ACTIVE_SESSION_KEY);
+    window.location.href = "/workout";
+  };
 
-  window.location.href = "/dashboard";
-};
-
+  if (!loaded) {
+    return (
+      <div className="active-workout-page">
+        <h1>Loading workout...</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="active-workout-page">
@@ -238,6 +291,10 @@ export default function ActiveWorkout() {
 
       <button className="finish-btn" onClick={finishWorkout}>
         Finish Session
+      </button>
+
+      <button className="end-workout-btn" onClick={abandonWorkout}>
+        End Without Saving
       </button>
     </div>
   );
