@@ -20,7 +20,7 @@ export default function Premium() {
       </p>
 
       <div className="premium-card">
-        <h2>$9.99/NAIRA 13,596/month</h2>
+        <h2>$9.99/₦13,596/month</h2>
 
         <p>
           Includes all premium ASCEND programs and future premium updates.
