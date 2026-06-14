@@ -38,6 +38,11 @@ export default function ProgramSetup() {
   const [selectedDays, setSelectedDays] = useState([]);
   const [dayFocus, setDayFocus] = useState({});
 
+  const profile = UserProfileEngine.getProfile();
+
+const [currentWeight, setCurrentWeight] = useState(profile.weight || 70);
+const [goalWeight, setGoalWeight] = useState(profile.goalWeight || "");
+
   if (!program) {
     return (
       <div className="program-setup-page app-page">
@@ -98,38 +103,61 @@ export default function ProgramSetup() {
       focus: dayFocus[day],
     }));
 
-    const profile = UserProfileEngine.getProfile();
+   const profile = UserProfileEngine.getProfile();
 
-    const nutrition = NutritionEngine.getProgramNutrition({
-      programId: program.id,
-      goal: program.goal,
-      weight: profile.weight,
-      trainingDays: track,
-    });
+if (!currentWeight || Number(currentWeight) <= 0) {
+  alert("Please enter your current weight.");
+  return;
+}
 
+if (!goalWeight || Number(goalWeight) <= 0) {
+  alert("Please enter your goal weight.");
+  return;
+}
+
+const nutrition = NutritionEngine.getProgramNutrition({
+  programId: program.id,
+  goal: program.goal,
+  weight: currentWeight,
+  goalWeight,
+  trainingDays: track,
+});
     UserProfileEngine.saveProfile({
-      ...profile,
-      program: program.name,
-      programId: program.id,
-      programTrack: track,
-      programWorkoutDays: selectedDays,
-      programSchedule,
-      currentWeek: 1,
-      trainingDays: track,
+  ...profile,
 
-      calories: nutrition.calories,
-      protein: nutrition.protein,
-      nutritionPhase: nutrition.nutritionPhase,
-      nutritionNote: nutrition.nutritionNote,
+  program: program.name,
+  programId: program.id,
+  programTrack: track,
+  programWorkoutDays: selectedDays,
+  programSchedule,
+  currentWeek: 1,
+  trainingDays: track,
 
-      weeklyReview: {
-        ...profile.weeklyReview,
-        currentCalories: nutrition.calories,
-        currentProtein: nutrition.protein,
-        currentPhase: nutrition.nutritionPhase,
-        aiNotes: nutrition.nutritionNote,
-      },
-    });
+  weight: nutrition.currentWeight,
+  startingWeight: profile.startingWeight || nutrition.currentWeight,
+  goalWeight: nutrition.goalWeight,
+
+  calories: nutrition.calories,
+  protein: nutrition.protein,
+  carbs: nutrition.carbs,
+  fat: nutrition.fat,
+
+  nutritionPhase: nutrition.nutritionPhase,
+  nutritionNote: nutrition.nutritionNote,
+  weeklyTargetChange: nutrition.weeklyTargetChange,
+  estimatedWeeksToGoal: nutrition.estimatedWeeksToGoal,
+  maintenanceCalories: nutrition.maintenanceCalories,
+
+  weeklyReview: {
+    ...profile.weeklyReview,
+    currentCalories: nutrition.calories,
+    currentProtein: nutrition.protein,
+    currentPhase: nutrition.nutritionPhase,
+    aiNotes: nutrition.nutritionNote,
+  },
+});
+
+    
 
     localStorage.removeItem("workout");
     localStorage.removeItem("workoutDate");
@@ -144,6 +172,25 @@ export default function ProgramSetup() {
         <h1>{program.name}</h1>
         <p>{program.description}</p>
       </div>
+
+      <div className="setup-card">
+  <h2>Set Your Bodyweight Goal</h2>
+  <p>ASCEND will calculate your calories, protein, carbs, and fats from this.</p>
+
+  <input
+    type="number"
+    placeholder="Current weight in kg"
+    value={currentWeight}
+    onChange={(e) => setCurrentWeight(e.target.value)}
+  />
+
+  <input
+    type="number"
+    placeholder="Goal weight in kg"
+    value={goalWeight}
+    onChange={(e) => setGoalWeight(e.target.value)}
+  />
+</div>
 
       <div className="setup-card">
         <h2>Choose Training Version</h2>

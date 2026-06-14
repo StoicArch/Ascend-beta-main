@@ -6,42 +6,71 @@ class NutritionEngine {
     return Math.round(bodyWeight * 33 + days * 50);
   }
 
-  static getProgramNutrition({ programId, goal, weight, trainingDays }) {
-    const maintenance = this.estimateMaintenance(weight, trainingDays);
+  static getProgramNutrition({
+    programId,
+    goal,
+    weight,
+    goalWeight,
+    trainingDays,
+  }) {
     const bodyWeight = Number(weight || 70);
+    const targetWeight = Number(goalWeight || weight || 70);
+    const maintenance = this.estimateMaintenance(bodyWeight, trainingDays);
+
+    let weeklyTargetChange = 0;
+    let calories = maintenance;
+    let nutritionPhase = "Build";
+    let nutritionNote = "Moderate nutrition target for steady progress.";
 
     if (programId === "skinny-to-jacked") {
-      return {
-        calories: maintenance + 250,
-        protein: Math.round(bodyWeight * 2),
-        nutritionPhase: "Lean Bulk",
-        nutritionNote: "Small surplus to build muscle while staying lean.",
-      };
+      weeklyTargetChange = 0.35;
+      calories = maintenance + 250;
+      nutritionPhase = "Lean Bulk";
+      nutritionNote = "Lean surplus to build muscle while staying relatively lean.";
     }
 
     if (programId === "bulking-journey") {
-      return {
-        calories: maintenance + 450,
-        protein: Math.round(bodyWeight * 2),
-        nutritionPhase: "Bulk",
-        nutritionNote: "Bigger surplus to gain size and strength faster.",
-      };
+      weeklyTargetChange = 0.6;
+      calories = maintenance + 450;
+      nutritionPhase = "Bulk";
+      nutritionNote = "Higher surplus to gain size and strength faster.";
     }
 
     if (programId === "8-week-shred" || goal === "Lose fat") {
-      return {
-        calories: maintenance - 400,
-        protein: Math.round(bodyWeight * 2.2),
-        nutritionPhase: "Cut",
-        nutritionNote: "Calorie deficit with high protein to keep muscle.",
-      };
+      weeklyTargetChange = -0.6;
+      calories = maintenance - 400;
+      nutritionPhase = "Cut";
+      nutritionNote = "Deficit calories with high protein to keep muscle.";
     }
 
+    const protein = Math.round(bodyWeight * 2);
+    const fat = Math.round(bodyWeight * 0.8);
+
+    const proteinCalories = protein * 4;
+    const fatCalories = fat * 9;
+    const carbCalories = calories - proteinCalories - fatCalories;
+    const carbs = Math.max(50, Math.round(carbCalories / 4));
+
+    const totalWeightChange = Number((targetWeight - bodyWeight).toFixed(1));
+
+    const estimatedWeeksToGoal =
+      weeklyTargetChange !== 0
+        ? Math.max(1, Math.ceil(Math.abs(totalWeightChange / weeklyTargetChange)))
+        : 1;
+
     return {
-      calories: maintenance + 200,
-      protein: Math.round(bodyWeight * 2),
-      nutritionPhase: "Build",
-      nutritionNote: "Moderate surplus for steady progress.",
+      calories,
+      protein,
+      carbs,
+      fat,
+      nutritionPhase,
+      nutritionNote,
+      currentWeight: bodyWeight,
+      goalWeight: targetWeight,
+      totalWeightChange,
+      weeklyTargetChange,
+      estimatedWeeksToGoal,
+      maintenanceCalories: maintenance,
     };
   }
 }
