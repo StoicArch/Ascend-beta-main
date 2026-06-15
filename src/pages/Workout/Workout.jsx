@@ -322,36 +322,9 @@ if (active && workout.length > 0) {
 
       </div>
 
-      {/* START */}
+      {/* START */} {workout.length > 0 && !completedToday && ( <button className="start-workout-btn" onClick={() => { localStorage.removeItem("activeWorkoutSession"); navigate("/active-workout"); }} > Start Workout </button> )}
 
-      {workout.length > 0 && !completedToday && (
-  <>
-    {!programStatus.canAccessTodayWorkout ? (
-      <div className="workout-locked-card">
-        <h2>Premium Workout Locked 🔒</h2>
-
-        <p>
-          You have completed the free preview. Upgrade to Premium to continue
-          this program.
-        </p>
-
-        <button onClick={() => navigate("/premium")}>
-          Unlock Premium
-        </button>
-      </div>
-    ) : (
-      <button
-        className="start-workout-btn"
-        onClick={() => {
-          localStorage.removeItem("activeWorkoutSession");
-          navigate("/active-workout");
-        }}
-      >
-        Start Workout
-      </button>
-    )}
-  </>
-)}
+  
 
 
 {completedToday && (
