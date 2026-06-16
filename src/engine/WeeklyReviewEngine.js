@@ -150,10 +150,117 @@ class WeeklyReviewEngine {
     };
   }
 
+  static getPRsHitThisWeek() {
+  const profile = UserProfileEngine.getProfile();
+  const history = profile.exerciseHistory || [];
+  const last7Days = this.getLast7Days();
+
+  let prsHit = 0;
+  const previousBest = {};
+
+  const sortedHistory = [...history].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+
+  sortedHistory.forEach((exerciseSession) => {
+    const sessionDate = new Date(exerciseSession.date).toDateString();
+    const exerciseName = exerciseSession.exerciseName;
+
+    exerciseSession.sets.forEach((set) => {
+      const weight = Number(set.weight || 0);
+      const reps = Number(set.reps || 0);
+
+      if (!previousBest[exerciseName]) {
+        previousBest[exerciseName] = {
+          weight: 0,
+          reps: 0,
+        };
+      }
+
+      const oldBest = previousBest[exerciseName];
+
+      const isPR =
+        weight > oldBest.weight ||
+        (weight === oldBest.weight && reps > oldBest.reps);
+
+      if (last7Days.includes(sessionDate) && isPR && weight > 0 && reps > 0) {
+        prsHit += 1;
+      }
+
+      if (
+        weight > oldBest.weight ||
+        (weight === oldBest.weight && reps > oldBest.reps)
+      ) {
+        previousBest[exerciseName] = {
+          weight,
+          reps,
+        };
+      }
+    });
+  });
+
+  return prsHit;
+}
+
+static getTrainingConsistencyText() {
+  const completed = this.getWorkoutsCompletedThisWeek();
+  const expected = this.getExpectedWorkouts();
+
+  if (completed >= expected) {
+    return "Excellent consistency. You completed your planned workouts.";
+  }
+
+  if (completed >= expected * 0.7) {
+    return "Good week, but there is still room to hit every planned session.";
+  }
+
+  return "Consistency is the main focus next week. Missed workouts will slow results.";
+}
+
+static getStrengthProgressText() {
+  const prsHit = this.getPRsHitThisWeek();
+
+  if (prsHit >= 5) {
+    return "Strong progress. You hit multiple PRs this week.";
+  }
+
+  if (prsHit >= 1) {
+    return "Some strength progress showed up this week. Keep building on it.";
+  }
+
+  return "No PRs detected this week. Focus on clean reps and progressive overload.";
+}
+
+static getNextWeekFocus() {
+  const profile = UserProfileEngine.getProfile();
+  const weightChange = this.getWeeklyWeightChange();
+  const completionRate = this.getCompletionRate();
+
+  if (completionRate < 70) {
+    return "Hit all scheduled workouts before changing anything else.";
+  }
+
+  if (profile.programId === "skinny-to-jacked" && weightChange < 0.2) {
+    return "Eat more consistently and aim to increase bodyweight slightly.";
+  }
+
+  if (profile.programId === "bulking-journey" && weightChange < 0.3) {
+    return "Push food intake higher and keep trying to beat your previous lifts.";
+  }
+
+  if (profile.programId === "8-week-shred" && weightChange >= 0) {
+    return "Tighten calories, keep protein high, and add more daily movement.";
+  }
+
+  return "Keep the current plan and aim to beat last week’s performance.";
+}
+
   static generateReview() {
+    
     const profile = UserProfileEngine.getProfile();
 
     const basicReview = {
+      prsHit: this.getPRsHitThisWeek(),
       date: this.getTodayDate(),
       program: profile.program || "",
       programId: profile.programId || "",
@@ -164,6 +271,9 @@ class WeeklyReviewEngine {
       expectedWorkouts: this.getExpectedWorkouts(),
       completionRate: this.getCompletionRate(),
       basicRecommendation: this.getBasicRecommendation(),
+      trainingConsistencyText: this.getTrainingConsistencyText(),
+      strengthProgressText: this.getStrengthProgressText(),
+      nextWeekFocus: this.getNextWeekFocus(),
     };
 
     const premiumReview = this.getPremiumRecommendation();

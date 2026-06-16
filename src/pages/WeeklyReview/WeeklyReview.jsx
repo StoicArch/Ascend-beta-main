@@ -4,14 +4,18 @@ import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
 import PremiumEngine from "../../engine/PremiumEngine";
 import { useNavigate } from "react-router-dom";
 
-export default function WeeklyReview() {
+  
+
+  export default function WeeklyReview() {
   const navigate = useNavigate();
 
   const [review, setReview] = useState(
-    WeeklyReviewEngine.getLatestReview() || WeeklyReviewEngine.saveReview()
-  );
+  WeeklyReviewEngine.saveReview()
+);
 
   const isPremium = PremiumEngine.isPremium();
+
+
 
   const refreshReview = () => {
     const updated = WeeklyReviewEngine.saveReview();
@@ -30,8 +34,10 @@ export default function WeeklyReview() {
 
       <div className="review-card">
         <h2>Weekly Summary</h2>
+        
 
         <div className="review-grid">
+
           <div>
             <span>Weight Change</span>
             <strong>
@@ -39,6 +45,13 @@ export default function WeeklyReview() {
               {review.weightChange} kg
             </strong>
           </div>
+
+
+
+<div>
+  <span>PRs Hit</span>
+  <strong>{review.prsHit || 0}</strong>
+</div>
 
           <div>
             <span>Workouts</span>
@@ -71,6 +84,7 @@ export default function WeeklyReview() {
           </div>
         )}
 
+       
         <div className={!isPremium ? "blurred-review" : ""}>
           <div className="review-grid">
             <div>
@@ -94,6 +108,40 @@ export default function WeeklyReview() {
 
           <p className="review-note">{review.premiumReview.summary}</p>
           <p className="review-note">{review.premiumReview.trainingAdvice}</p>
+
+          <div className="review-card">
+  <h3>Next Week Focus</h3>
+
+  <p>
+    {review.nextWeekFocus}
+  </p>
+</div>
+          {isPremium && review.premiumReview.calorieAdjustment !== 0 && (
+  <button
+    className="apply-review-btn"
+    onClick={() => {
+      const profile = JSON.parse(localStorage.getItem("profile")) || {};
+
+      localStorage.setItem(
+        "profile",
+        JSON.stringify({
+          ...profile,
+          calories: review.premiumReview.recommendedCalories,
+        })
+      );
+
+      alert("Calories updated for next week.");
+      refreshReview();
+    }}
+  >
+    Apply Calorie Recommendation
+  </button>
+)}
+
+ <p className="review-note">{review.trainingConsistencyText}</p>
+<p className="review-note">{review.strengthProgressText}</p>
+
+
         </div>
       </div>
 
