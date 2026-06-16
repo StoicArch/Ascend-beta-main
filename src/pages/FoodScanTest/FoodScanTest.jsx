@@ -6,22 +6,39 @@ export default function FoodScanTest() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleImage = (e) => {
-    const file = e.target.files[0];
+ const handleImage = (e) => {
+  const file = e.target.files[0];
 
-    if (!file) return;
+  if (!file) return;
 
-    const reader = new FileReader();
+  const reader = new FileReader();
 
-    reader.onloadend = () => {
-      const base64 = reader.result.split(",")[1];
+  reader.onload = () => {
+    const img = new Image();
 
-      setImagePreview(reader.result);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const maxWidth = 700;
+      const scale = maxWidth / img.width;
+
+      canvas.width = maxWidth;
+      canvas.height = img.height * scale;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.65);
+      const base64 = compressedDataUrl.split(",")[1];
+
+      setImagePreview(compressedDataUrl);
       setImageBase64(base64);
     };
 
-    reader.readAsDataURL(file);
+    img.src = reader.result;
   };
+
+  reader.readAsDataURL(file);
+};
 
   const testVision = async () => {
     if (!imageBase64 || loading) return;
