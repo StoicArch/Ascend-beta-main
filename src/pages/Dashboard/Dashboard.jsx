@@ -24,7 +24,7 @@ useEffect(() => {
     setMissedWorkoutNotice(notice);
     WorkoutSessionEngine.markMissedWorkoutNoticeShown();
   }
-}, []);
+}, []); 
 
 
   const navigate = useNavigate();
@@ -97,21 +97,7 @@ const hasWeeklyReviewAlert = true;
     ⚙️
   </button>
 
-  <div className="dashboard-card food-scan-card">
-  <div>
-    <span>AI Calorie Tracker</span>
-    <h2>Scan your meal</h2>
-    <p>
-      Take a photo of your food and let ASCEND estimate calories, protein,
-      carbs, and fats.
-    </p>
-  </div>
-
-  <button onClick={() => navigate("/food-scan-test")}>
-    Scan Food
-  </button>
-</div>
-
+  
   <button
     className="top-btn"
     onClick={() => navigate("/workout")}
