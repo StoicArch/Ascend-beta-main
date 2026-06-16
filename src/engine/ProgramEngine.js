@@ -266,13 +266,21 @@ static canAccessWorkout(week, workoutIndex) {
 static canAccessTodayWorkout() {
   const program = this.getCurrentProgram();
 
-  if (!program) return false;
+  if (!program) return true;
+
   if (program.access === "free") return true;
+
   if (PremiumEngine.isPremium()) return true;
+
   if (program.access === "premium") return false;
 
   if (program.access === "freemium") {
-    return true;
+    const week = this.getCurrentWeek();
+    const workoutIndex = this.getWorkoutIndexForToday();
+
+    if (workoutIndex === -1) return true;
+
+    return this.canAccessWorkout(week, workoutIndex);
   }
 
   return true;
