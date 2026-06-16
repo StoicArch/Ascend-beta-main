@@ -54,7 +54,15 @@ export default function FoodScanTest() {
   };
 
   return (
-    <div style={{ padding: "20px", color: "white" }}>
+   <div
+  style={{
+    padding: "20px",
+    paddingBottom: "120px",
+    color: "white",
+    minHeight: "100vh",
+    overflowY: "auto",
+  }}
+>
       <h1>Food Scan Test</h1>
 
       <input
@@ -69,11 +77,13 @@ export default function FoodScanTest() {
           src={imagePreview}
           alt="Food preview"
           style={{
-            width: "100%",
-            maxWidth: "360px",
-            marginTop: "20px",
-            borderRadius: "16px",
-          }}
+  width: "100%",
+  maxWidth: "360px",
+  maxHeight: "55vh",
+  objectFit: "contain",
+  marginTop: "20px",
+  borderRadius: "16px",
+}}
         />
       )}
 
