@@ -51,8 +51,13 @@ class ProgressEngine {
     const completed = this.getCompletedThisProgramWeek(programId, week);
 
     if (completed.length >= required) {
-      const nextWeek = Math.min(Number(profile.currentWeek || 1) + 1, 8);
+      const totalWeeks =
+  Number(profile.programTotalWeeks || 24);
 
+const nextWeek = Math.min(
+  Number(profile.currentWeek || 1) + 1,
+  totalWeeks
+);
       UserProfileEngine.saveProfile({
         ...profile,
         currentWeek: nextWeek,

@@ -2,6 +2,7 @@ import UserProfileEngine from "./UserProfileEngine";
 import { PROGRAMS } from "../Data/Programs";
 import { EXERCISES } from "../Data/exercises";
 import PremiumEngine from "./PremiumEngine";
+import WorkoutPlannerEngine from "./WorkoutPlannerEngine";
 
 
 class ProgramEngine {
@@ -126,39 +127,7 @@ class ProgramEngine {
   }
 
  static generateWorkoutFromFocus(focusList) {
-  const workout = [];
-  const usedIds = [];
-
-  focusList.forEach((focus) => {
-    const muscle = this.normalizeFocus(focus);
-
-    let targetVolume = 3;
-
-    if (focusList.length === 1) targetVolume = 6;
-    if (["Biceps", "Triceps", "Abs", "Calves"].includes(muscle)) {
-      targetVolume = focusList.length === 1 ? 5 : 2;
-    }
-    if (["Quads", "Hamstrings", "Glutes"].includes(muscle)) {
-      targetVolume = focusList.length === 1 ? 5 : 3;
-    }
-
-    const options = this.getExercisesForMuscle(muscle);
-
-    for (let i = 0; i < targetVolume; i++) {
-      const selected = this.getRandomExercise(options, usedIds);
-
-      if (!selected) break;
-
-      usedIds.push(selected.id);
-
-      workout.push({
-        ...selected,
-        focus: focusList,
-      });
-    }
-  });
-
-  return workout;
+  return WorkoutPlannerEngine.generateWorkout(focusList);
 }
 
   static getWorkoutIndexForToday() {

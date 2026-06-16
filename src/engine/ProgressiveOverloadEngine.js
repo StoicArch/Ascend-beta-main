@@ -1,118 +1,100 @@
 import UserProfileEngine from "./UserProfileEngine";
 
 class ProgressiveOverloadEngine {
-  static getHistory() {
-    const profile = UserProfileEngine.getProfile();
-    return profile.exerciseHistory || [];
-  }
-
   static getExerciseHistory(exerciseName) {
-    return this.getHistory()
-      .filter((item) => item.exerciseName === exerciseName)
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    const profile = UserProfileEngine.getProfile();
+
+    return (profile.exerciseHistory || [])
+      .filter(
+        (item) => item.exerciseName === exerciseName
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.date) - new Date(a.date)
+      );
   }
 
   static getLastPerformance(exerciseName) {
-    const history = this.getExerciseHistory(exerciseName);
+    const history =
+      this.getExerciseHistory(exerciseName);
 
-    if (history.length === 0) return null;
-
-    return history[0];
+    return history[0] || null;
   }
 
-  static getBestCompletedSet(performance) {
-    if (!performance?.sets) return null;
+  static getPersonalRecord(exerciseName) {
+    const history =
+      this.getExerciseHistory(exerciseName);
 
-    const completedSets = performance.sets.filter((set) => set.completed);
+    let bestWeight = 0;
+    let bestReps = 0;
 
-    if (completedSets.length === 0) return null;
+    history.forEach((session) => {
+      session.sets.forEach((set) => {
+        if (set.weight > bestWeight) {
+          bestWeight = set.weight;
+        }
 
-    return completedSets.sort((a, b) => {
-      if (b.weight !== a.weight) return b.weight - a.weight;
-      return b.reps - a.reps;
-    })[0];
-  }
-
-  static getAverageCompletedReps(performance) {
-    if (!performance?.sets) return 0;
-
-    const completedSets = performance.sets.filter((set) => set.completed);
-
-    if (completedSets.length === 0) return 0;
-
-    const totalReps = completedSets.reduce(
-      (sum, set) => sum + Number(set.reps || 0),
-      0
-    );
-
-    return Math.round(totalReps / completedSets.length);
-  }
-
-  static getNextTarget(exercise) {
-    const exerciseName =
-      typeof exercise === "string" ? exercise : exercise.name;
-
-    const targetReps =
-      typeof exercise === "string" ? 10 : Number(exercise.reps || 10);
-
-    const lastPerformance = this.getLastPerformance(exerciseName);
-
-    if (!lastPerformance) {
-      return {
-        hasHistory: false,
-        targetWeight: "",
-        targetReps,
-        instruction: "First time doing this exercise. Pick a weight you can control.",
-      };
-    }
-
-    const bestSet = this.getBestCompletedSet(lastPerformance);
-    const avgReps = this.getAverageCompletedReps(lastPerformance);
-
-    if (!bestSet) {
-      return {
-        hasHistory: true,
-        targetWeight: "",
-        targetReps,
-        instruction: "No completed sets found last time. Repeat this exercise properly today.",
-      };
-    }
-
-    const lastWeight = Number(bestSet.weight || 0);
-
-    if (avgReps >= targetReps + 2) {
-      return {
-        hasHistory: true,
-        targetWeight: lastWeight ? lastWeight + 2.5 : "",
-        targetReps: Math.max(targetReps - 2, 6),
-        instruction: "Increase weight slightly. You beat the rep target last time.",
-      };
-    }
-
-    if (avgReps >= targetReps) {
-      return {
-        hasHistory: true,
-        targetWeight: lastWeight,
-        targetReps: targetReps + 1,
-        instruction: "Keep the same weight and add 1 rep today.",
-      };
-    }
-
-    if (avgReps < targetReps - 3) {
-      return {
-        hasHistory: true,
-        targetWeight: lastWeight ? Math.max(0, lastWeight - 2.5) : "",
-        targetReps,
-        instruction: "Reduce weight slightly and rebuild clean reps.",
-      };
-    }
+        if (set.reps > bestReps) {
+          bestReps = set.reps;
+        }
+      });
+    });
 
     return {
-      hasHistory: true,
-      targetWeight: lastWeight,
-      targetReps,
-      instruction: "Repeat the same weight and aim to hit the target reps cleanly.",
+      bestWeight,
+      bestReps,
     };
+  }
+
+  static getRecommendation(exerciseName) {
+    const last =
+      this.getLastPerformance(exerciseName);
+
+    if (!last) {
+      return {
+        message:
+          "First time performing this exercise.",
+      };
+    }
+
+    const averageWeight =
+      last.sets.reduce(
+        (sum, set) => sum + (set.weight || 0),
+        0
+      ) / last.sets.length;
+
+    
+      const completedSets =
+  last.sets.filter((set) => set.completed);
+
+const averageReps =
+  completedSets.reduce(
+    (sum, set) => sum + set.reps,
+    0
+  ) / completedSets.length;
+
+const allTargetsHit =
+  completedSets.length === last.sets.length &&
+  averageReps >=
+    completedSets[0].targetReps;
+
+   if (allTargetsHit) {
+  return {
+    recommendedWeight:
+      averageWeight + 2.5,
+    increaseWeight: true,
+    message:
+      "Increase weight next session.",
+  };
+}
+
+return {
+  recommendedWeight:
+    averageWeight,
+  increaseWeight: false,
+  message:
+    "Stay at current weight and aim for more reps.",
+};
   }
 }
 

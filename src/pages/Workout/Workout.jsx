@@ -21,9 +21,11 @@ import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 
 export default function Workout() {
-  const activeSession = JSON.parse(
-  localStorage.getItem("activeWorkoutSession")
-);
+  const activeSession =
+  !ProgressEngine.isTodayCompleted()
+    ? JSON.parse(localStorage.getItem("activeWorkoutSession"))
+    : null;
+
 
   const navigate = useNavigate();
 
@@ -55,7 +57,9 @@ const [restTime, setRestTime] = useState(60);
     );
 
   useEffect(() => {
-
+if (ProgressEngine.isTodayCompleted()) {
+    localStorage.removeItem("activeWorkoutSession");
+  }
     setWorkout(
       WorkoutEngine.getOrCreateTodayWorkout());
   }, []);

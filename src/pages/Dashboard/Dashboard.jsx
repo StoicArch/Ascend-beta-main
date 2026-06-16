@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
 import DashboardEngine from "../../engine/DashboardEngine";
@@ -9,9 +9,24 @@ import WeightEngine from "../../engine/WeightEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
 import GoalEngine from "../../engine/GoalEngine";
+import WorkoutSessionEngine from "../../engine/WorkoutSessionEngine";
 
 
 export default function Dashboard() {
+const [missedWorkoutNotice, setMissedWorkoutNotice] = React.useState(null);
+
+useEffect(() => {
+  WorkoutSessionEngine.closeExpiredWorkoutIfNeeded();
+
+  const notice = WorkoutSessionEngine.getMissedWorkoutNotice();
+
+  if (notice) {
+    setMissedWorkoutNotice(notice);
+    WorkoutSessionEngine.markMissedWorkoutNoticeShown();
+  }
+}, []);
+
+
   const navigate = useNavigate();
 
   const profile = UserProfileEngine.getProfile();
@@ -66,6 +81,13 @@ const hasWeeklyReviewAlert = true;
               {profile.trainingDays || 4}
             </p>
           </div>
+
+          {missedWorkoutNotice && (
+  <div className="missed-workout-notice">
+    <strong>Workout missed</strong>
+    <p>{missedWorkoutNotice.message}</p>
+  </div>
+)}
 
           <div className="topbar-actions">
             <button

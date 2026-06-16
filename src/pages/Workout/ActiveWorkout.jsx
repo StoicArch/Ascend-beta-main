@@ -6,6 +6,7 @@ import UserProfileEngine from "../../engine/UserProfileEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 import { useNavigate } from "react-router-dom";
+import ProgressiveOverloadEngine from "../../engine/ProgressiveOverloadEngine";
 
 const ACTIVE_SESSION_KEY = "activeWorkoutSession";
 
@@ -46,17 +47,20 @@ export default function ActiveWorkout() {
   useEffect(() => {
     if (!loaded) return;
 
-    localStorage.setItem(
-      ACTIVE_SESSION_KEY,
-      JSON.stringify({
-        workout,
-        completedSets,
-        setLogs,
-        seconds,
-        restTimer,
-        updatedAt: new Date().toISOString(),
-      })
-    );
+   localStorage.setItem(
+  ACTIVE_SESSION_KEY,
+  JSON.stringify({
+    workout,
+    completedSets,
+    setLogs,
+    seconds,
+    restTimer,
+    date: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  })
+);
+
+
   }, [loaded, workout, completedSets, setLogs, seconds, restTimer]);
 
   useEffect(() => {
@@ -234,8 +238,20 @@ export default function ActiveWorkout() {
         </div>
       )}
 
-      <div className="active-list">
-        {workout.map((exercise, i) => (
+     <div className="active-list">
+  {workout.map((exercise, i) => {
+
+    const recommendation =
+      ProgressiveOverloadEngine.getRecommendation(
+        exercise.name
+      );
+
+    const pr =
+      ProgressiveOverloadEngine.getPersonalRecord(
+        exercise.name
+      );
+
+    return (
           <div className="active-card" key={i}>
             <div className="exercise-head">
               <div>
@@ -245,6 +261,20 @@ export default function ActiveWorkout() {
                   {exercise.target ? ` • ${exercise.target}` : ""}
                 </span>
               </div>
+
+              <div className="progression-card">
+  <p>
+    PR Weight: {pr.bestWeight || "--"}kg
+  </p>
+
+  <p>
+    PR Reps: {pr.bestReps || "--"}
+  </p>
+
+  <p>
+    Suggested Weight: {recommendation.recommendedWeight || "--"}kg
+  </p>
+</div>
 
               <div className="exercise-badge">{exercise.sets} Sets</div>
             </div>
@@ -295,7 +325,10 @@ export default function ActiveWorkout() {
               })}
             </div>
           </div>
-        ))}
+        );
+      })}
+
+
       </div>
 
       <button className="finish-btn" onClick={finishWorkout}>
