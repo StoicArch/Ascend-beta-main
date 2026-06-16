@@ -2,6 +2,17 @@ import UserProfileEngine from "./UserProfileEngine";
 import PremiumEngine from "./PremiumEngine";
 
 class WeeklyReviewEngine {
+
+  static getWeightTrend() {
+  const entries = this.getWeightEntries();
+
+  return entries.slice(-7).map((entry) => ({
+    date: new Date(entry.date).toLocaleDateString(),
+    weight: entry.weight,
+  }));
+}
+
+
   static getWeightEntries() {
     return JSON.parse(localStorage.getItem("weightEntries")) || [];
   }
@@ -255,12 +266,15 @@ static getNextWeekFocus() {
   return "Keep the current plan and aim to beat last week’s performance.";
 }
 
+
   static generateReview() {
     
     const profile = UserProfileEngine.getProfile();
 
     const basicReview = {
+      
       prsHit: this.getPRsHitThisWeek(),
+      weightTrend: this.getWeightTrend(),
       date: this.getTodayDate(),
       program: profile.program || "",
       programId: profile.programId || "",

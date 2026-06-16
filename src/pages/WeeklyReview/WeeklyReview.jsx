@@ -3,10 +3,23 @@ import "./WeeklyReview.css";
 import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
 import PremiumEngine from "../../engine/PremiumEngine";
 import { useNavigate } from "react-router-dom";
+import ProgramEngine from "../../engine/ProgramEngine";
 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
   
 
   export default function WeeklyReview() {
+
+   
+
+
   const navigate = useNavigate();
 
   const [review, setReview] = useState(
@@ -15,7 +28,8 @@ import { useNavigate } from "react-router-dom";
 
   const isPremium = PremiumEngine.isPremium();
 
-
+ const programStatus = ProgramEngine.getProgramStatus();
+const nextWorkoutPreview = programStatus.nextWorkoutPreview;
 
   const refreshReview = () => {
     const updated = WeeklyReviewEngine.saveReview();
@@ -68,6 +82,55 @@ import { useNavigate } from "react-router-dom";
 
         <p className="review-note">{review.basicRecommendation}</p>
       </div>
+
+      {review.weightTrend && review.weightTrend.length >= 2 && (
+  <div className="review-card">
+    <h2>Weight Trend</h2>
+
+    <div className="weight-chart">
+      <ResponsiveContainer width="100%" height={220}>
+        <LineChart data={review.weightTrend}>
+          <XAxis dataKey="date" />
+          <YAxis domain={["dataMin - 1", "dataMax + 1"]} />
+          <Tooltip />
+          <Line
+            type="monotone"
+            dataKey="weight"
+            strokeWidth={3}
+            dot
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+)}
+
+      {nextWorkoutPreview && (
+  <div className="review-card">
+    <h2>Next Workout</h2>
+
+    <div className="review-grid">
+      <div>
+        <span>Day</span>
+        <strong>{nextWorkoutPreview.day}</strong>
+      </div>
+
+      <div>
+        <span>Workout</span>
+        <strong>{nextWorkoutPreview.name}</strong>
+      </div>
+
+      <div>
+        <span>Main Target</span>
+        <strong>{nextWorkoutPreview.mainTarget}</strong>
+      </div>
+    </div>
+
+    <p className="review-note">
+      <strong>Goal:</strong> {nextWorkoutPreview.goal}
+    </p>
+  </div>
+)}
 
       <div className="review-card premium-review-card">
         <h2>AI Premium Review</h2>

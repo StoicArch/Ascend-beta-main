@@ -24,6 +24,7 @@ import Premium from "./pages/Premium/Premium/Premium";
 import Support from "./pages/Support/Support";
 import WeeklyReview from "./pages/WeeklyReview/WeeklyReview";
 import ProfileMigrationEngine from "./engine/ProfileMigrationEngine";
+import FoodScanTest from "./pages/FoodScanTest/FoodScanTest";
 
 export default function App() {
   useEffect(() => {
@@ -153,7 +154,10 @@ export default function App() {
         />
 
         <Route path="/support" element={<Support />} />
+        
+        <Route path="/food-scan-test" element={<FoodScanTest />} />
 
+        
         <Route path="*" element={<LandingPage />} />
       </Routes>
 

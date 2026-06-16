@@ -286,6 +286,27 @@ static canAccessTodayWorkout() {
   return true;
 }
 
+static getNextWorkoutPreview() {
+  const nextWorkout = this.getNextWorkoutDay();
+
+  if (!nextWorkout) {
+    return null;
+  }
+
+  const focus = Array.isArray(nextWorkout.focus)
+    ? nextWorkout.focus
+    : [nextWorkout.focus];
+
+  const mainTarget = focus[0] || "Training";
+
+  return {
+    day: nextWorkout.day,
+    name: focus.join(" & "),
+    mainTarget,
+    goal: "Beat last session",
+  };
+}
+
 
 
   static getProgramStatus() {
@@ -299,9 +320,11 @@ static canAccessTodayWorkout() {
     const todayTemplate = this.getTodayWorkoutTemplate();
     const todayWorkout = this.getTodayWorkout();
     const nextWorkout = this.getNextWorkoutDay();
+    const nextWorkoutPreview = this.getNextWorkoutPreview();
     const canAccessCurrentWeek = this.canAccessCurrentWeek();
 
     return {
+      nextWorkoutPreview,
       program,
       week,
       today,
