@@ -14,7 +14,7 @@ class UserProfileEngine {
     sleep: 7,
     calories: 2400,
     protein: 160,
-    carbs: 300,
+    carbs: 300, 
     fat: 70,
     equipment: [],
     gender: "",

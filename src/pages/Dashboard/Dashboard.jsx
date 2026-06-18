@@ -10,7 +10,7 @@ import ProgressEngine from "../../engine/ProgressEngine";
 import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
 import GoalEngine from "../../engine/GoalEngine";
 import WorkoutSessionEngine from "../../engine/WorkoutSessionEngine";
-
+import FoodLogEngine from "../../engine/FoodLogEngine"
 
 export default function Dashboard() {
 const [missedWorkoutNotice, setMissedWorkoutNotice] = React.useState(null);
@@ -37,6 +37,19 @@ useEffect(() => {
   const streak = DashboardEngine.getStreak();
   const calories = DashboardEngine.getCalories();
   const protein = DashboardEngine.getProtein();
+  const todayCalories =
+  FoodLogEngine.getTodayCalories();
+
+const todayProtein =
+  FoodLogEngine.getTodayProtein();
+
+const todayCarbs =
+  FoodLogEngine.getTodayCarbs();
+
+const todayFat =
+  FoodLogEngine.getTodayFat();
+
+
   const sleep = DashboardEngine.getSleep();
   const insight = DashboardEngine.getAIInsight();
 
@@ -224,6 +237,43 @@ const hasWeeklyReviewAlert = true;
             <p>Sleep recovery target.</p>
           </div>
         </section>
+        
+        <section className="nutrition-card">
+
+  <h2>AI Nutrition Tracker</h2>
+
+  <div className="nutrition-grid">
+
+    <div>
+      <span>Calories</span>
+      <h3>
+        {todayCalories}/{profile.calories}
+      </h3>
+    </div>
+
+    <div>
+      <span>Protein</span>
+      <h3>
+        {todayProtein}/{profile.protein}g
+      </h3>
+    </div>
+
+    <div>
+      <span>Carbs</span>
+      <h3>
+        {todayCarbs}/{profile.carbs}g
+      </h3>
+    </div>
+
+    <div>
+      <span>Fat</span>
+      <h3>
+        {todayFat}/{profile.fat}g
+      </h3>
+    </div>
+
+  </div>
+</section>
 
         <section className="dashboard-grid">
           <div className="dashboard-card workout-card">
@@ -288,7 +338,7 @@ const hasWeeklyReviewAlert = true;
   className="ai-action"
   onClick={() => navigate("/food-scan-test")}
 >
-  Food Scan Test
+  AI MEAL TRACKER
 </button>
             </div>
 
@@ -305,6 +355,8 @@ const hasWeeklyReviewAlert = true;
             </div>
           </div>
         </section>
+
+       
 
         <section className="quote-section">
           <p>“Whatever you do, work at it with all your heart.”</p>
