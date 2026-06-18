@@ -164,6 +164,22 @@ setFoodData(parsedFood);
     Save Meal
   </button>
 )}
+
+<button
+  onClick={() => {
+    alert(
+      JSON.stringify(
+        FoodLogEngine.getMeals(),
+        null,
+        2
+      )
+    );
+  }}
+>
+  View Meals
+</button>
+
+
     </div>
   );
 }
