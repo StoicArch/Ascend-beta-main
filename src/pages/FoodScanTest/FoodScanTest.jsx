@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import FoodLogEngine from "../../engine/FoodLogEngine";
 
 export default function FoodScanTest() {
+    const [foodData, setFoodData] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [imageBase64, setImageBase64] = useState("");
   const [result, setResult] = useState("");
@@ -61,6 +63,16 @@ export default function FoodScanTest() {
       );
 
       const data = await response.json();
+
+      const parsedFood = JSON.parse(
+  data.response
+    .replace("```json", "")
+    .replace("```", "")
+);
+
+setFoodData(parsedFood);
+
+      console.log(data);
 
       setResult(JSON.stringify(data, null, 2));
     } catch (err) {
@@ -131,6 +143,27 @@ export default function FoodScanTest() {
           {result}
         </pre>
       )}
+
+      {foodData && (
+  <button
+    onClick={() => {
+      FoodLogEngine.saveMeal(foodData);
+      alert("Meal Saved");
+
+      alert(
+  JSON.stringify(
+    FoodLogEngine.getMeals(),
+    null,
+    2
+  )
+);
+    }}
+
+
+  >
+    Save Meal
+  </button>
+)}
     </div>
   );
 }
