@@ -283,6 +283,13 @@ const hasWeeklyReviewAlert = true;
               >
                 Ask AI Coach
               </button>
+
+              <button
+  className="ai-action"
+  onClick={() => navigate("/food-scan-test")}
+>
+  Food Scan Test
+</button>
             </div>
 
             <div className="ai-stats">
