@@ -418,18 +418,234 @@ export const PROGRAMS = [
   },
 },
 
-  {
-    id: "home-chest-builder",
-    name: "Home Chest Builder",
-    duration: "8 weeks",
-    totalWeeks: 8,
-    goal: "Build chest at home",
-    type: "Home training",
-    access: "free",
-    status: "coming soon",
-    description:
-      "A no-gym chest program based on simple home training and progression.",
+ {
+  id: "home-chest-builder",
+  name: "Home Chest Builder",
+  duration: "16 weeks",
+  totalWeeks: 16,
+  access: "premium",
+  status: "available",
+
+  goal: "Build chest at home",
+
+  tracks: {
+    4: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 16 }, (_, i) => {
+          const week = i + 1;
+
+          let workoutA = [];
+          let workoutB = [];
+          let workoutC = [];
+          let workoutD = [];
+
+          // WEEKS 1-4
+          if (week <= 4) {
+            workoutA = [
+              "Wall Pushup",
+              "Incline Pushup",
+              "Knee Pushup",
+              "Wide Knee Pushup",
+              "Pushup",
+              "Diamond Knee Pushup",
+            ];
+
+            workoutB = [
+              "Wall Pushup",
+              "Knee Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Knee Pushup",
+              "Pause Pushup",
+            ];
+
+            workoutC = [
+              "Incline Pushup",
+              "Knee Pushup",
+              "Wide Knee Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Pause Pushup",
+            ];
+
+            workoutD = [
+              "Wall Pushup",
+              "Incline Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Knee Pushup",
+              "Pushup",
+            ];
+          }
+
+          // WEEKS 5-8
+          else if (week <= 8) {
+            workoutA = [
+              "Incline Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Pushup",
+              "Decline Pushup",
+              "Pause Pushup",
+              "Staggered Pushup",
+              "Pushup",
+              "Wide Pushup",
+            ];
+
+            workoutB = [
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Pushup",
+              "Decline Pushup",
+              "Pause Pushup",
+              "Staggered Pushup",
+              "Pushup",
+              "Diamond Pushup",
+              "Wide Pushup",
+            ];
+
+            workoutC = [
+              "Incline Pushup",
+              "Decline Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Pause Pushup",
+              "Diamond Pushup",
+              "Staggered Pushup",
+              "Pushup",
+              "Wide Pushup",
+            ];
+
+            workoutD = [
+              "Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Pushup",
+              "Decline Pushup",
+              "Pause Pushup",
+              "Staggered Pushup",
+              "Pushup",
+              "Wide Pushup",
+            ];
+          }
+
+          // WEEKS 9-12
+          else if (week <= 12) {
+            workoutA = [
+              "Decline Pushup",
+              "Deficit Pushup",
+              "Diamond Pushup",
+              "Pause Pushup",
+              "Tempo Pushup",
+              "Hindu Pushup",
+              "Spiderman Pushup",
+              "Wide Pushup",
+              "Pushup",
+              "Deficit Pushup",
+              "Diamond Pushup",
+              "Decline Pushup",
+            ];
+
+            workoutB = [
+              "Pushup",
+              "Wide Pushup",
+              "Deficit Pushup",
+              "Diamond Pushup",
+              "Pause Pushup",
+              "Tempo Pushup",
+              "Hindu Pushup",
+              "Spiderman Pushup",
+              "Decline Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Pushup",
+            ];
+
+            workoutC = [
+              "Deficit Pushup",
+              "Decline Pushup",
+              "Diamond Pushup",
+              "Pause Pushup",
+              "Tempo Pushup",
+              "Hindu Pushup",
+              "Spiderman Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Decline Pushup",
+              "Diamond Pushup",
+              "Deficit Pushup",
+            ];
+
+            workoutD = [
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Pushup",
+              "Decline Pushup",
+              "Deficit Pushup",
+              "Pause Pushup",
+              "Tempo Pushup",
+              "Hindu Pushup",
+              "Spiderman Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Diamond Pushup",
+            ];
+          }
+
+          // WEEKS 13-16
+          else {
+            workoutA = [
+              "Archer Pushup",
+              "Deficit Pushup",
+              "Feet Elevated Pushup",
+              "Diamond Pushup",
+              "Pause Pushup",
+              "Tempo Pushup",
+              "Star Pushup",
+              "Spiderman Pushup",
+              "Hindu Pushup",
+              "Decline Pushup",
+              "Pushup",
+              "Wide Pushup",
+              "Deficit Pushup",
+              "Diamond Pushup",
+              "Archer Pushup",
+              "Feet Elevated Pushup",
+            ];
+
+            workoutB = [...workoutA];
+            workoutC = [...workoutA];
+            workoutD = [...workoutA];
+          }
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: "Upper Chest Focus",
+                  exercises: workoutA,
+                },
+                {
+                  name: "Mid Chest Focus",
+                  exercises: workoutB,
+                },
+                {
+                  name: "Stretch Focus",
+                  exercises: workoutC,
+                },
+                {
+                  name: "Chest Finisher",
+                  exercises: workoutD,
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
   },
+},
 
  {
   id: "bulking-journey",

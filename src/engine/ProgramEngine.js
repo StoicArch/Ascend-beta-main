@@ -147,25 +147,68 @@ class ProgramEngine {
     return workouts[workoutIndex] || null;
   }
 
-  static getTemplateWorkout() {
-    const template = this.getTodayWorkoutTemplate();
+  static applyHomeChestBuilderProgression(exercise) {
+  const week = this.getCurrentWeek();
 
-    if (!template) return [];
+  let rest = 30;
+  let sets = exercise.sets || 3;
 
-    return template.exercises
-      .map((name) => EXERCISES.find((exercise) => exercise.name === name))
-      .filter(Boolean);
+  if (week >= 5 && week <= 8) {
+    rest = 20;
+    sets = Math.max(sets, 3);
   }
 
-  static getTodayWorkout() {
-    const todayFocus = this.getTodayFocus();
+  if (week >= 9 && week <= 12) {
+    rest = 15;
+    sets = Math.max(sets, 3);
+  }
 
-    if (todayFocus.length > 0) {
-      return this.generateWorkoutFromFocus(todayFocus);
-    }
+  if (week >= 13) {
+    rest = 10;
+    sets = Math.max(sets, 4);
+  }
 
+  return {
+    ...exercise,
+    rest,
+    sets,
+  };
+}
+
+  static getTemplateWorkout() {
+  const program = this.getCurrentProgram();
+  const template = this.getTodayWorkoutTemplate();
+
+  if (!template) return [];
+
+  const workout = template.exercises
+    .map((name) => EXERCISES.find((exercise) => exercise.name === name))
+    .filter(Boolean);
+
+  if (program?.id === "home-chest-builder") {
+    return workout.map((exercise) =>
+      this.applyHomeChestBuilderProgression(exercise)
+    );
+  }
+
+  return workout;
+}
+
+ static getTodayWorkout() {
+  const program = this.getCurrentProgram();
+
+  if (program?.id === "home-chest-builder") {
     return this.getTemplateWorkout();
   }
+
+  const todayFocus = this.getTodayFocus();
+
+  if (todayFocus.length > 0) {
+    return this.generateWorkoutFromFocus(todayFocus);
+  }
+
+  return this.getTemplateWorkout();
+}
 
   static isRestDay() {
     return this.getTodayWorkout().length === 0;
@@ -214,7 +257,17 @@ class ProgramEngine {
   return false;
 }
 
-  static getCurrentTrackWorkouts() {
+ static getCurrentTrackWorkouts() {
+  const program = this.getCurrentProgram();
+  const week = this.getCurrentWeek();
+  const track = this.getCurrentTrack();
+
+  if (!program) return [];
+
+  if (program.id === "home-chest-builder") {
+    return program.tracks?.[4]?.weeks?.[week]?.workouts || [];
+  }
+
   const schedule = this.getProgramSchedule();
 
   if (schedule.length > 0) {
@@ -225,14 +278,9 @@ class ProgramEngine {
     }));
   }
 
-  const program = this.getCurrentProgram();
-  const week = this.getCurrentWeek();
-  const track = this.getCurrentTrack();
-
-  if (!program) return [];
-
   return program.tracks?.[track]?.weeks?.[week]?.workouts || [];
 }
+
 
 static getGlobalWorkoutNumber(week, workoutIndex, track) {
   return (Number(week || 1) - 1) * Number(track || 4) + workoutIndex + 1;

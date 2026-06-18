@@ -44,29 +44,33 @@ class ProgressEngine {
   }
 
   static advanceProgramWeekIfReady(programId, week) {
-    if (!programId) return;
+  if (!programId) return;
 
-    const profile = UserProfileEngine.getProfile();
-    const required = this.getRequiredWeeklyWorkouts();
-    const completed = this.getCompletedThisProgramWeek(programId, week);
+  const profile = UserProfileEngine.getProfile();
+  const required = this.getRequiredWeeklyWorkouts();
+  const completed = this.getCompletedThisProgramWeek(programId, week);
+  console.log("Required:", required);
+console.log("Completed:", completed.length);
+console.log("Program:", programId);
+console.log("Week:", week);
 
-    if (completed.length >= required) {
-      const totalWeeks =
-  Number(profile.programTotalWeeks || 24);
+  if (completed.length >= required) {
+    console.log("ADVANCING WEEK");
+    const totalWeeks = Number(profile.programTotalWeeks || 8);
+    const currentWeek = Number(profile.currentWeek || 1);
 
-const nextWeek = Math.min(
-  Number(profile.currentWeek || 1) + 1,
-  totalWeeks
-);
+    if (currentWeek < totalWeeks) {
       UserProfileEngine.saveProfile({
         ...profile,
-        currentWeek: nextWeek,
+        currentWeek: currentWeek + 1,
       });
-
-      localStorage.removeItem("workout");
-      localStorage.removeItem("workoutDate");
     }
+
+    localStorage.removeItem("workout");
+    localStorage.removeItem("workoutDate");
   }
+}
+
 
   static completeWorkout(data = {}) {
     if (this.isTodayCompleted()) {

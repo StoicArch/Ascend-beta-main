@@ -73,7 +73,10 @@ export default function Program() {
 };
 
   const totalWeeks = currentProgram.totalWeeks || 8;
-  const progressPercent = Math.round((status.week / totalWeeks) * 100);
+  const progressPercent = Math.min(
+  100,
+  Math.round(((status.week - 1) / totalWeeks) * 100)
+);
   const workouts = ProgramEngine.getCurrentTrackWorkouts();
   const workoutDays = status.workoutDays || [];
 

@@ -4,12 +4,16 @@ import UserProfileEngine from "./UserProfileEngine";
 class WorkoutPlannerEngine {
   static getUserEquipment() {
     const profile = UserProfileEngine.getProfile();
-    
-
-
 
     if (profile.location === "Gym") {
-      return ["Dumbbells", "Barbell", "Machine", "Cable", "Smith Machine", "Bodyweight"];
+      return [
+        "Dumbbells",
+        "Barbell",
+        "Machine",
+        "Cable",
+        "Smith Machine",
+        "Bodyweight",
+      ];
     }
 
     if (!profile.equipment || profile.equipment.length === 0) {
@@ -62,7 +66,11 @@ class WorkoutPlannerEngine {
 
         if (selected) {
           usedIds.push(selected.id);
-          workout.push(selected);
+
+          workout.push({
+            ...selected,
+            role: item.role || item.target,
+          });
         }
       }
     });
@@ -70,198 +78,184 @@ class WorkoutPlannerEngine {
     return workout;
   }
 
-  static getPlanForFocus(focusList) {
-    const focus = focusList.join(" ");
+  static getPlanForMuscle(muscle) {
+    const plans = {
+      Chest: [
+        {
+          target: "Upper Chest",
+          fallbackMuscle: "Chest",
+          count: 1,
+          role: "Upper chest press",
+        },
+        {
+          target: "Mid Chest",
+          fallbackMuscle: "Chest",
+          count: 1,
+          role: "Main chest press",
+        },
+        {
+          target: "Chest Isolation",
+          fallbackMuscle: "Chest",
+          count: 1,
+          role: "Chest squeeze",
+        },
+        {
+          target: "Chest Stretch",
+          fallbackMuscle: "Chest",
+          count: 1,
+          role: "Chest stretch",
+        },
+      ],
 
-    if (focus.includes("Chest")) {
-      return [
-        { target: "Upper Chest", fallbackMuscle: "Chest", count: 2 },
-        { target: "Mid Chest", fallbackMuscle: "Chest", count: 1 },
-        { target: "Chest Isolation", fallbackMuscle: "Chest", count: 1 },
-        { target: "Triceps", fallbackMuscle: "Triceps", count: 1 },
-      ];
-    }
+      Back: [
+        {
+          target: "Lats",
+          fallbackMuscle: "Back",
+          count: 2,
+          role: "Lat builder",
+        },
+        {
+          target: "Upper Back",
+          fallbackMuscle: "Back",
+          count: 2,
+          role: "Upper back thickness",
+        },
+      ],
 
-    if (focus.includes("Back")) {
-      return [
-        { target: "Lats", fallbackMuscle: "Back", count: 2 },
-        { target: "Upper Back", fallbackMuscle: "Back", count: 2 },
-        { target: "Mid Back", fallbackMuscle: "Back", count: 1 },
-        { target: "Traps", fallbackMuscle: "Back", count: 1 },
-      ];
-    }
+      Shoulders: [
+        {
+          target: "Front Delts",
+          fallbackMuscle: "Shoulders",
+          count: 1,
+          role: "Front delt press",
+        },
+        {
+          target: "Side Delts",
+          fallbackMuscle: "Shoulders",
+          count: 1,
+          role: "Side delt width",
+        },
+        {
+          target: "Rear Delts",
+          fallbackMuscle: "Shoulders",
+          count: 2,
+          role: "Rear delt builder",
+        },
+      ],
 
-    if (focus.includes("Shoulders")) {
-      return [
-        { target: "Side Delts", fallbackMuscle: "Shoulders", count: 2 },
-        { target: "Rear Delts", fallbackMuscle: "Shoulders", count: 1 },
-        { target: "Front Delts", fallbackMuscle: "Shoulders", count: 1 },
-      ];
-    }
+      Biceps: [
+        {
+          target: "Bicep Stretch",
+          fallbackMuscle: "Biceps",
+          count: 1,
+          role: "Stretch curl",
+        },
+        {
+          target: "Bicep Width",
+          fallbackMuscle: "Biceps",
+          count: 1,
+          role: "Width curl",
+        },
+      ],
 
-    if (focus.includes("Biceps")) {
-      return [
-        { target: "Biceps", fallbackMuscle: "Biceps", count: 3 },
-      ];
-    }
+      Triceps: [
+        {
+          target: "Overhead Triceps",
+          fallbackMuscle: "Triceps",
+          count: 1,
+          role: "Long head triceps",
+        },
+        {
+          target: "Pushdown Triceps",
+          fallbackMuscle: "Triceps",
+          count: 1,
+          role: "Pushdown triceps",
+        },
+      ],
 
-    if (focus.includes("Triceps")) {
-      return [
-        { target: "Triceps", fallbackMuscle: "Triceps", count: 3 },
-      ];
-    }
+      Quads: [
+        {
+          target: "Quads",
+          fallbackMuscle: "Quads",
+          count: 3,
+          role: "Quad builder",
+        },
+      ],
 
-    if (focus.includes("Quads")) {
-      return [
-        { target: "Quads", fallbackMuscle: "Quads", count: 4 },
-        { target: "Calves", fallbackMuscle: "Calves", count: 1 },
-      ];
-    }
+      Hamstrings: [
+        {
+          target: "Hamstrings",
+          fallbackMuscle: "Hamstrings",
+          count: 3,
+          role: "Hamstring builder",
+        },
+      ],
 
-    if (focus.includes("Hamstrings")) {
-      return [
-        { target: "Hamstrings", fallbackMuscle: "Hamstrings", count: 3 },
-        { target: "Glutes", fallbackMuscle: "Glutes", count: 1 },
-      ];
-    }
+      Glutes: [
+        {
+          target: "Glutes",
+          fallbackMuscle: "Glutes",
+          count: 2,
+          role: "Glute builder",
+        },
+        {
+          target: "Side Glutes",
+          fallbackMuscle: "Glutes",
+          count: 1,
+          role: "Side glutes",
+        },
+      ],
 
-    if (focus.includes("Glutes")) {
-      return [
-        { target: "Glutes", fallbackMuscle: "Glutes", count: 3 },
-        { target: "Side Glutes", fallbackMuscle: "Glutes", count: 1 },
-      ];
-    }
+      Abs: [
+        {
+          target: "Abs",
+          fallbackMuscle: "Abs",
+          count: 2,
+          role: "Core",
+        },
+        {
+          target: "Lower Abs",
+          fallbackMuscle: "Abs",
+          count: 1,
+          role: "Lower abs",
+        },
+        {
+          target: "Obliques",
+          fallbackMuscle: "Abs",
+          count: 1,
+          role: "Obliques",
+        },
+      ],
 
-    if (focus.includes("Abs")) {
-      return [
-        { target: "Abs", fallbackMuscle: "Abs", count: 2 },
-        { target: "Lower Abs", fallbackMuscle: "Abs", count: 1 },
-        { target: "Obliques", fallbackMuscle: "Abs", count: 1 },
-      ];
-    }
+      Conditioning: [
+        {
+          target: "Conditioning",
+          fallbackMuscle: "Conditioning",
+          count: 2,
+          role: "Conditioning",
+        },
+      ],
+    };
 
-    return focusList.map((item) => ({
-      target: item,
-      fallbackMuscle: item,
-      count: 3,
-    }));
+    return plans[muscle] || [
+      {
+        target: muscle,
+        fallbackMuscle: muscle,
+        count: 2,
+        role: muscle,
+      },
+    ];
   }
 
- 
+  static generateWorkout(focusList = []) {
+    const focus = Array.isArray(focusList) ? focusList : [focusList];
 
-    
-  static generateWorkout(focusList) {
-  const profile = UserProfileEngine.getProfile();
-  const programId = profile.programId;
-  const focus = focusList.join(" ");
+    const targetPlan = focus.flatMap((muscle) =>
+      this.getPlanForMuscle(muscle)
+    );
 
-  if (programId === "skinny-to-jacked" && focus.includes("Chest")) {
-    return this.buildFromTargets([
-      { target: "Upper Chest", fallbackMuscle: "Chest", count: 3 },
-      { target: "Mid Chest", fallbackMuscle: "Chest", count: 1 },
-      { target: "Chest Isolation", fallbackMuscle: "Chest", count: 1 },
-    ]);
+    return this.buildFromTargets(targetPlan);
   }
-
-  if (programId === "skinny-to-jacked" && focus.includes("Back")) {
-    return this.buildFromTargets([
-      { target: "Upper Back", fallbackMuscle: "Back", count: 3 },
-      { target: "Lats", fallbackMuscle: "Back", count: 2 },
-      { target: "Traps", fallbackMuscle: "Back", count: 1 },
-    ]);
-  }
-
-  if (programId === "skinny-to-jacked" && focus.includes("Shoulders")) {
-    return this.buildFromTargets([
-      { target: "Side Delts", fallbackMuscle: "Shoulders", count: 3 },
-      { target: "Rear Delts", fallbackMuscle: "Shoulders", count: 1 },
-      { target: "Front Delts", fallbackMuscle: "Shoulders", count: 1 },
-    ]);
-  }
-
-  if (programId === "8-week-shred" && focus.includes("Chest")) {
-    return this.buildFromTargets([
-      { target: "Upper Chest", fallbackMuscle: "Chest", count: 1 },
-      { target: "Mid Chest", fallbackMuscle: "Chest", count: 1 },
-      { target: "Chest Isolation", fallbackMuscle: "Chest", count: 1 },
-      { target: "Triceps", fallbackMuscle: "Triceps", count: 1 },
-      { target: "Conditioning", fallbackMuscle: "Conditioning", count: 1 },
-    ]);
-  }
-
-  if (programId === "8-week-shred" && focus.includes("Back")) {
-    return this.buildFromTargets([
-      { target: "Lats", fallbackMuscle: "Back", count: 2 },
-      { target: "Upper Back", fallbackMuscle: "Back", count: 1 },
-      { target: "Mid Back", fallbackMuscle: "Back", count: 1 },
-      { target: "Conditioning", fallbackMuscle: "Conditioning", count: 1 },
-    ]);
-  }
-
-  if (programId === "8-week-shred" && focus.includes("Quads")) {
-    return this.buildFromTargets([
-      { target: "Quads", fallbackMuscle: "Quads", count: 3 },
-      { target: "Hamstrings", fallbackMuscle: "Hamstrings", count: 1 },
-      { target: "Conditioning", fallbackMuscle: "Conditioning", count: 1 },
-    ]);
-  }
-
-  if (programId === "8-week-shred" && focus.includes("Shoulders")) {
-    return this.buildFromTargets([
-      { target: "Side Delts", fallbackMuscle: "Shoulders", count: 1 },
-      { target: "Rear Delts", fallbackMuscle: "Shoulders", count: 1 },
-      { target: "Front Delts", fallbackMuscle: "Shoulders", count: 1 },
-      { target: "Abs", fallbackMuscle: "Abs", count: 1 },
-      { target: "Conditioning", fallbackMuscle: "Conditioning", count: 1 },
-    ]);
-  }
-
-  if (programId === "bulking-journey" && focus.includes("Chest")) {
-  return this.buildFromTargets([
-    { target: "Mid Chest", fallbackMuscle: "Chest", count: 2 },
-    { target: "Upper Chest", fallbackMuscle: "Chest", count: 2 },
-    { target: "Lower Chest", fallbackMuscle: "Chest", count: 1 },
-    { target: "Triceps", fallbackMuscle: "Triceps", count: 1 },
-  ]);
-}
-
-if (programId === "bulking-journey" && focus.includes("Back")) {
-  return this.buildFromTargets([
-    { target: "Lats", fallbackMuscle: "Back", count: 2 },
-    { target: "Upper Back", fallbackMuscle: "Back", count: 2 },
-    { target: "Mid Back", fallbackMuscle: "Back", count: 1 },
-    { target: "Traps", fallbackMuscle: "Back", count: 1 },
-  ]);
-}
-
-if (programId === "bulking-journey" && focus.includes("Shoulders")) {
-  return this.buildFromTargets([
-    { target: "Front Delts", fallbackMuscle: "Shoulders", count: 2 },
-    { target: "Side Delts", fallbackMuscle: "Shoulders", count: 2 },
-    { target: "Rear Delts", fallbackMuscle: "Shoulders", count: 1 },
-  ]);
-}
-
-if (programId === "bulking-journey" && focus.includes("Quads")) {
-  return this.buildFromTargets([
-    { target: "Quads", fallbackMuscle: "Quads", count: 4 },
-    { target: "Glutes", fallbackMuscle: "Glutes", count: 1 },
-    { target: "Calves", fallbackMuscle: "Calves", count: 1 },
-  ]);
-}
-
-if (programId === "bulking-journey" && focus.includes("Hamstrings")) {
-  return this.buildFromTargets([
-    { target: "Hamstrings", fallbackMuscle: "Hamstrings", count: 3 },
-    { target: "Glutes", fallbackMuscle: "Glutes", count: 2 },
-    { target: "Calves", fallbackMuscle: "Calves", count: 1 },
-  ]);
-}
-
-  const plan = this.getPlanForFocus(focusList);
-  return this.buildFromTargets(plan);
-}
-  
 }
 
 export default WorkoutPlannerEngine;

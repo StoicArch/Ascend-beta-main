@@ -34,7 +34,9 @@ export default function ProgramSetup() {
 
   const program = PROGRAMS.find((p) => String(p.id) === String(id));
 
-  const [track, setTrack] = useState(4);
+ const isHomeChestBuilder = program?.id === "home-chest-builder";
+
+const [track, setTrack] = useState(isHomeChestBuilder ? 4 : 4);
   const [selectedDays, setSelectedDays] = useState([]);
   const [dayFocus, setDayFocus] = useState({});
 
@@ -89,19 +91,21 @@ const [goalWeight, setGoalWeight] = useState(profile.goalWeight || "");
       return;
     }
 
-    const missingFocus = selectedDays.some(
-      (day) => !dayFocus[day] || dayFocus[day].length === 0
-    );
+    const missingFocus =
+  !isHomeChestBuilder &&
+  selectedDays.some(
+    (day) => !dayFocus[day] || dayFocus[day].length === 0
+  );
 
-    if (missingFocus) {
-      alert("Please choose at least one muscle focus for each selected day.");
-      return;
-    }
+if (missingFocus) {
+  alert("Please choose at least one muscle focus for each selected day.");
+  return;
+}
 
-    const programSchedule = selectedDays.map((day) => ({
-      day,
-      focus: dayFocus[day],
-    }));
+   const programSchedule = selectedDays.map((day) => ({
+  day,
+  focus: isHomeChestBuilder ? ["Chest"] : dayFocus[day],
+}));
 
    const profile = UserProfileEngine.getProfile();
 
@@ -125,8 +129,10 @@ const nutrition = NutritionEngine.getProgramNutrition({
     UserProfileEngine.saveProfile({
   ...profile,
 
+
   program: program.name,
   programId: program.id,
+  programTotalWeeks: program.totalWeeks,
   programTrack: track,
   programWorkoutDays: selectedDays,
   programSchedule,
@@ -193,25 +199,43 @@ const nutrition = NutritionEngine.getProgramNutrition({
 </div>
 
       <div className="setup-card">
-        <h2>Choose Training Version</h2>
-        <p>Pick how many days per week you can realistically train.</p>
+  <h2>Choose Training Version</h2>
 
-        <div className="track-grid">
-          {[3, 4, 5, 6].map((num) => (
-            <button
-              key={num}
-              className={track === num ? "active" : ""}
-              onClick={() => {
-                setTrack(num);
-                setSelectedDays([]);
-                setDayFocus({});
-              }}
-            >
-              {num} Days
-            </button>
-          ))}
-        </div>
+  {isHomeChestBuilder ? (
+    <>
+      <p>
+        Home Chest Builder is fixed at 4 chest days per week because the whole
+        program is built around high-frequency chest volume.
+      </p>
+
+      <div className="track-grid">
+        <button className="active" type="button">
+          4 Days
+        </button>
       </div>
+    </>
+  ) : (
+    <>
+      <p>Pick how many days per week you can realistically train.</p>
+
+      <div className="track-grid">
+        {[3, 4, 5, 6].map((num) => (
+          <button
+            key={num}
+            className={track === num ? "active" : ""}
+            onClick={() => {
+              setTrack(num);
+              setSelectedDays([]);
+              setDayFocus({});
+            }}
+          >
+            {num} Days
+          </button>
+        ))}
+      </div>
+    </>
+  )}
+</div>
 
       <div className="setup-card">
         <h2>Choose Workout Days</h2>
@@ -230,33 +254,56 @@ const nutrition = NutritionEngine.getProgramNutrition({
         </div>
       </div>
 
-      {selectedDays.length > 0 && (
-        <div className="setup-card">
-          <h2>Choose Muscle Focus Per Day</h2>
-          <p>You can pick more than one muscle group per workout day.</p>
+      {selectedDays.length > 0 && !isHomeChestBuilder && (
+  <div className="setup-card">
+    <h2>Choose Muscle Focus Per Day</h2>
+    <p>You can pick more than one muscle group per workout day.</p>
 
-          {selectedDays.map((day) => (
-            <div key={day} className="focus-row">
-              <strong>{day}</strong>
+    {selectedDays.map((day) => (
+      <div key={day} className="focus-row">
+        <strong>{day}</strong>
 
-              <div className="focus-grid">
-                {FOCUS_OPTIONS.map((focus) => (
-                  <button
-                    key={focus}
-                    type="button"
-                    className={
-                      dayFocus[day]?.includes(focus) ? "active" : ""
-                    }
-                    onClick={() => toggleFocus(day, focus)}
-                  >
-                    {focus}
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div className="focus-grid">
+          {FOCUS_OPTIONS.map((focus) => (
+            <button
+              key={focus}
+              type="button"
+              className={
+                dayFocus[day]?.includes(focus) ? "active" : ""
+              }
+              onClick={() => toggleFocus(day, focus)}
+            >
+              {focus}
+            </button>
           ))}
         </div>
-      )}
+      </div>
+    ))}
+  </div>
+)}
+
+{selectedDays.length > 0 && isHomeChestBuilder && (
+  <div className="setup-card">
+    <h2>Chest Focus Locked</h2>
+    <p>
+      Home Chest Builder is a 16-week chest specialization program. Every
+      selected workout day will automatically be assigned to Chest.
+    </p>
+
+    {selectedDays.map((day) => (
+      <div key={day} className="focus-row">
+        <strong>{day}</strong>
+
+        <div className="focus-grid">
+          <button className="active" type="button">
+            Chest
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
 
       <button className="start-setup-btn" onClick={startProgram}>
         Start {program.name}
