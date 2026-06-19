@@ -26,12 +26,14 @@ if (hiddenRoutes.includes(location.pathname)) {
     </button>
 
     <button
-      onClick={() => navigate("/programs")}
-      className={isActive("/programs") ? "mobile-active" : ""}
-    >
-      <span>📅</span>
-      Programs
-    </button>
+  id="tour-programs"
+  onClick={() => navigate("/programs")}
+  className={isActive("/programs") ? "mobile-active" : ""}
+>
+  <span>📅</span>
+  Programs
+</button>
+      
 
     <button
       className="center-button"
@@ -49,12 +51,13 @@ if (hiddenRoutes.includes(location.pathname)) {
     </button>
 
     <button
-      onClick={() => navigate("/ai-coach")}
-      className={isActive("/ai-coach") ? "mobile-active" : ""}
-    >
-      <span>🤖</span>
-      AI
-    </button>
+  id="tour-ai-nav"
+  onClick={() => navigate("/ai-coach")}
+  className={isActive("/ai-coach") ? "mobile-active" : ""}
+>
+  <span>🤖</span>
+  AI
+</button>
   </nav>
 );
 }
