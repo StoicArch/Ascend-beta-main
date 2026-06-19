@@ -32,6 +32,66 @@ export default function LandingPage() {
             chasing real transformation.
           </p>
 
+          <div className="hero-comparison">
+
+  <div className="comparison-header">
+    Why people switch to ASCEND
+  </div>
+
+  <div className="comparison-grid">
+
+    <div className="comparison-top"></div>
+    <div className="comparison-top">ASCEND</div>
+    <div className="comparison-top">Apps</div>
+    <div className="comparison-top">Coach</div>
+    <div className="comparison-top">Influencer</div>
+
+    <div>Programs</div>
+    <div>✅</div>
+    <div>⚠️</div>
+    <div>✅</div>
+    <div>✅</div>
+
+    <div>Progressive Overload</div>
+    <div>✅</div>
+    <div>⚠️</div>
+    <div>✅</div>
+    <div>❌</div>
+
+    <div>Weekly Reviews</div>
+    <div>✅</div>
+    <div>❌</div>
+    <div>✅</div>
+    <div>❌</div>
+
+    <div>Calorie Tracking</div>
+    <div>✅</div>
+    <div>⚠️</div>
+    <div>❌</div>
+    <div>❌</div>
+
+    <div>AI Coach</div>
+    <div>✅</div>
+    <div>❌</div>
+    <div>❌</div>
+    <div>❌</div>
+
+    <div>24/7 Available</div>
+    <div>✅</div>
+    <div>✅</div>
+    <div>❌</div>
+    <div>❌</div>
+
+    <div>Price</div>
+    <div>$9.99</div>
+    <div>$10-30</div>
+    <div>$100+</div>
+    <div>$50+</div>
+
+  </div>
+
+</div>
+
           <div className="hero-buttons">
 
             <button
@@ -48,18 +108,18 @@ export default function LandingPage() {
           <div className="hero-stats">
 
             <div className="stat">
-              <h2>12k+</h2>
-              <span>Tracked Workouts</span>
+              <h2>AI</h2>
+              <span>Workout and Nutrition Guidance</span>
             </div>
 
             <div className="stat">
-              <h2>98%</h2>
-              <span>Consistency Rate</span>
+              <h2>Programs</h2>
+              <span>Built fr results</span>
             </div>
 
             <div className="stat">
               <h2>24/7</h2>
-              <span>AI Coaching</span>
+              <span>Coaching Access</span>
             </div>
 
           </div>

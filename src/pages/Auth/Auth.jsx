@@ -13,18 +13,38 @@ export default function Auth() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const onboardingCompleted = localStorage.getItem("onboardingCompleted");
+ useEffect(() => {
+  const token = localStorage.getItem("token");
+  const onboardingCompleted = localStorage.getItem("onboardingCompleted");
 
-    if (token) {
+  const pendingProgram =
+    localStorage.getItem("pendingProgram");
+
+  if (token) {
+
+    if (pendingProgram) {
+
       if (onboardingCompleted === "true") {
-        navigate("/dashboard", { replace: true });
+        navigate(
+          `/program-setup/${pendingProgram}`,
+          { replace: true }
+        );
       } else {
-        navigate("/onboarding", { replace: true });
+        navigate("/onboarding", {
+          replace: true,
+        });
       }
+
+      return;
     }
-  }, [navigate]);
+
+    if (onboardingCompleted === "true") {
+      navigate("/dashboard", { replace: true });
+    } else {
+      navigate("/onboarding", { replace: true });
+    }
+  }
+}, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,11 +81,24 @@ export default function Auth() {
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("lastLogin", String(Date.now()));
 
-      if (mode === "signup") {
-        navigate("/onboarding", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
+     const redirectProgram =
+  localStorage.getItem("pendingProgram");
+
+if (mode === "signup") {
+  navigate("/onboarding", { replace: true });
+} else {
+  if (redirectProgram) {
+    navigate(`/program-setup/${redirectProgram}`, {
+      replace: true,
+    });
+  } else {
+    navigate("/dashboard", {
+      replace: true,
+    });
+  }
+}
+
+
     } catch (err) {
       setError("Could not connect to server");
     }

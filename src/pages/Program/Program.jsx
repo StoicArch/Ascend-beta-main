@@ -27,8 +27,10 @@ export default function Program() {
         </div>
 
         <div className="program-summary-card">
+          <h1>YOUR NEXT STEP</h1>
           <h2>No Program Selected</h2>
-          <p>Go to Programs and choose one to begin.</p>
+          <p>Programs create your workouts, track progress, and help you achieve your fitness goals.</p>
+          <p1>Choose a program to get started:</p1>
         </div>
       </div>
     );

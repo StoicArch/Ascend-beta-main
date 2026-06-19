@@ -343,9 +343,29 @@ const finish = () => {
   localStorage.removeItem("workout");
   localStorage.removeItem("workoutDate");
 
-  setTimeout(() => {
-    navigate("/dashboard");
-  }, 1200);
+ setTimeout(() => {
+
+  const pendingProgram =
+    localStorage.getItem(
+      "pendingProgram"
+    );
+
+  if (pendingProgram) {
+
+    localStorage.removeItem(
+      "pendingProgram"
+    );
+
+    navigate(
+      `/program-setup/${pendingProgram}`
+    );
+
+    return;
+  }
+
+  navigate("/dashboard");
+
+}, 1200);
 };
 
 

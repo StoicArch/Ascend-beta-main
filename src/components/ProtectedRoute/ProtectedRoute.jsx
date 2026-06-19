@@ -12,8 +12,23 @@ export default function ProtectedRoute({
   const onboardingCompleted = localStorage.getItem("onboardingCompleted");
 
   if (!token || !user) {
-    return <Navigate to="/auth" replace />;
+  const currentPath =
+    window.location.pathname;
+
+  const match =
+    currentPath.match(
+      /\/program-setup\/(.+)/
+    );
+
+  if (match) {
+    localStorage.setItem(
+      "pendingProgram",
+      match[1]
+    );
   }
+
+  return <Navigate to="/auth" replace />;
+}
 
   if (requireOnboarding && onboardingCompleted !== "true") {
     return <Navigate to="/onboarding" replace />;
