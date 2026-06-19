@@ -1,0 +1,47 @@
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  z-index: 9998;
+}
+
+.tour-highlight {
+  position: relative;
+  z-index: 10000 !important;
+  box-shadow:
+    0 0 0 4px #7c3aed,
+    0 0 40px rgba(124,58,237,.8);
+  border-radius: 20px;
+}
+
+.tour-box {
+  position: fixed;
+  left: 50%;
+  bottom: 110px;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 420px;
+  background: #111827;
+  color: white;
+  padding: 20px;
+  border-radius: 20px;
+  z-index: 10001;
+}
+
+.tour-box p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.tour-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tour-actions button {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+}

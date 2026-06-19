@@ -11,8 +11,17 @@ import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
 import GoalEngine from "../../engine/GoalEngine";
 import WorkoutSessionEngine from "../../engine/WorkoutSessionEngine";
 import FoodLogEngine from "../../engine/FoodLogEngine"
+import AppTour from "../../components/AppTour/AppTour";
 
 export default function Dashboard() {
+  const [showTour, setShowTour] =
+  React.useState(
+    !localStorage.getItem(
+      "ascendTourCompleted"
+    )
+  );
+
+
 const [missedWorkoutNotice, setMissedWorkoutNotice] = React.useState(null);
 
 useEffect(() => {
@@ -111,17 +120,21 @@ const hasWeeklyReviewAlert = true;
   </button>
 
   
-  <button
-    className="top-btn"
-    onClick={() => navigate("/workout")}
-  >
+ <button
+  id="tour-start-workout"
+  className="top-btn"
+  onClick={() => navigate("/workout")}
+>
     Start Workout
   </button>
 
           </div>
         </div>
 
-        <section className="current-program-card">
+       <section
+  id="tour-program-card"
+  className="current-program-card"
+>
           <div>
             <span>Current Program</span>
 
@@ -152,6 +165,7 @@ const hasWeeklyReviewAlert = true;
         </section>
 
         <section
+  id="tour-weekly-review"
   className="weekly-review-banner"
   onClick={() => navigate("/weekly-review")}
 >
@@ -179,11 +193,12 @@ const hasWeeklyReviewAlert = true;
 
         <section className="metrics-grid">
           
-          <div
-            className="metric-card clickable"
-            onClick={() => navigate("/weight")}
-          >
-            <span>Weight</span>
+         <div
+  id="tour-weight"
+  className="metric-card clickable"
+  onClick={() => navigate("/weight")}
+>
+  <span>Weight</span>
             <h2>{currentWeight ? `${currentWeight}kg` : "--"}</h2>
             <p>
               {currentWeight
@@ -209,7 +224,10 @@ const hasWeeklyReviewAlert = true;
             <p>Workouts Finished</p>
           </div>
 
-          <div className="metric-card recovery">
+          <div
+  id="tour-recovery"
+  className="metric-card recovery"
+>
             <span>Recovery Score</span>
             <h2>{recovery}%</h2>
             <p>
@@ -318,7 +336,10 @@ const hasWeeklyReviewAlert = true;
             )}
           </div>
 
-          <div className="dashboard-card ai-card">
+         <div
+  id="tour-ai-coach"
+  className="dashboard-card ai-card"
+>
             <div className="card-header">
               <h2>AI Coach</h2>
               <span>Adaptive Intelligence</span>
@@ -335,6 +356,7 @@ const hasWeeklyReviewAlert = true;
               </button>
 
               <button
+  id="tour-nutrition"
   className="ai-action"
   onClick={() => navigate("/food-scan-test")}
 >
@@ -364,37 +386,20 @@ const hasWeeklyReviewAlert = true;
         </section>
       </main>
 
-      <nav className="mobile-nav">
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="mobile-active"
-        >
-          <span>🏠</span>
-          Home
-        </button>
+      
 
-        <button onClick={() => navigate("/programs")}>
-          <span>📚</span>
-          Programs
-        </button>
+      {showTour && (
+  <AppTour
+    onFinish={() => {
+      localStorage.setItem(
+        "ascendTourCompleted",
+        "true"
+      );
 
-        <button
-          className="center-button"
-          onClick={() => navigate("/workout")}
-        >
-          <span>＋</span>
-        </button>
-
-        <button onClick={() => navigate("/weekly-review")}>
-          <span>📊</span>
-          Weekly Review
-        </button>
-
-        <button onClick={() => navigate("/ai-coach")}>
-          <span>🤖</span>
-          AI
-        </button>
-      </nav>
+      setShowTour(false);
+    }}
+  />
+)}
     </div>
   );
 }
