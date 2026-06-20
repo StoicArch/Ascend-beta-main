@@ -1,11 +1,34 @@
 import React, { useState } from "react";
 import FoodLogEngine from "../../engine/FoodLogEngine";
+import "./FoodScanTest.css";
+import UserProfileEngine from "../../engine/UserProfileEngine";
 
 export default function FoodScanTest() {
+  const profile = UserProfileEngine.getProfile();
+
+const todayCalories =
+  FoodLogEngine.getTodayCalories();
+
+const todayProtein =
+  FoodLogEngine.getTodayProtein();
+
+const caloriePercent = Math.min(
+  100,
+  Math.round(
+    (todayCalories / profile.calories) * 100
+  )
+);
+
+const proteinPercent = Math.min(
+  100,
+  Math.round(
+    (todayProtein / profile.protein) * 100
+  )
+);
     const [foodData, setFoodData] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [imageBase64, setImageBase64] = useState("");
-  const [result, setResult] = useState("");
+  
   const [loading, setLoading] = useState(false);
 
  const handleImage = (e) => {
@@ -46,7 +69,7 @@ export default function FoodScanTest() {
     if (!imageBase64 || loading) return;
 
     setLoading(true);
-    setResult("");
+   
 
     try {
       const response = await fetch(
@@ -74,35 +97,39 @@ setFoodData(parsedFood);
 
       console.log(data);
 
-      setResult(JSON.stringify(data, null, 2));
+      
     } catch (err) {
-      setResult("Vision test failed.");
+     
     }
 
     setLoading(false);
   };
 
   return (
-   <div
-  style={{
-    padding: "20px",
-    paddingBottom: "120px",
-    color: "white",
-    minHeight: "100vh",
-    overflowY: "auto",
-  }}
->
-      <h1>Food Scan Test</h1>
+  <div className="food-page">
 
-      <input
-  type="file"
-  accept="image/*"
-  capture="environment"
-  onChange={handleImage}
-/>
+      <h1 className="food-title">
+  AI Nutrition Scanner
+</h1>
+
+<p className="food-subtitle">
+  Take a photo of your meal and let ASCEND estimate the calories and macros.
+</p>
+
+     <div className="upload-card">
+
+  <input
+    type="file"
+    accept="image/*"
+    capture="environment"
+    onChange={handleImage}
+  />
+
+</div>
 
       {imagePreview && (
         <img
+        className="food-preview"
           src={imagePreview}
           alt="Food preview"
           style={{
@@ -117,6 +144,7 @@ setFoodData(parsedFood);
       )}
 
       <button
+      className="scan-btn"
         onClick={testVision}
         disabled={loading || !imageBase64}
         style={{
@@ -127,57 +155,97 @@ setFoodData(parsedFood);
           fontWeight: "800",
         }}
       >
-        {loading ? "Testing..." : "Test Vision"}
+        {loading ? "Testing..." : "LOG TODAY'S MEAL"}
       </button>
 
-      {result && (
-        <pre
-          style={{
-            marginTop: "20px",
-            whiteSpace: "pre-wrap",
-            background: "#111",
-            padding: "16px",
-            borderRadius: "12px",
-          }}
-        >
-          {result}
-        </pre>
-      )}
+     
+     {foodData && (
 
-      {foodData && (
-  <button
-    onClick={() => {
-      FoodLogEngine.saveMeal(foodData);
-      alert("Meal Saved");
+  <div className="food-result-card">
 
-      alert(
-  JSON.stringify(
-    FoodLogEngine.getMeals(),
-    null,
-    2
-  )
-);
-    }}
+    <h2>
+      {foodData.name || "Meal Detected"}
+    </h2>
 
+    <div className="macro-grid">
 
-  >
-    Save Meal
-  </button>
+      <div>
+        <span>Calories</span>
+        <h3>{foodData.calories}</h3>
+      </div>
+
+      <div>
+        <span>Protein</span>
+        <h3>{foodData.protein}g</h3>
+      </div>
+
+      <div>
+        <span>Carbs</span>
+        <h3>{foodData.carbs}g</h3>
+      </div>
+
+      <div>
+        <span>Fat</span>
+        <h3>{foodData.fat}g</h3>
+      </div>
+
+    </div>
+
+    <button
+      className="save-meal-btn"
+      onClick={() => {
+        FoodLogEngine.saveMeal(foodData);
+        alert("Meal Saved ✅");
+      }}
+    >
+      Save Meal
+    </button>
+
+  </div>
+
 )}
 
-<button
-  onClick={() => {
-    alert(
-      JSON.stringify(
-        FoodLogEngine.getMeals(),
-        null,
-        2
-      )
-    );
-  }}
->
-  View Meals
-</button>
+<div className="today-nutrition-card">
+
+  <h2>
+    Today's Nutrition
+  </h2>
+
+  <p>
+    Calories
+  </p>
+
+  <div className="nutrition-bar">
+    <div
+      className="nutrition-fill"
+      style={{
+        width: `${caloriePercent}%`
+      }}
+    />
+  </div>
+
+  <h3>
+    {todayCalories}/{profile.calories}
+  </h3>
+
+  <p>
+    Protein
+  </p>
+
+  <div className="nutrition-bar">
+    <div
+      className="nutrition-fill"
+      style={{
+        width: `${proteinPercent}%`
+      }}
+    />
+  </div>
+
+  <h3>
+    {todayProtein}/{profile.protein}g
+  </h3>
+
+</div>
 
 
     </div>

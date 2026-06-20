@@ -18,6 +18,8 @@ export default function ActiveWorkout() {
   const [seconds, setSeconds] = useState(0);
   const [restTimer, setRestTimer] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [summary, setSummary] =
+  useState(null);
 
   useEffect(() => {
   if (!ProgramEngine.canAccessTodayWorkout()) {
@@ -196,9 +198,42 @@ export default function ActiveWorkout() {
 
     localStorage.removeItem(ACTIVE_SESSION_KEY);
 
-    alert("Workout Completed");
+    const summaryData =
+  exerciseHistory.map((exercise) => {
 
-    window.location.href = "/dashboard";
+    const pr =
+      ProgressiveOverloadEngine.getPersonalRecord(
+        exercise.exerciseName
+      );
+
+    const recommendation =
+      ProgressiveOverloadEngine.getRecommendation(
+        exercise.exerciseName
+      );
+
+    const achievement =
+  ProgressiveOverloadEngine.getWorkoutAchievement(
+    exercise.exerciseName
+  );
+
+return {
+  name: exercise.exerciseName,
+  weightPR: pr.bestWeight,
+  repPR: pr.bestReps,
+  recommendation: recommendation.message,
+  achievement: achievement.text,
+  reason: achievement.reason,
+};
+
+
+  });
+
+setSummary({
+  exercises: summaryData,
+  duration: seconds,
+});
+
+
   };
 
   const abandonWorkout = () => {
@@ -211,6 +246,75 @@ export default function ActiveWorkout() {
     localStorage.removeItem(ACTIVE_SESSION_KEY);
     window.location.href = "/workout";
   };
+  if (summary) {
+  return (
+    <div className="active-workout-page">
+
+      <h1>
+        Workout Complete ✅
+      </h1>
+
+      <p>
+        Duration:
+        {" "}
+        {formatTime(summary.duration)}
+      </p>
+
+      <div className="summary-list">
+
+        {summary.exercises.map((item, i) => (
+          <div
+            className="summary-card"
+            key={i}
+          >
+            <h3>{item.name}</h3>
+
+            <p>
+              Weight PR:
+              {" "}
+              {item.weightPR || "--"}kg
+            </p>
+
+            <h3
+  style={{
+    color: "#22c55e",
+    marginBottom: "10px",
+  }}
+>
+  {item.achievement}
+</h3>
+
+<p>
+  {item.reason}
+</p>
+
+            <p>
+              Rep PR:
+              {" "}
+              {item.repPR || "--"}
+            </p>
+
+            <p>
+              {item.recommendation}
+            </p>
+          </div>
+        ))}
+
+      </div>
+
+      <button
+        className="finish-btn"
+        onClick={() => {
+          window.location.href =
+            "/dashboard";
+        }}
+      >
+        Return To Dashboard
+      </button>
+
+    </div>
+  );
+}
 
   if (!loaded) {
     return (
@@ -263,17 +367,56 @@ export default function ActiveWorkout() {
               </div>
 
               <div className="progression-card">
-  <p>
-    PR Weight: {pr.bestWeight || "--"}kg
-  </p>
+
+  {pr.bestWeight === 0 &&
+   pr.bestReps === 0 ? (
+
+    <>
+      <p>
+        First time performing this exercise.
+      </p>
+
+      <p>
+        Today's performance will be used
+        to build future progression.
+      </p>
+    </>
+
+  ) : (
+
+    <>
+      <p>
+        PR Weight: {pr.bestWeight}kg
+      </p>
+
+      <p>
+        PR Reps: {pr.bestReps}
+      </p>
+
+      <p>
+  Goal Weight:
+  {" "}
+  {recommendation.recommendedWeight || "--"}kg
+</p>
+
+<div
+  className="progression-feedback"
+>
+  <h4>
+    {recommendation.increaseWeight
+      ? "🚀 Progression Unlocked"
+      : "🎯 Current Focus"}
+  </h4>
 
   <p>
-    PR Reps: {pr.bestReps || "--"}
+    {recommendation.message}
   </p>
+</div>
 
-  <p>
-    Suggested Weight: {recommendation.recommendedWeight || "--"}kg
-  </p>
+    </>
+
+  )}
+
 </div>
 
               <div className="exercise-badge">{exercise.sets} Sets</div>

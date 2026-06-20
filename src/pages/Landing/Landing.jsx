@@ -28,12 +28,11 @@ export default function LandingPage() {
             in the gym
           </h1>
 
-          <p>
-ASCEND builds your workouts,
-tracks nutrition,
-manages progression,
+       <p>
+ASCEND generates your workouts, tracks your nutrition,
+reviews your progress weekly, manages progressive overload,
 and tells you exactly what to do next.
-          </p>
+</p>
 
         
 
@@ -54,17 +53,17 @@ and tells you exactly what to do next.
 
             <div className="stat">
               <h2>AI</h2>
-              <span>Workout and Nutrition Guidance</span>
+<span>Coach, Nutrition & Recovery</span>
             </div>
 
             <div className="stat">
-              <h2>Programs</h2>
-              <span>Built for results</span>
+             <h2>Programs</h2>
+<span>Structured Transformations</span>
             </div>
 
             <div className="stat">
-              <h2>24/7</h2>
-              <span>Coaching Access</span>
+             <h2>Weekly</h2>
+<span>Progress Reviews</span>
             </div>
 
           </div>
@@ -184,6 +183,18 @@ and tells you exactly what to do next.
     <div>❌</div>
     <div>❌</div>
 
+    <div>Recovery Tracking</div>
+<div>✅</div>
+<div>❌</div>
+<div>⚠️</div>
+<div>❌</div>
+
+<div>Weight Tracking</div>
+<div>✅</div>
+<div>⚠️</div>
+<div>⚠️</div>
+<div>❌</div>
+
     <div>Price</div>
     <div>$9.99</div>
     <div>$10-30</div>
@@ -242,19 +253,19 @@ and tells you exactly what to do next.
           </div>
 
           <div className="feature-card">
-            <h3>Offline Training</h3>
-            <p>
-              Download workouts and train
-              without worrying about bad network.
-            </p>
+            <h3>Weekly Reviews</h3>
+<p>
+ASCEND analyzes your progress every week
+and adjusts your direction based on results.
+</p>
           </div>
 
           <div className="feature-card">
-            <h3>Exercise Library</h3>
-            <p>
-              Massive searchable database
-              with visuals and execution guides.
-            </p>
+           <h3>Weekly Reviews</h3>
+<p>
+ASCEND analyzes your progress every week
+and adjusts your direction based on results.
+</p>
           </div>
 
           <div className="feature-card">
@@ -266,11 +277,11 @@ and tells you exactly what to do next.
           </div>
 
           <div className="feature-card">
-            <h3>PR Analytics</h3>
-            <p>
-              Track your lifts, progression,
-              trends, and personal records.
-            </p>
+           <h3>AI Nutrition Tracking</h3>
+<p>
+Track calories, protein, carbs and fats
+without manually calculating everything.
+</p>
           </div>
 
           <div className="feature-card">
@@ -342,8 +353,8 @@ and tells you exactly what to do next.
               <li>Track Your Progress</li>
               <li>Weekly Progressions</li>
               <li>Early Access Features</li>
-              <li>AI Calorie Tracker (Soon)</li>
-              <li>Sleep Tracker (Soon)</li>
+              <li>Nutrition Tracking</li>
+              <li>Recovery Tracking</li>
               <li>Future Programs Included</li> 
             </ul>
 

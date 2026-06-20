@@ -9,6 +9,72 @@ class ProgressiveOverloadEngine {
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }
 
+  static getWorkoutAchievement(exerciseName) {
+  const history =
+    this.getExerciseHistory(exerciseName);
+
+  if (history.length <= 1) {
+    return {
+  type: "first-time",
+  text: "💪 First Time Exercise",
+  reason:
+    "We'll use today's performance to create future progression targets.",
+};
+  }
+
+  const current = history[0];
+  const previous = history[1];
+
+  const currentBestWeight = Math.max(
+    ...(current.sets || []).map(
+      (s) => Number(s.weight || 0)
+    )
+  );
+
+  const previousBestWeight = Math.max(
+    ...(previous.sets || []).map(
+      (s) => Number(s.weight || 0)
+    )
+  );
+
+  const currentBestReps = Math.max(
+    ...(current.sets || []).map(
+      (s) => Number(s.reps || 0)
+    )
+  );
+
+  const previousBestReps = Math.max(
+    ...(previous.sets || []).map(
+      (s) => Number(s.reps || 0)
+    )
+  );
+
+ if (currentBestWeight > previousBestWeight) {
+  return {
+    type: "weight-pr",
+    text: "🏆 New Weight PR",
+    reason:
+      "You lifted more weight than your previous best.",
+  };
+}
+
+ if (currentBestReps > previousBestReps) {
+  return {
+    type: "rep-pr",
+    text: "🔥 New Rep PR",
+    reason:
+      "You completed more reps than your previous best.",
+  };
+}
+
+  return {
+  type: "maintain",
+  text: "🎯 Maintain Weight",
+  reason:
+    "Target reps not fully achieved yet. Focus on beating your previous reps before increasing weight.",
+};
+}
+
   static getLastPerformance(exerciseName) {
     const history = this.getExerciseHistory(exerciseName);
     return history[0] || null;
@@ -71,18 +137,41 @@ class ProgressiveOverloadEngine {
       completedSets.length === last.sets.length && averageReps >= targetReps;
 
     if (allTargetsHit) {
-      return {
-        recommendedWeight: Number((averageWeight + 2.5).toFixed(1)),
-        increaseWeight: true,
-        message: "Increase weight next session.",
-      };
-    }
+  const nextWeight =
+    Number((averageWeight + 2.5).toFixed(1));
 
-    return {
-      recommendedWeight: Number(averageWeight.toFixed(1)),
-      increaseWeight: false,
-      message: "Stay at current weight and aim for more reps.",
-    };
+  return {
+    recommendedWeight: nextWeight,
+    increaseWeight: true,
+
+    message:
+      `Progression Ready 🚀
+
+Previous:
+${averageWeight.toFixed(1)}kg × ${Math.round(averageReps)}
+
+New Goal:
+${nextWeight}kg × ${targetReps}
+
+Push beyond target reps if possible.`,
+  };
+}
+
+return {
+  recommendedWeight: Number(
+    averageWeight.toFixed(1)
+  ),
+
+  increaseWeight: false,
+
+  message:
+    `Recovery Focus
+
+Stay at ${averageWeight.toFixed(1)}kg
+
+Goal:
+Beat ${Math.round(averageReps)} reps next workout.`,
+};
   }
 }
 

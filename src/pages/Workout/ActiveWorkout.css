@@ -233,3 +233,16 @@
   background: transparent;
   color: inherit;
 }
+
+.progression-feedback{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  background:rgba(124,58,237,.12);
+  border:1px solid rgba(124,58,237,.3);
+}
+
+.progression-feedback h4{
+  margin-bottom:6px;
+  color:#a855f7;
+}

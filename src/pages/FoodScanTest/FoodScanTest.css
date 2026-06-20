@@ -1,0 +1,144 @@
+.food-page{
+  min-height:100vh;
+  background:#050505;
+  color:white;
+  padding:24px;
+  padding-bottom:120px;
+}
+
+.food-title{
+  font-size:32px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.food-subtitle{
+  color:#888;
+  line-height:1.6;
+  margin-bottom:24px;
+}
+
+.upload-card{
+  background:#101010;
+  border:2px dashed rgba(255,255,255,.08);
+  border-radius:24px;
+  padding:24px;
+  text-align:center;
+}
+
+.upload-card input{
+  width:100%;
+}
+
+.food-preview{
+  width:100%;
+  border-radius:20px;
+  margin-top:20px;
+}
+
+.scan-btn{
+  width:100%;
+  margin-top:20px;
+  border:none;
+  padding:16px;
+  border-radius:16px;
+  background:linear-gradient(
+    135deg,
+    #ff2d55,
+    #ff416c
+  );
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.food-result-card{
+  margin-top:24px;
+  background:#101010;
+  border-radius:24px;
+  padding:24px;
+}
+
+.food-result-card h2{
+  margin-bottom:20px;
+}
+
+.macro-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.macro-grid div{
+  background:#171717;
+  padding:18px;
+  border-radius:16px;
+}
+
+.macro-grid span{
+  color:#888;
+  font-size:13px;
+}
+
+.macro-grid h3{
+  margin-top:10px;
+  font-size:28px;
+}
+
+.save-meal-btn{
+  width:100%;
+  margin-top:20px;
+  border:none;
+  padding:16px;
+  border-radius:16px;
+  background:#22c55e;
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.today-nutrition-card{
+  margin-top:24px;
+  background:#101010;
+  border-radius:24px;
+  padding:24px;
+}
+
+.nutrition-bar{
+  width:100%;
+  height:12px;
+  background:#222;
+  border-radius:999px;
+  overflow:hidden;
+  margin:10px 0;
+}
+
+.nutrition-fill{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(
+    90deg,
+    #ff2d55,
+    #ff416c
+  );
+}
+
+.today-nutrition-card h3{
+  margin-bottom:20px;
+}
+
+@media(max-width:640px){
+
+  .food-page{
+    padding:18px;
+    padding-bottom:120px;
+  }
+
+  .food-title{
+    font-size:28px;
+  }
+
+  .macro-grid{
+    grid-template-columns:1fr;
+  }
+}

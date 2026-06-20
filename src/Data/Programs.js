@@ -423,7 +423,7 @@ export const PROGRAMS = [
   name: "Home Chest Builder",
   duration: "16 weeks",
   totalWeeks: 16,
-  access: "premium",
+  access: "free",
   status: "available",
 
   goal: "Build chest at home",

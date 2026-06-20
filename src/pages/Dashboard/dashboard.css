@@ -627,3 +627,11 @@
   margin-top:10px;
   font-size:28px;
 }
+
+.nutrition-coach{
+  margin-top:20px;
+  background:#171717;
+  padding:18px;
+  border-radius:16px;
+  border-left:4px solid #ff2d55;
+}

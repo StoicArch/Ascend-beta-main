@@ -12,6 +12,7 @@ import GoalEngine from "../../engine/GoalEngine";
 import WorkoutSessionEngine from "../../engine/WorkoutSessionEngine";
 import FoodLogEngine from "../../engine/FoodLogEngine"
 import AppTour from "../../components/AppTour/AppTour";
+import DashboardCoachEngine from "../../engine/DashboardCoachEngine";
 
 export default function Dashboard() {
   const [showTour, setShowTour] =
@@ -62,6 +63,9 @@ const todayFat =
   const sleep = DashboardEngine.getSleep();
   const insight = DashboardEngine.getAIInsight();
 
+  const coachMessage =
+  DashboardCoachEngine.getDailyFocus();
+
   const programStatus = ProgramEngine.getProgramStatus();
   const currentProgram = programStatus.program;
 
@@ -78,6 +82,39 @@ const goalMessage = GoalEngine.getGoalMessage();
   WeeklyReviewEngine.saveReview();
 
 const hasWeeklyReviewAlert = true;
+
+const caloriePercent = Math.min(
+  100,
+  Math.round(
+    (todayCalories / profile.calories) * 100
+  )
+);
+
+const proteinPercent = Math.min(
+  100,
+  Math.round(
+    (todayProtein / profile.protein) * 100
+  )
+);
+
+const carbsPercent = Math.min(
+  100,
+  Math.round(
+    (todayCarbs / profile.carbs) * 100
+  )
+);
+
+const fatPercent = Math.min(
+  100,
+  Math.round(
+    (todayFat / profile.fat) * 100
+  )
+);
+
+const nutritionFocus =
+  DashboardCoachEngine.getDailyFocus();
+
+
 
   return (
     <div className="dashboard-main app-page">
@@ -258,37 +295,95 @@ const hasWeeklyReviewAlert = true;
         
         <section className="nutrition-card">
 
+          <div className="nutrition-coach">
+
+  <h3>
+    {nutritionFocus.title}
+  </h3>
+
+  <p>
+    {nutritionFocus.message}
+  </p>
+
+</div>
+
   <h2>AI Nutrition Tracker</h2>
 
   <div className="nutrition-grid">
 
     <div>
-      <span>Calories</span>
-      <h3>
-        {todayCalories}/{profile.calories}
-      </h3>
-    </div>
+  <span>Calories</span>
+
+  <h3>
+    {todayCalories}/{profile.calories}
+  </h3>
+
+  <div className="nutrition-bar">
+    <div
+      className="nutrition-fill"
+      style={{
+        width: `${caloriePercent}%`
+      }}
+    />
+  </div>
+
+</div>
 
     <div>
-      <span>Protein</span>
-      <h3>
-        {todayProtein}/{profile.protein}g
-      </h3>
-    </div>
+  <span>Protein</span>
+
+  <h3>
+    {todayProtein}/{profile.protein}g
+  </h3>
+
+  <div className="nutrition-bar">
+    <div
+      className="nutrition-fill"
+      style={{
+        width: `${proteinPercent}%`
+      }}
+    />
+  </div>
+
+</div>
+
+
 
     <div>
-      <span>Carbs</span>
-      <h3>
-        {todayCarbs}/{profile.carbs}g
-      </h3>
-    </div>
+  <span>Carbs</span>
+
+  <h3>
+    {todayCarbs}/{profile.carbs}g
+  </h3>
+
+  <div className="nutrition-bar">
+    <div
+      className="nutrition-fill"
+      style={{
+        width: `${carbsPercent}%`
+      }}
+    />
+  </div>
+
+</div>
 
     <div>
-      <span>Fat</span>
-      <h3>
-        {todayFat}/{profile.fat}g
-      </h3>
-    </div>
+  <span>Fat</span>
+
+  <h3>
+    {todayFat}/{profile.fat}g
+  </h3>
+
+  <div className="nutrition-bar">
+    <div
+      className="nutrition-fill"
+      style={{
+        width: `${fatPercent}%`
+      }}
+    />
+  </div>
+
+</div>
 
   </div>
 </section>
@@ -346,8 +441,17 @@ const hasWeeklyReviewAlert = true;
             </div>
 
             <div className="ai-message">
-              <p>{insight}</p>
+              <h3>
+  {coachMessage.title}
+</h3>
 
+<p>
+  {coachMessage.message}
+</p>
+
+<p>
+  {insight}
+</p>
               <button
                 className="ai-action"
                 onClick={() => navigate("/ai-coach")}
