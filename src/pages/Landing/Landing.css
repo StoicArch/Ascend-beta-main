@@ -422,6 +422,31 @@ body{
 
 @media(max-width:700px){
 
+  .hero{
+  padding:100px 20px 40px;
+}
+
+.hero-left h1{
+  font-size:36px;
+  line-height:1.05;
+}
+
+.hero-left p{
+  font-size:16px;
+}
+
+.hero-stats{
+  gap:20px;
+}
+
+.stat h2{
+  font-size:24px;
+}
+
+.dashboard-preview{
+  display:none;
+}
+
   .nav-links{
     display:none;
   }
@@ -485,9 +510,15 @@ body{
 
   .hero-comparison{
     overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
   }
 
   .comparison-grid{
-    min-width:650px;
+    min-width:520px;
+    font-size:12px;
+  }
+
+  .comparison-grid div{
+    padding:8px;
   }
 }

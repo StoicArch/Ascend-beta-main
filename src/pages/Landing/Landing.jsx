@@ -23,74 +23,19 @@ export default function LandingPage() {
           </div>
 
           <h1>
-            Train Like Someone Who Refuses To Stay Average.
+            Stop Thinking 
+            <br />
+            in the gym
           </h1>
 
           <p>
-            Adaptive workouts, AI coaching, progression tracking,
-            recovery intelligence, and a system built for people
-            chasing real transformation.
+ASCEND builds your workouts,
+tracks nutrition,
+manages progression,
+and tells you exactly what to do next.
           </p>
 
-          <div className="hero-comparison">
-
-  <div className="comparison-header">
-    Why people switch to ASCEND
-  </div>
-
-  <div className="comparison-grid">
-
-    <div className="comparison-top"></div>
-    <div className="comparison-top">ASCEND</div>
-    <div className="comparison-top">Apps</div>
-    <div className="comparison-top">Coach</div>
-    <div className="comparison-top">Influencer</div>
-
-    <div>Programs</div>
-    <div>✅</div>
-    <div>⚠️</div>
-    <div>✅</div>
-    <div>✅</div>
-
-    <div>Progressive Overload</div>
-    <div>✅</div>
-    <div>⚠️</div>
-    <div>✅</div>
-    <div>❌</div>
-
-    <div>Weekly Reviews</div>
-    <div>✅</div>
-    <div>❌</div>
-    <div>✅</div>
-    <div>❌</div>
-
-    <div>Calorie Tracking</div>
-    <div>✅</div>
-    <div>⚠️</div>
-    <div>❌</div>
-    <div>❌</div>
-
-    <div>AI Coach</div>
-    <div>✅</div>
-    <div>❌</div>
-    <div>❌</div>
-    <div>❌</div>
-
-    <div>24/7 Available</div>
-    <div>✅</div>
-    <div>✅</div>
-    <div>❌</div>
-    <div>❌</div>
-
-    <div>Price</div>
-    <div>$9.99</div>
-    <div>$10-30</div>
-    <div>$100+</div>
-    <div>$50+</div>
-
-  </div>
-
-</div>
+        
 
           <div className="hero-buttons">
 
@@ -114,7 +59,7 @@ export default function LandingPage() {
 
             <div className="stat">
               <h2>Programs</h2>
-              <span>Built fr results</span>
+              <span>Built for results</span>
             </div>
 
             <div className="stat">
@@ -188,6 +133,66 @@ export default function LandingPage() {
         </div>
 
       </section>
+
+        <div className="hero-comparison">
+
+  <div className="comparison-header">
+    Why people switch to ASCEND
+  </div>
+
+  <div className="comparison-grid">
+
+    <div className="comparison-top"></div>
+    <div className="comparison-top">ASCEND</div>
+    <div className="comparison-top">Apps</div>
+    <div className="comparison-top">Coach</div>
+    <div className="comparison-top">Influencer</div>
+
+    <div>Programs</div>
+    <div>✅</div>
+    <div>⚠️</div>
+    <div>✅</div>
+    <div>✅</div>
+
+    <div>Progressive Overload</div>
+    <div>✅</div>
+    <div>⚠️</div>
+    <div>✅</div>
+    <div>❌</div>
+
+    <div>Weekly Reviews</div>
+    <div>✅</div>
+    <div>❌</div>
+    <div>✅</div>
+    <div>❌</div>
+
+    <div>Calorie Tracking</div>
+    <div>✅</div>
+    <div>⚠️</div>
+    <div>❌</div>
+    <div>❌</div>
+
+    <div>AI Coach</div>
+    <div>✅</div>
+    <div>❌</div>
+    <div>❌</div>
+    <div>❌</div>
+
+    <div>24/7 Available</div>
+    <div>✅</div>
+    <div>✅</div>
+    <div>❌</div>
+    <div>❌</div>
+
+    <div>Price</div>
+    <div>$9.99</div>
+    <div>$10-30</div>
+    <div>$100+</div>
+    <div>$50+</div>
+
+  </div>
+
+</div>
 
       {/* PROBLEM */}
       <section className="problem-section">

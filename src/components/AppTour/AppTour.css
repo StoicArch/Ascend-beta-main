@@ -6,12 +6,27 @@
 }
 
 .tour-highlight {
-  position: relative;
+  position: relative !important;
   z-index: 10000 !important;
+
+  outline: 4px solid #7c3aed !important;
+  outline-offset: 4px !important;
+
+  transform: scale(1.08) !important;
+
   box-shadow:
-    0 0 0 4px #7c3aed,
-    0 0 40px rgba(124,58,237,.8);
-  border-radius: 20px;
+    0 0 20px #7c3aed,
+    0 0 40px #7c3aed,
+    0 0 60px #7c3aed !important;
+
+  transition: all 0.3s ease;
+}
+.tour-nav-active {
+  z-index: 10002 !important;
+}
+
+.mobile-nav:has(.tour-highlight) {
+  z-index: 10002 !important;
 }
 
 .tour-box {

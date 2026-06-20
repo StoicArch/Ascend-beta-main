@@ -55,9 +55,18 @@ export default function AppTour({onFinish}) {
     );
 
   const timer = setTimeout(() => {
+    console.log(
+  "Current step:",
+  step,
+  steps[step]
+);
     const target = document.getElementById(
       steps[step]?.target
     );
+    console.log(
+  "Target found:",
+  target
+);
 
     if (!target) {
       console.log(
@@ -68,6 +77,15 @@ export default function AppTour({onFinish}) {
     }
 
     target.classList.add("tour-highlight");
+
+    if (
+  target.closest(".mobile-nav")
+) {
+  target
+    .closest(".mobile-nav")
+    .classList.add("tour-nav-active");
+}
+
 
     target.scrollIntoView({
       behavior: "smooth",
