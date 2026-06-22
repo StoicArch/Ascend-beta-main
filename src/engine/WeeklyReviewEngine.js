@@ -65,7 +65,7 @@ class WeeklyReviewEngine {
 
   static getExpectedWorkouts() {
     const profile = UserProfileEngine.getProfile();
-    return Number(profile.trainingDays || 4);
+    return Number(profile.programTrack || 4);
   }
 
   static getCompletionRate() {
@@ -76,91 +76,100 @@ class WeeklyReviewEngine {
 
     return Math.min(100, Math.round((completed / expected) * 100));
   }
+static getBasicRecommendation() {
+  const history = this.getWorkoutHistory();
+  const latestWorkout = history[history.length - 1];
+  const programId = latestWorkout?.programId || "";
 
-  static getBasicRecommendation() {
-    const profile = UserProfileEngine.getProfile();
-    const weightChange = this.getWeeklyWeightChange();
-    const completionRate = this.getCompletionRate();
+  const weightChange = this.getWeeklyWeightChange();
+  const completionRate = this.getCompletionRate();
 
-    if (profile.programId === "skinny-to-jacked") {
-      if (weightChange < 0.2) {
-        return "You may need slightly more food this week to keep building muscle.";
-      }
-
-      if (weightChange > 0.7) {
-        return "You are gaining fast. Keep an eye on fat gain and stay consistent.";
-      }
-
-      return "Good lean-bulk pace. Keep training hard and stay consistent.";
+  if (programId === "skinny-to-jacked") {
+    if (weightChange < 0.2) {
+      return "You may need slightly more food this week to keep building muscle.";
     }
 
-    if (profile.programId === "bulking-journey") {
-      if (weightChange < 0.3) {
-        return "Your bulk may need more calories this week.";
-      }
-
-      return "Good bulking pace. Keep pushing your main lifts.";
+    if (weightChange > 0.7) {
+      return "You are gaining fast. Keep an eye on fat gain and stay consistent.";
     }
 
-    if (profile.programId === "8-week-shred") {
-      if (weightChange >= 0) {
-        return "Fat loss may be slow. Tighten calories and keep steps high.";
-      }
-
-      return "Good cutting progress. Keep protein high and stay consistent.";
-    }
-
-    if (completionRate < 70) {
-      return "Your biggest opportunity is consistency. Hit more workouts next week.";
-    }
-
-    return "Steady week. Keep building momentum.";
+    return "Good lean-bulk pace. Keep training hard and stay consistent.";
   }
 
+  if (programId === "bulking-journey") {
+    if (weightChange < 0.3) {
+      return "Your bulk may need more calories this week.";
+    }
+
+    return "Good bulking pace. Keep pushing your main lifts.";
+  }
+
+  if (programId === "8-week-shred") {
+    if (weightChange >= 0) {
+      return "Fat loss may be slow. Tighten calories and keep steps high.";
+    }
+
+    return "Good cutting progress. Keep protein high and stay consistent.";
+  }
+
+  if (completionRate < 70) {
+    return "Your biggest opportunity is consistency. Hit more workouts next week.";
+  }
+
+  return "Steady week. Keep building momentum.";
+}
   static getPremiumRecommendation() {
-    const profile = UserProfileEngine.getProfile();
-    const weightChange = this.getWeeklyWeightChange();
-    const completed = this.getWorkoutsCompletedThisWeek();
-    const expected = this.getExpectedWorkouts();
+  const profile = UserProfileEngine.getProfile();
 
-    let calorieAdjustment = 0;
-    let trainingAdvice = "Keep your current training structure.";
+  const history = this.getWorkoutHistory();
+  const latestWorkout = history[history.length - 1];
+  const programId = latestWorkout?.programId || "";
 
-    if (profile.programId === "skinny-to-jacked") {
-      if (weightChange < 0.2) calorieAdjustment = 200;
-      if (weightChange > 0.7) calorieAdjustment = -100;
-      trainingAdvice =
-        "Keep main lifts stable. Focus on adding reps or small weight increases.";
-    }
+  const weightChange = this.getWeeklyWeightChange();
+  const completed = this.getWorkoutsCompletedThisWeek();
+  const expected = this.getExpectedWorkouts();
 
-    if (profile.programId === "bulking-journey") {
-      if (weightChange < 0.3) calorieAdjustment = 250;
-      if (weightChange > 1) calorieAdjustment = -150;
-      trainingAdvice =
-        "Prioritize heavy compounds and recover well between sessions.";
-    }
+  let calorieAdjustment = 0;
+  let trainingAdvice = "Keep your current training structure.";
 
-    if (profile.programId === "8-week-shred") {
-      if (weightChange >= 0) calorieAdjustment = -200;
-      if (weightChange < -1) calorieAdjustment = 100;
-      trainingAdvice =
-        "Keep protein high and avoid reducing strength training volume too much.";
-    }
+  if (programId === "skinny-to-jacked") {
+    if (weightChange < 0.2) calorieAdjustment = 200;
+    if (weightChange > 0.7) calorieAdjustment = -100;
 
-    const newCalories = Number(profile.calories || 2400) + calorieAdjustment;
-
-    return {
-      calorieAdjustment,
-      recommendedCalories: newCalories,
-      recommendedProtein: profile.protein,
-      trainingAdvice,
-      summary:
-        completed >= expected
-          ? "You completed your planned workouts. Great consistency."
-          : `You completed ${completed}/${expected} workouts. Improve consistency next week.`,
-    };
+    trainingAdvice =
+      "Keep main lifts stable. Focus on adding reps or small weight increases.";
   }
 
+  if (programId === "bulking-journey") {
+    if (weightChange < 0.3) calorieAdjustment = 250;
+    if (weightChange > 1) calorieAdjustment = -150;
+
+    trainingAdvice =
+      "Prioritize heavy compounds and recover well between sessions.";
+  }
+
+  if (programId === "8-week-shred") {
+    if (weightChange >= 0) calorieAdjustment = -200;
+    if (weightChange < -1) calorieAdjustment = 100;
+
+    trainingAdvice =
+      "Keep protein high and avoid reducing strength training volume too much.";
+  }
+
+  const newCalories =
+    Number(profile.calories || 2400) + calorieAdjustment;
+
+  return {
+    calorieAdjustment,
+    recommendedCalories: newCalories,
+    recommendedProtein: profile.protein,
+    trainingAdvice,
+    summary:
+      completed >= expected
+        ? "You completed your planned workouts. Great consistency."
+        : `You completed ${completed}/${expected} workouts. Improve consistency next week.`,
+  };
+}
   static getPRsHitThisWeek() {
   const profile = UserProfileEngine.getProfile();
   const history = profile.exerciseHistory || [];
@@ -241,9 +250,11 @@ static getStrengthProgressText() {
 
   return "No PRs detected this week. Focus on clean reps and progressive overload.";
 }
-
 static getNextWeekFocus() {
-  const profile = UserProfileEngine.getProfile();
+  const history = this.getWorkoutHistory();
+  const latestWorkout = history[history.length - 1];
+  const programId = latestWorkout?.programId || "";
+
   const weightChange = this.getWeeklyWeightChange();
   const completionRate = this.getCompletionRate();
 
@@ -251,15 +262,15 @@ static getNextWeekFocus() {
     return "Hit all scheduled workouts before changing anything else.";
   }
 
-  if (profile.programId === "skinny-to-jacked" && weightChange < 0.2) {
+  if (programId === "skinny-to-jacked" && weightChange < 0.2) {
     return "Eat more consistently and aim to increase bodyweight slightly.";
   }
 
-  if (profile.programId === "bulking-journey" && weightChange < 0.3) {
+  if (programId === "bulking-journey" && weightChange < 0.3) {
     return "Push food intake higher and keep trying to beat your previous lifts.";
   }
 
-  if (profile.programId === "8-week-shred" && weightChange >= 0) {
+  if (programId === "8-week-shred" && weightChange >= 0) {
     return "Tighten calories, keep protein high, and add more daily movement.";
   }
 
@@ -276,7 +287,7 @@ static getNextWeekFocus() {
       prsHit: this.getPRsHitThisWeek(),
       weightTrend: this.getWeightTrend(),
       date: this.getTodayDate(),
-      program: profile.program || "",
+      
       programId: profile.programId || "",
       currentCalories: profile.calories,
       currentProtein: profile.protein,

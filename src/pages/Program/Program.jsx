@@ -4,8 +4,23 @@ import "./Program.css";
 import UserProfileEngine from "../../engine/UserProfileEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
 import NutritionEngine from "../../engine/NutritionEngine";
+import ProgressEngine from "../../engine/ProgressEngine";
 
 export default function Program() {
+
+  const quitProgram = () => {
+  const confirmed = window.confirm(
+    "Leave program?\n\nYour progress will still be saved and you can continue later."
+  );
+
+  if (!confirmed) return;
+
+  ProgramEngine.quitProgram();
+
+  navigate("/programs");
+};
+
+
   const navigate = useNavigate();
   const profile = UserProfileEngine.getProfile();
   const status = ProgramEngine.getProgramStatus();
@@ -52,7 +67,7 @@ export default function Program() {
     goal: currentProgram.goal,
     weight: currentWeightInput,
     goalWeight: goalWeightInput,
-    trainingDays: profile.trainingDays,
+    trainingDays: status.track(),
   });
 
   UserProfileEngine.saveProfile({
@@ -75,10 +90,10 @@ export default function Program() {
 };
 
   const totalWeeks = currentProgram.totalWeeks || 8;
-  const progressPercent = Math.min(
-  100,
-  Math.round(((status.week - 1) / totalWeeks) * 100)
-);
+  const progressPercent =
+  ProgressEngine.getProgramCompletionPercent(
+    currentProgram.id
+  );
   const workouts = ProgramEngine.getCurrentTrackWorkouts();
   const workoutDays = status.workoutDays || [];
 
@@ -132,7 +147,7 @@ export default function Program() {
         <p>Duration: {currentProgram.duration}</p>
         <p>Nutrition: {currentProgram.type}</p>
         <p>Track: {status.track} days/week</p>
-        <p>Training Days: {profile.trainingDays || "Not set"}</p>
+        
       </div>
 
       {needsGoalWeight && (
@@ -292,8 +307,20 @@ export default function Program() {
             Follow the weekly workouts, track your weight, and stay consistent
             until the program is complete.
           </p>
+
+          <button
+  className="quit-program-btn"
+  onClick={quitProgram}
+>
+  Leave Program
+</button>
         </div>
       </div>
+
+     
     </div>
+    
   );
+
+  
 }

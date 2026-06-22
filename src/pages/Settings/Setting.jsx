@@ -48,10 +48,14 @@ export default function Settings() {
     }
   };
 
-  const clearTodayWorkout = () => {
-    localStorage.removeItem("workout");
-    localStorage.removeItem("workoutDate");
-  };
+ const clearTodayWorkout = () => {
+  localStorage.removeItem("workout");
+  localStorage.removeItem("workoutDate");
+
+  window.dispatchEvent(
+    new Event("workout-regenerated")
+  );
+};
 
   const updateProfile = (field, value) => {
     const updated = {
@@ -74,11 +78,14 @@ export default function Settings() {
       : [...currentFocus, focus];
 
     const updatedPlan = {
-      ...weeklyPlan,
-      [day]: {
-        focus: updatedFocus,
-      },
-    };
+  ...weeklyPlan,
+
+  [day]: {
+    ...currentDay,
+    rest: false,
+    focus: updatedFocus,
+  },
+};
 
     const trainingDays = Object.values(updatedPlan).filter(
       (item) => item?.focus && item.focus.length > 0
@@ -99,11 +106,13 @@ export default function Settings() {
     const weeklyPlan = profile.weeklyPlan || {};
 
     const updatedPlan = {
-      ...weeklyPlan,
-      [day]: {
-        rest: true,
-      },
-    };
+  ...weeklyPlan,
+
+  [day]: {
+    ...weeklyPlan[day],
+    rest: true,
+  },
+};
 
     const trainingDays = Object.values(updatedPlan).filter(
       (item) => item && !item.rest

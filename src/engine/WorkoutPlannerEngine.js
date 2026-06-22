@@ -80,6 +80,48 @@ class WorkoutPlannerEngine {
 
   static getPlanForMuscle(muscle) {
     const plans = {
+
+      Legs: [
+  {
+    target: "Quads",
+    fallbackMuscle: "Quads",
+    count: 2,
+    role: "Quad builder",
+  },
+  {
+    target: "Hamstrings",
+    fallbackMuscle: "Hamstrings",
+    count: 2,
+    role: "Hamstring builder",
+  },
+  {
+    target: "Calves",
+    fallbackMuscle: "Calves",
+    count: 1,
+    role: "Calves",
+  },
+],
+
+Abs: [
+  {
+    target: "Lower Abs",
+    fallbackMuscle: "Abs",
+    count: 2,
+    role: "Lower abs",
+  },
+  {
+    target: "Obliques",
+    fallbackMuscle: "Abs",
+    count: 1,
+    role: "Obliques",
+  },
+  {
+    target: "Core Stability",
+    fallbackMuscle: "Abs",
+    count: 1,
+    role: "Core",
+  },
+],
       Chest: [
         {
           target: "Upper Chest",
@@ -100,7 +142,7 @@ class WorkoutPlannerEngine {
           role: "Chest squeeze",
         },
         {
-          target: "Chest Stretch",
+          target: "Chest stretch",
           fallbackMuscle: "Chest",
           count: 1,
           role: "Chest stretch",
@@ -145,13 +187,13 @@ class WorkoutPlannerEngine {
 
       Biceps: [
         {
-          target: "Bicep Stretch",
+          target: "Bicep stretch",
           fallbackMuscle: "Biceps",
           count: 1,
           role: "Stretch curl",
         },
         {
-          target: "Bicep Width",
+          target: "Bicep width",
           fallbackMuscle: "Biceps",
           count: 1,
           role: "Width curl",
@@ -206,26 +248,7 @@ class WorkoutPlannerEngine {
         },
       ],
 
-      Abs: [
-        {
-          target: "Abs",
-          fallbackMuscle: "Abs",
-          count: 2,
-          role: "Core",
-        },
-        {
-          target: "Lower Abs",
-          fallbackMuscle: "Abs",
-          count: 1,
-          role: "Lower abs",
-        },
-        {
-          target: "Obliques",
-          fallbackMuscle: "Abs",
-          count: 1,
-          role: "Obliques",
-        },
-      ],
+      
 
       Conditioning: [
         {

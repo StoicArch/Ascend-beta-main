@@ -144,8 +144,7 @@ export default function ActiveWorkout() {
         target: exercise.target,
         movementPattern: exercise.movementPattern,
         equipment: exercise.equipment,
-        programId: profile.programId || "",
-        program: profile.program || "",
+        programId: programStatus.program?.id|| "",
         week: profile.currentWeek || 1,
         focus: exercise.focus || programStatus.todayFocus || [],
         date: new Date().toISOString(),
@@ -186,8 +185,7 @@ export default function ActiveWorkout() {
     WorkoutStore.saveSession(completedSession);
 
     ProgressEngine.completeWorkout({
-      program: profile.program || "",
-      programId: profile.programId || "",
+      programId: programStatus.program?.id|| "",
       week: profile.currentWeek || 1,
       day: programStatus.today || "",
       workout: programStatus.todayTemplate?.name || "Workout",
@@ -439,15 +437,17 @@ setSummary({
                     </div>
 
                     <div className="set-inputs">
-                      <input
-                        type="number"
-                        placeholder="Weight"
-                        value={setLogs[key]?.weight || ""}
-                        disabled={done}
-                        onChange={(e) =>
-                          updateSetLog(i, setIndex, "weight", e.target.value)
-                        }
-                      />
+                      {exercise.equipment !== "Bodyweight" && (
+  <input
+    type="number"
+    placeholder="Weight"
+    value={setLogs[key]?.weight || ""}
+    disabled={done}
+    onChange={(e) =>
+      updateSetLog(i, setIndex, "weight", e.target.value)
+    }
+  />
+)}
 
                       <input
                         type="number"

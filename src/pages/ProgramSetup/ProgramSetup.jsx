@@ -27,23 +27,21 @@ const FOCUS_OPTIONS = [
   "Abs",
   "Conditioning",
 ];
-
 export default function ProgramSetup() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const program = PROGRAMS.find((p) => String(p.id) === String(id));
-
- const isHomeChestBuilder = program?.id === "home-chest-builder";
-
-const [track, setTrack] = useState(isHomeChestBuilder ? 4 : 4);
-  const [selectedDays, setSelectedDays] = useState([]);
-  const [dayFocus, setDayFocus] = useState({});
-
   const profile = UserProfileEngine.getProfile();
 
-const [currentWeight, setCurrentWeight] = useState(profile.weight || 70);
-const [goalWeight, setGoalWeight] = useState(profile.goalWeight || "");
+  const [track, setTrack] = useState(4);
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [dayFocus, setDayFocus] = useState({});
+  const [currentWeight, setCurrentWeight] = useState(profile.weight || 70);
+  const [goalWeight, setGoalWeight] = useState(profile.goalWeight || "");
+
+  const program = PROGRAMS.find(
+    (p) => String(p.id) === String(id)
+  );
 
   if (!program) {
     return (
@@ -52,6 +50,9 @@ const [goalWeight, setGoalWeight] = useState(profile.goalWeight || "");
       </div>
     );
   }
+
+  const isHomeChestBuilder =
+    program.id === "home-chest-builder";
 
   const toggleDay = (day) => {
     if (selectedDays.includes(day)) {
@@ -85,62 +86,82 @@ const [goalWeight, setGoalWeight] = useState(profile.goalWeight || "");
     });
   };
 
-  const startProgram = () => {
-    if (selectedDays.length !== track) {
-      alert(`Please choose exactly ${track} workout days.`);
-      return;
-    }
+  
+ const startProgram = () => {
+ const currentProfile = UserProfileEngine.getProfile();
 
-    const missingFocus =
-  !isHomeChestBuilder &&
-  selectedDays.some(
-    (day) => !dayFocus[day] || dayFocus[day].length === 0
-  );
-
-if (missingFocus) {
-  alert("Please choose at least one muscle focus for each selected day.");
-  return;
+if (
+  currentProfile.programSchedule &&
+  currentProfile.programSchedule.length > 0
+) 
+  {
+alert(
+"You are already enrolled in a program. Leave your current program before starting another one."
+);
+return;
 }
 
-   const programSchedule = selectedDays.map((day) => ({
-  day,
-  focus: isHomeChestBuilder ? ["Chest"] : dayFocus[day],
+if (currentProfile.programId === program.id) {
+alert(
+"You are already enrolled in this program."
+);
+return;
+}
+
+if (selectedDays.length !== track) {
+alert(`Please choose exactly ${track} workout days.`);
+return;
+}
+
+const missingFocus =
+!isHomeChestBuilder &&
+selectedDays.some(
+(day) => !dayFocus[day] || dayFocus[day].length === 0
+);
+
+if (missingFocus) {
+alert("Please choose at least one muscle focus for each selected day.");
+return;
+}
+
+const programSchedule = selectedDays.map((day) => ({
+day,
+focus: isHomeChestBuilder ? ["Chest"] : dayFocus[day],
 }));
 
-   const profile = UserProfileEngine.getProfile();
+const profile = UserProfileEngine.getProfile();
 
 if (!currentWeight || Number(currentWeight) <= 0) {
-  alert("Please enter your current weight.");
-  return;
+alert("Please enter your current weight.");
+return;
 }
 
 if (!goalWeight || Number(goalWeight) <= 0) {
-  alert("Please enter your goal weight.");
-  return;
+alert("Please enter your goal weight.");
+return;
 }
 
 const nutrition = NutritionEngine.getProgramNutrition({
-  programId: program.id,
-  goal: program.goal,
-  weight: currentWeight,
-  goalWeight,
-  trainingDays: track,
+programId: program.id,
+goal: program.goal,
+weight: currentWeight,
+goalWeight,
+trainingDays: track,
 });
-    UserProfileEngine.saveProfile({
+UserProfileEngine.saveProfile({
   ...profile,
 
-
-  program: program.name,
   programId: program.id,
+
   programTotalWeeks: program.totalWeeks,
   programTrack: track,
   programWorkoutDays: selectedDays,
   programSchedule,
   currentWeek: 1,
-  trainingDays: track,
 
   weight: nutrition.currentWeight,
-  startingWeight: profile.startingWeight || nutrition.currentWeight,
+  startingWeight:
+    profile.startingWeight || nutrition.currentWeight,
   goalWeight: nutrition.goalWeight,
 
   calories: nutrition.calories,
@@ -163,15 +184,13 @@ const nutrition = NutritionEngine.getProgramNutrition({
   },
 });
 
-    
+localStorage.removeItem("workout");
+localStorage.removeItem("workoutDate");
 
-    localStorage.removeItem("workout");
-    localStorage.removeItem("workoutDate");
-
-    navigate("/program");
-  };
-
+navigate("/program");
+};
   return (
+    
     <div className="program-setup-page app-page">
       <div className="program-setup-header">
         <span>Start Program</span>

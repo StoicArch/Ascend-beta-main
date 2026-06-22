@@ -3,12 +3,33 @@ import "./Programs.css";
 import { PROGRAMS } from "../../Data/Programs";
 import { useNavigate } from "react-router-dom";
 import PremiumEngine from "../../engine/PremiumEngine";
+import UserProfileEngine from "../../engine/UserProfileEngine";
 
 export default function Programs() {
+
+  
   const navigate = useNavigate();
   const [selectedProgram, setSelectedProgram] = useState(null);
 
   const startProgram = (program) => {
+
+    const profile = UserProfileEngine.getProfile();
+
+if (
+  profile.programId &&
+  profile.programId !== program.id
+) {
+  alert(
+    "You are already enrolled in a program. Leave your current program before starting another one."
+  );
+  return;
+}
+if (profile.programId === program.id) {
+  alert(
+    "You are already enrolled in this program."
+  );
+  return;
+}
   if (program.status !== "available") return;
 
   const premium = PremiumEngine.isPremium();

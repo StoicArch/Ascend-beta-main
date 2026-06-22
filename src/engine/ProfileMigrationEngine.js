@@ -19,7 +19,7 @@ class ProfileMigrationEngine {
     const goalWeight = Number(profile.goalWeight || currentWeight);
 
     const nutrition = NutritionEngine.getProgramNutrition({
-      programId: profile.programId,
+     
       goal: profile.goal,
       weight: currentWeight,
       goalWeight,

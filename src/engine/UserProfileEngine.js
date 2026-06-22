@@ -4,13 +4,10 @@ class UserProfileEngine {
     goal: "Build Muscle",
     weight: 70,
     goalWeight: "",
-    program: "",
-    programId: "",
     programTrack: 4,
     programWorkoutDays: [],
     programSchedule: [],
     currentWeek: 1,
-    trainingDays: 4,
     sleep: 7,
     calories: 2400,
     protein: 160,
@@ -26,6 +23,7 @@ class UserProfileEngine {
       splitMode: "",
   weeklyPlan: {},
   exerciseHistory: [],
+programHistory: [],
 
   startingWeight: null,
 
@@ -88,9 +86,7 @@ class UserProfileEngine {
   static updateWeeklyPlan(weeklyPlan) {
     const profile = this.getProfile();
 
-    const trainingDays = Object.values(weeklyPlan).filter(
-      (day) => day && !day.rest
-    ).length;
+    
 
     localStorage.removeItem("workout");
     localStorage.removeItem("workoutDate");
@@ -98,7 +94,7 @@ class UserProfileEngine {
     return this.saveProfile({
       ...profile,
       weeklyPlan,
-      trainingDays,
+     
     });
   }
 

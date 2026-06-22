@@ -18,30 +18,39 @@ class WorkoutEngine {
 
   static hasActiveProgram() {
     const profile = UserProfileEngine.getProfile();
-    return !!profile.programId || !!profile.program;
+
+    return !!profile.programId;
   }
 
   static generateTodayWorkout() {
-  if (this.hasActiveProgram()) {
-    if (!ProgramEngine.canAccessTodayWorkout()) {
-      return [];
+    if (this.hasActiveProgram()) {
+      if (!ProgramEngine.canAccessTodayWorkout()) {
+        return [];
+      }
+
+      return ProgramEngine.getTodayWorkout();
     }
 
-    return ProgramEngine.getTodayWorkout();
+    return GeneralWorkoutEngine.getTodayWorkout();
   }
-
-  return GeneralWorkoutEngine.getTodayWorkout();
-}
 
   static getOrCreateTodayWorkout() {
     const today = this.getTodayDate();
     const savedDate = localStorage.getItem("workoutDate");
     const savedWorkout = this.getWorkout();
 
-    if (savedDate !== today || savedWorkout.length === 0) {
-      const workout = this.generateTodayWorkout();
+    if (
+      savedDate !== today ||
+      savedWorkout.length === 0
+    ) {
+      const workout =
+        this.generateTodayWorkout();
 
-      localStorage.setItem("workoutDate", today);
+      localStorage.setItem(
+        "workoutDate",
+        today
+      );
+
       return this.saveWorkout(workout);
     }
 
@@ -62,24 +71,41 @@ class WorkoutEngine {
 
   static removeExercise(index) {
     const workout = this.getWorkout();
+
     workout.splice(index, 1);
+
     return this.saveWorkout(workout);
   }
 
-  static updateExercise(index, field, value) {
+  static updateExercise(
+    index,
+    field,
+    value
+  ) {
     const workout = this.getWorkout();
+
     workout[index][field] = value;
+
     return this.saveWorkout(workout);
   }
 
-  static swapExercise(index, newExercise) {
+  static swapExercise(
+    index,
+    newExercise
+  ) {
     const workout = this.getWorkout();
 
     workout[index] = {
       ...workout[index],
       ...newExercise,
-      sets: newExercise.sets || workout[index].sets || 3,
-      reps: newExercise.reps || workout[index].reps || 10,
+      sets:
+        newExercise.sets ||
+        workout[index].sets ||
+        3,
+      reps:
+        newExercise.reps ||
+        workout[index].reps ||
+        10,
     };
 
     return this.saveWorkout(workout);
@@ -88,23 +114,31 @@ class WorkoutEngine {
   static resetWorkout() {
     localStorage.removeItem("workout");
     localStorage.removeItem("workoutDate");
+
     return this.getOrCreateTodayWorkout();
   }
 
   static refreshWorkout() {
-  const workout = this.generateTodayWorkout();
+    const workout =
+      this.generateTodayWorkout();
 
-  localStorage.setItem("workoutDate", this.getTodayDate());
+    localStorage.setItem(
+      "workoutDate",
+      this.getTodayDate()
+    );
 
-  return this.saveWorkout(workout);
-}
+    return this.saveWorkout(workout);
+  }
 
   static refreshFromProgram() {
     return this.refreshWorkout();
   }
 
   static completeWorkout() {
-    localStorage.setItem("lastWorkoutDate", new Date().toISOString());
+    localStorage.setItem(
+      "lastWorkoutDate",
+      new Date().toISOString()
+    );
   }
 }
 

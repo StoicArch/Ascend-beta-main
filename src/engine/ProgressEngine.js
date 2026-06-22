@@ -9,6 +9,32 @@ class ProgressEngine {
     localStorage.setItem("workoutHistory", JSON.stringify(history));
     return history;
   }
+static getProgramCompletionPercent(programId) {
+  const profile = UserProfileEngine.getProfile();
+
+  if (!programId) return 0;
+
+  const totalWeeks =
+    Number(profile.programTotalWeeks || 1);
+
+  const workoutsPerWeek =
+    Number(profile.programTrack || 4);
+
+  const totalWorkouts =
+    totalWeeks * workoutsPerWeek;
+
+  const completed =
+    this.getHistory().filter(
+      (item) =>
+        item.completed &&
+        item.programId === programId
+    ).length;
+
+  return Math.round(
+    (completed / totalWorkouts) * 100
+  );
+}
+
 
   static getTodayDate() {
     return new Date().toDateString();
@@ -31,7 +57,7 @@ class ProgressEngine {
       return profile.programWorkoutDays.length;
     }
 
-    return Number(profile.programTrack || profile.trainingDays || 4);
+    return Number(profile.programTrack || 4);
   }
 
   static getCompletedThisProgramWeek(programId, week) {
@@ -49,10 +75,7 @@ class ProgressEngine {
   const profile = UserProfileEngine.getProfile();
   const required = this.getRequiredWeeklyWorkouts();
   const completed = this.getCompletedThisProgramWeek(programId, week);
-  console.log("Required:", required);
-console.log("Completed:", completed.length);
-console.log("Program:", programId);
-console.log("Week:", week);
+  
 
   if (completed.length >= required) {
     console.log("ADVANCING WEEK");

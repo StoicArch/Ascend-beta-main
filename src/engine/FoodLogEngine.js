@@ -1,4 +1,10 @@
 class FoodLogEngine {
+
+  static getTodayMealCount() {
+  return this.getTodayMeals().length;
+}
+
+
   static getMeals() {
     return JSON.parse(
       localStorage.getItem("foodLog")

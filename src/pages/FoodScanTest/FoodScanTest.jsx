@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import FoodLogEngine from "../../engine/FoodLogEngine";
 import "./FoodScanTest.css";
 import UserProfileEngine from "../../engine/UserProfileEngine";
+import PremiumEngine from "../../engine/PremiumEngine";
 
 export default function FoodScanTest() {
   const profile = UserProfileEngine.getProfile();
 
 const todayCalories =
   FoodLogEngine.getTodayCalories();
+
+ const isPremium =
+  PremiumEngine.isPremium();
+
+
+
+
 
 const todayProtein =
   FoodLogEngine.getTodayProtein();
@@ -112,20 +120,43 @@ setFoodData(parsedFood);
   AI Nutrition Scanner
 </h1>
 
+
 <p className="food-subtitle">
   Take a photo of your meal and let ASCEND estimate the calories and macros.
 </p>
 
-     <div className="upload-card">
+     {isPremium ? (
 
-  <input
-    type="file"
-    accept="image/*"
-    capture="environment"
-    onChange={handleImage}
-  />
+  <div className="upload-card">
 
-</div>
+    <input
+      type="file"
+      accept="image/*"
+      capture="environment"
+      onChange={handleImage}
+    />
+
+  </div>
+
+) : (
+
+  <div className="premium-lock-card">
+
+    <h2>
+      AI Food Scanner 🔒
+    </h2>
+
+    <p>
+      Premium members can scan meals
+      using AI and automatically track
+      calories and macros.
+    </p>
+
+    
+
+  </div>
+
+)}
 
       {imagePreview && (
         <img
@@ -143,20 +174,19 @@ setFoodData(parsedFood);
         />
       )}
 
-      <button
-      className="scan-btn"
-        onClick={testVision}
-        disabled={loading || !imageBase64}
-        style={{
-          display: "block",
-          marginTop: "20px",
-          padding: "12px 16px",
-          borderRadius: "12px",
-          fontWeight: "800",
-        }}
-      >
-        {loading ? "Testing..." : "LOG TODAY'S MEAL"}
-      </button>
+      {isPremium && (
+
+<button
+  className="scan-btn"
+  onClick={testVision}
+  disabled={loading || !imageBase64}
+>
+  {loading
+    ? "Testing..."
+    : "LOG TODAY'S MEAL"}
+</button>
+
+)}
 
      
      {foodData && (
@@ -205,6 +235,51 @@ setFoodData(parsedFood);
 
 )}
 
+<div className="manual-log-card">
+
+  <h2>
+    Forgot to take a photo?
+  </h2>
+
+  <p>
+    No worries. Log today's meal manually.
+  </p>
+
+  <button
+    className="save-meal-btn"
+    onClick={() => {
+
+      const name =
+        prompt("Meal name");
+
+      const calories =
+        Number(prompt("Calories"));
+
+      const protein =
+        Number(prompt("Protein"));
+
+      const carbs =
+        Number(prompt("Carbs"));
+
+      const fat =
+        Number(prompt("Fat"));
+
+      FoodLogEngine.saveMeal({
+        name,
+        calories,
+        protein,
+        carbs,
+        fat,
+      });
+
+      window.location.reload();
+    }}
+  >
+    Log Meal Manually
+  </button>
+
+</div>
+
 <div className="today-nutrition-card">
 
   <h2>
@@ -246,6 +321,8 @@ setFoodData(parsedFood);
   </h3>
 
 </div>
+
+
 
 
     </div>

@@ -15,6 +15,8 @@ import AppTour from "../../components/AppTour/AppTour";
 import DashboardCoachEngine from "../../engine/DashboardCoachEngine";
 
 export default function Dashboard() {
+
+  const premiumNutrition = DashboardCoachEngine.getPremiumNutritionInsight();
   const [showTour, setShowTour] =
   React.useState(
     !localStorage.getItem(
@@ -326,6 +328,50 @@ const nutritionFocus =
       }}
     />
   </div>
+
+  <div className="premium-nutrition-card">
+
+  {premiumNutrition.locked ? (
+
+    <>
+      <h3>
+        🔒 Premium Nutrition Insight
+      </h3>
+
+      <div className="premium-blur">
+
+        Increase protein intake today.
+
+        Add a recovery meal before bed.
+
+        Nutrition timing recommendations.
+
+        Muscle gain optimization strategy.
+
+      </div>
+
+      <button
+        onClick={() => navigate("/premium")}
+      >
+        Unlock Premium
+      </button>
+    </>
+
+  ) : (
+
+    <>
+      <h3>
+        {premiumNutrition.title}
+      </h3>
+
+      <p>
+        {premiumNutrition.message}
+      </p>
+    </>
+
+  )}
+
+</div>
 
 </div>
 

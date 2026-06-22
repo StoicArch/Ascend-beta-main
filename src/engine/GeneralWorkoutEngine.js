@@ -149,19 +149,38 @@ class GeneralWorkoutEngine {
     return [...new Set(focus)];
   }
 
-  static getExercisesForMuscle(muscle) {
-    const equipment = this.getUserEquipment();
-    const excludeBodyweight = this.shouldExcludeBodyweight();
+ static getExercisesForMuscle(muscle) {
+  const equipment = this.getUserEquipment();
+  const excludeBodyweight = this.shouldExcludeBodyweight();
 
-    return EXERCISES.filter((exercise) => {
-      const muscleMatch = exercise.muscle === muscle;
-      const equipmentMatch = equipment.includes(exercise.equipment);
-      const bodyweightBlocked =
-        excludeBodyweight && exercise.equipment === "Bodyweight";
+  let musclesToMatch = [muscle];
 
-      return muscleMatch && equipmentMatch && !bodyweightBlocked;
-    });
+  if (muscle === "Legs") {
+    musclesToMatch = [
+      "Quads",
+      "Hamstrings",
+      "Calves",
+    ];
   }
+
+  return EXERCISES.filter((exercise) => {
+    const muscleMatch =
+      musclesToMatch.includes(exercise.muscle);
+
+    const equipmentMatch =
+      equipment.includes(exercise.equipment);
+
+    const bodyweightBlocked =
+      excludeBodyweight &&
+      exercise.equipment === "Bodyweight";
+
+    return (
+      muscleMatch &&
+      equipmentMatch &&
+      !bodyweightBlocked
+    );
+  });
+}
 
   static getRandomExercise(exercises, usedIds) {
     const available = exercises.filter(

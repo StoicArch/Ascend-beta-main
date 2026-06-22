@@ -31,6 +31,10 @@ export default function Workout() {
 
   const programStatus = ProgramEngine.getProgramStatus();
 
+  
+
+  
+
 const [completedToday, setCompletedToday] = useState(
   ProgressEngine.isTodayCompleted()
 );
@@ -56,13 +60,27 @@ const [restTime, setRestTime] = useState(60);
       "Your workout is optimized for today's recovery."
     );
 
-  useEffect(() => {
-if (ProgressEngine.isTodayCompleted()) {
-    localStorage.removeItem("activeWorkoutSession");
-  }
+ useEffect(() => {
+  const loadWorkout = () => {
     setWorkout(
-      WorkoutEngine.getOrCreateTodayWorkout());
-  }, []);
+      WorkoutEngine.getOrCreateTodayWorkout()
+    );
+  };
+
+  loadWorkout();
+
+  window.addEventListener(
+    "workout-regenerated",
+    loadWorkout
+  );
+
+  return () => {
+    window.removeEventListener(
+      "workout-regenerated",
+      loadWorkout
+    );
+  };
+}, []);
 
   // =====================
   // REMOVE
@@ -173,13 +191,18 @@ if (active && workout.length > 0) {
       setCurrentIndex(currentIndex + 1);
       setCurrentSet(1);
     } else {
-      ProgressEngine.completeWorkout({
-        program: programStatus.program?.name || "",
-        week: programStatus.week,
-        day: programStatus.today,
-        workout: programStatus.todayTemplate?.name || "",
-        exercises: workout.length,
-      });
+     ProgressEngine.completeWorkout({
+  program: programStatus.program?.name || "",
+  programId: programStatus.program?.id || "",
+  week: programStatus.week,
+ day: new Date().toLocaleDateString("en-US", {
+  weekday: "long",
+}),
+  workout: programStatus.todayTemplate?.name || "",
+  exercises: workout.length,
+});
+
+     
 
       WorkoutEngine.completeWorkout();
 
@@ -192,6 +215,8 @@ if (active && workout.length > 0) {
 };
   
   return (
+
+    
     <div className="active-workout app-page">
 
       <h2>{exercise.name}</h2>

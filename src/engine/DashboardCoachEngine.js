@@ -1,8 +1,63 @@
 import UserProfileEngine from "./UserProfileEngine";
 import FoodLogEngine from "./FoodLogEngine";
 import DashboardEngine from "./DashboardEngine";
+import PremiumEngine from "./PremiumEngine";
 
 class DashboardCoachEngine {
+    static getPremiumNutritionInsight() {
+
+  const premium =
+    PremiumEngine.isPremium();
+
+  if (!premium) {
+    return {
+      locked: true,
+      title: "🔒 Premium Nutrition Insight",
+      message:
+        "Upgrade to unlock AI nutrition recommendations.",
+    };
+  }
+
+  const profile =
+    UserProfileEngine.getProfile();
+
+  const calories =
+    FoodLogEngine.getTodayCalories();
+
+  const protein =
+    FoodLogEngine.getTodayProtein();
+
+  const calorieGap =
+    profile.calories - calories;
+
+  const proteinGap =
+    profile.protein - protein;
+
+  if (proteinGap > 30) {
+    return {
+      locked: false,
+      title: "Protein Priority 💪",
+      message:
+        `You're approximately ${proteinGap}g short of your protein target. Add a high protein meal before bed.`,
+    };
+  }
+
+  if (calorieGap > 500) {
+    return {
+      locked: false,
+      title: "Recovery Fuel 🍽️",
+      message:
+        `You're roughly ${calorieGap} calories under target today. Consider another meal.`,
+    };
+  }
+
+  return {
+    locked: false,
+    title: "Nutrition On Track ✅",
+    message:
+      "You're close to your nutrition targets. Focus on consistency.",
+  };
+}
 
   static getDailyFocus() {
 

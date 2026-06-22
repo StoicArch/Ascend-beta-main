@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
 
 import { AuthProvider } from "./context/AuthContext";
 
@@ -29,6 +28,46 @@ import FoodScanTest from "./pages/FoodScanTest/FoodScanTest";
 export default function App() {
   useEffect(() => {
     ProfileMigrationEngine.migrate();
+  }, []);
+
+  useEffect(() => {
+    const disableContextMenu = (e) => {
+      e.preventDefault();
+    };
+
+    const disableKeys = (e) => {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === "I") ||
+        (e.ctrlKey && e.shiftKey && e.key === "J") ||
+        (e.ctrlKey && e.shiftKey && e.key === "C") ||
+        (e.ctrlKey && e.key.toLowerCase() === "u")
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener(
+      "contextmenu",
+      disableContextMenu
+    );
+
+    document.addEventListener(
+      "keydown",
+      disableKeys
+    );
+
+    return () => {
+      document.removeEventListener(
+        "contextmenu",
+        disableContextMenu
+      );
+
+      document.removeEventListener(
+        "keydown",
+        disableKeys
+      );
+    };
   }, []);
 
   return (
@@ -117,6 +156,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/weekly-review"
           element={
@@ -153,12 +193,20 @@ export default function App() {
           }
         />
 
-        <Route path="/support" element={<Support />} />
-        
-        <Route path="/food-scan-test" element={<FoodScanTest />} />
+        <Route
+          path="/support"
+          element={<Support />}
+        />
 
-        
-        <Route path="*" element={<LandingPage />} />
+        <Route
+          path="/food-scan-test"
+          element={<FoodScanTest />}
+        />
+
+        <Route
+          path="*"
+          element={<LandingPage />}
+        />
       </Routes>
 
       <MobileNav />
