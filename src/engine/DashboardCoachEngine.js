@@ -4,6 +4,67 @@ import DashboardEngine from "./DashboardEngine";
 import PremiumEngine from "./PremiumEngine";
 
 class DashboardCoachEngine {
+    static getNutritionRecommendations() {
+      const profile = UserProfileEngine.getProfile();
+      const recovery = DashboardEngine.getRecoveryScore();
+      const totals = FoodLogEngine.getDailyTotals();
+
+      const calorieGap = Number(profile.calories || 0) - totals.calories;
+      const proteinGap = Number(profile.protein || 0) - totals.protein;
+
+      const recommendations = [];
+
+      if (proteinGap > 25) {
+        recommendations.push({
+          type: "Protein Alert",
+          title: "Protein Alert",
+          message: `You are ${proteinGap}g short of your protein target. Add lean protein in your next meal.`,
+        });
+      } else {
+        recommendations.push({
+          type: "Protein Alert",
+          title: "Protein On Track",
+          message: "Protein intake is tracking well for today's target.",
+        });
+      }
+
+      if (calorieGap > 500) {
+        recommendations.push({
+          type: "Calorie Alert",
+          title: "Calorie Alert",
+          message: `You are ${calorieGap} calories under target. Add a balanced meal to support training.`,
+        });
+      } else if (calorieGap < -300) {
+        recommendations.push({
+          type: "Calorie Alert",
+          title: "Calorie Alert",
+          message: `You are ${Math.abs(calorieGap)} calories above target. Keep the next meal lighter.`,
+        });
+      } else {
+        recommendations.push({
+          type: "Calorie Alert",
+          title: "Calories On Track",
+          message: "Calories are close to today's target.",
+        });
+      }
+
+      if (recovery < 65 && (proteinGap > 15 || calorieGap > 300)) {
+        recommendations.push({
+          type: "Recovery Nutrition Alert",
+          title: "Recovery Nutrition Alert",
+          message: "Recovery is low and nutrition is behind. Prioritize protein, carbs, and hydration today.",
+        });
+      } else {
+        recommendations.push({
+          type: "Recovery Nutrition Alert",
+          title: "Recovery Nutrition",
+          message: "Nutrition is not currently limiting your recovery score.",
+        });
+      }
+
+      return recommendations;
+    }
+
     static getPremiumNutritionInsight() {
 
   const premium =

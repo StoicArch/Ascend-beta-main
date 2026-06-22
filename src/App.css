@@ -150,6 +150,39 @@
   letter-spacing: 1px;
 }
 
+.pwa-install-prompt{
+  position:fixed;
+  left:16px;
+  right:16px;
+  bottom:88px;
+  z-index:10000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  max-width:520px;
+  margin:0 auto;
+  background:#111;
+  color:white;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.pwa-install-prompt p{
+  margin:4px 0 0;
+  color:#aaa;
+}
+
+.pwa-install-prompt button{
+  border:none;
+  border-radius:8px;
+  padding:10px 12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
 .premium-left {
   flex: 1;
   padding: 20px;

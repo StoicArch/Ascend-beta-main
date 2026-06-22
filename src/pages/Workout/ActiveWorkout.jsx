@@ -7,6 +7,7 @@ import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 import { useNavigate } from "react-router-dom";
 import ProgressiveOverloadEngine from "../../engine/ProgressiveOverloadEngine";
+import AddExerciseModal from "../../components/workout/AddExerciseModal";
 
 const ACTIVE_SESSION_KEY = "activeWorkoutSession";
 
@@ -20,6 +21,8 @@ export default function ActiveWorkout() {
   const [loaded, setLoaded] = useState(false);
   const [summary, setSummary] =
   useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [swapIndex, setSwapIndex] = useState(null);
 
   useEffect(() => {
   if (!ProgramEngine.canAccessTodayWorkout()) {
@@ -118,6 +121,84 @@ export default function ActiveWorkout() {
     setRestTimer(workout[exerciseIndex]?.rest || 90);
   };
 
+  const clearExerciseLogs = (exerciseIndex) => {
+    setCompletedSets((prev) => {
+      const next = {};
+
+      Object.keys(prev).forEach((key) => {
+        if (!key.startsWith(`${exerciseIndex}-`)) {
+          next[key] = prev[key];
+        }
+      });
+
+      return next;
+    });
+
+    setSetLogs((prev) => {
+      const next = {};
+
+      Object.keys(prev).forEach((key) => {
+        if (!key.startsWith(`${exerciseIndex}-`)) {
+          next[key] = prev[key];
+        }
+      });
+
+      return next;
+    });
+  };
+
+  const addExercise = (exercise) => {
+    setWorkout((prev) => [
+      ...prev,
+      {
+        ...exercise,
+        sets: exercise.sets || 3,
+        reps: exercise.reps || 10,
+      },
+    ]);
+    setShowAddModal(false);
+  };
+
+  const removeExercise = (exerciseIndex) => {
+    setWorkout((prev) => prev.filter((_, index) => index !== exerciseIndex));
+    clearExerciseLogs(exerciseIndex);
+  };
+
+  const updateExerciseField = (exerciseIndex, field, value) => {
+    setWorkout((prev) =>
+      prev.map((exercise, index) =>
+        index === exerciseIndex
+          ? {
+              ...exercise,
+              [field]: Number(value),
+            }
+          : exercise
+      )
+    );
+
+    if (field === "sets") {
+      clearExerciseLogs(exerciseIndex);
+    }
+  };
+
+  const swapExercise = (exercise) => {
+    if (swapIndex === null) return;
+
+    setWorkout((prev) =>
+      prev.map((item, index) =>
+        index === swapIndex
+          ? {
+              ...exercise,
+              sets: item.sets || exercise.sets || 3,
+              reps: item.reps || exercise.reps || 10,
+            }
+          : item
+      )
+    );
+    clearExerciseLogs(swapIndex);
+    setSwapIndex(null);
+  };
+
   const buildExerciseHistory = () => {
     const profile = UserProfileEngine.getProfile();
     const programStatus = ProgramEngine.getProgramStatus();
@@ -214,6 +295,9 @@ export default function ActiveWorkout() {
     exercise.exerciseName
   );
 
+    const metrics =
+      ProgressiveOverloadEngine.getWorkoutMetrics(exercise);
+
 return {
   name: exercise.exerciseName,
   weightPR: pr.bestWeight,
@@ -221,6 +305,10 @@ return {
   recommendation: recommendation.message,
   achievement: achievement.text,
   reason: achievement.reason,
+  estimatedOneRepMax: metrics.estimatedOneRepMax,
+  volume: metrics.volume,
+  volumePR: metrics.volumePR,
+  setPR: metrics.setPR,
 };
 
 
@@ -293,6 +381,16 @@ setSummary({
             </p>
 
             <p>
+              Estimated 1RM: {item.estimatedOneRepMax || "--"}kg
+            </p>
+
+            <p>
+              Volume: {item.volume || 0}kg
+              {item.volumePR ? " • Volume PR" : ""}
+              {item.setPR ? " • Set PR" : ""}
+            </p>
+
+            <p>
               {item.recommendation}
             </p>
           </div>
@@ -332,6 +430,13 @@ setSummary({
 
         <div className="session-time">{formatTime(seconds)}</div>
       </div>
+
+      <button
+        className="active-tool-btn"
+        onClick={() => setShowAddModal(true)}
+      >
+        Add Exercise
+      </button>
 
       {restTimer !== null && (
         <div className="rest-card">
@@ -417,7 +522,34 @@ setSummary({
 
 </div>
 
-              <div className="exercise-badge">{exercise.sets} Sets</div>
+              <div className="exercise-tools">
+                <label>
+                  Sets
+                  <input
+                    type="number"
+                    min="1"
+                    value={exercise.sets || 3}
+                    onChange={(e) =>
+                      updateExerciseField(i, "sets", e.target.value)
+                    }
+                  />
+                </label>
+
+                <label>
+                  Reps
+                  <input
+                    type="number"
+                    min="1"
+                    value={exercise.reps || 10}
+                    onChange={(e) =>
+                      updateExerciseField(i, "reps", e.target.value)
+                    }
+                  />
+                </label>
+
+                <button onClick={() => setSwapIndex(i)}>Swap</button>
+                <button onClick={() => removeExercise(i)}>Remove</button>
+              </div>
             </div>
 
             <div className="sets-list">
@@ -481,6 +613,20 @@ setSummary({
       <button className="end-workout-btn" onClick={abandonWorkout}>
         End Without Saving
       </button>
+
+      {showAddModal && (
+        <AddExerciseModal
+          onClose={() => setShowAddModal(false)}
+          onAdd={addExercise}
+        />
+      )}
+
+      {swapIndex !== null && (
+        <AddExerciseModal
+          onClose={() => setSwapIndex(null)}
+          onAdd={swapExercise}
+        />
+      )}
     </div>
   );
 }

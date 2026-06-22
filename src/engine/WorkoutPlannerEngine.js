@@ -1,5 +1,6 @@
 import { EXERCISES } from "../Data/exercises";
 import UserProfileEngine from "./UserProfileEngine";
+import EquipmentEngine from "./EquipmentEngine";
 
 class WorkoutPlannerEngine {
   static getUserEquipment() {
@@ -20,7 +21,7 @@ class WorkoutPlannerEngine {
       return ["Bodyweight", "Dumbbells"];
     }
 
-    return profile.equipment;
+    return EquipmentEngine.normalizeEquipmentList(profile.equipment);
   }
 
   static getExercisesByTarget(target, usedIds = []) {
@@ -29,7 +30,10 @@ class WorkoutPlannerEngine {
     return EXERCISES.filter(
       (exercise) =>
         exercise.target === target &&
-        equipment.includes(exercise.equipment) &&
+        (
+          target === "Conditioning" ||
+          equipment.includes(exercise.equipment)
+        ) &&
         !usedIds.includes(exercise.id)
     );
   }
@@ -40,7 +44,10 @@ class WorkoutPlannerEngine {
     return EXERCISES.filter(
       (exercise) =>
         exercise.muscle === muscle &&
-        equipment.includes(exercise.equipment) &&
+        (
+          muscle === "Conditioning" ||
+          equipment.includes(exercise.equipment)
+        ) &&
         !usedIds.includes(exercise.id)
     );
   }
@@ -60,6 +67,18 @@ class WorkoutPlannerEngine {
 
         if (options.length === 0 && item.fallbackMuscle) {
           options = this.getExercisesByMuscle(item.fallbackMuscle, usedIds);
+        }
+
+        if (options.length === 0 && item.allowRepeat) {
+          options = this.getExercisesByTarget(item.target);
+        }
+
+        if (
+          options.length === 0 &&
+          item.allowRepeat &&
+          item.fallbackMuscle
+        ) {
+          options = this.getExercisesByMuscle(item.fallbackMuscle);
         }
 
         const selected = this.pickExercise(options);
@@ -215,6 +234,15 @@ Abs: [
         },
       ],
 
+      Forearms: [
+        {
+          target: "Forearms",
+          fallbackMuscle: "Forearms",
+          count: 2,
+          role: "Forearm builder",
+        },
+      ],
+
       Quads: [
         {
           target: "Quads",
@@ -256,6 +284,7 @@ Abs: [
           fallbackMuscle: "Conditioning",
           count: 2,
           role: "Conditioning",
+          allowRepeat: true,
         },
       ],
     };

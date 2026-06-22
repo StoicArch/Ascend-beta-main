@@ -400,6 +400,12 @@ without manually calculating everything.
         <p>
           AI-powered fitness built for real transformation.
         </p>
+
+        <div className="footer-links">
+          <button onClick={() => navigate("/privacy")}>Privacy Policy</button>
+          <button onClick={() => navigate("/terms")}>Terms of Use</button>
+          <button onClick={() => navigate("/cookies")}>Cookie Policy</button>
+        </div>
         
         <h2>colossians 3:23</h2>
       </footer>

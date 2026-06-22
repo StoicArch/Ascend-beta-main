@@ -1,5 +1,6 @@
 import UserProfileEngine from "./UserProfileEngine";
 import PremiumEngine from "./PremiumEngine";
+import ProgressiveOverloadEngine from "./ProgressiveOverloadEngine";
 
 class WeeklyReviewEngine {
 
@@ -285,6 +286,8 @@ static getNextWeekFocus() {
     const basicReview = {
       
       prsHit: this.getPRsHitThisWeek(),
+      weeklyProgressionScore:
+        ProgressiveOverloadEngine.getWeeklyProgressionScore(),
       weightTrend: this.getWeightTrend(),
       date: this.getTodayDate(),
       

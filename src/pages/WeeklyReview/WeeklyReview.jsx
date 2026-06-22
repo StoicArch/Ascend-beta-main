@@ -78,6 +78,11 @@ const nextWorkoutPreview = programStatus.nextWorkoutPreview;
             <span>Completion</span>
             <strong>{review.completionRate}%</strong>
           </div>
+
+          <div>
+            <span>Progression Score</span>
+            <strong>{review.weeklyProgressionScore || 0}/100</strong>
+          </div>
         </div>
 
         <p className="review-note">{review.basicRecommendation}</p>

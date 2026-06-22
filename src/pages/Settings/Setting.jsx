@@ -21,6 +21,7 @@ const FOCUS_OPTIONS = [
   "Glutes",
   "Biceps",
   "Triceps",
+  "Forearms",
   "Abs",
   "Conditioning",
 ];

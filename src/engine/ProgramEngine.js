@@ -3,6 +3,7 @@ import { PROGRAMS } from "../Data/Programs";
 import { EXERCISES } from "../Data/exercises";
 import PremiumEngine from "./PremiumEngine";
 import WorkoutPlannerEngine from "./WorkoutPlannerEngine";
+import EquipmentEngine from "./EquipmentEngine";
 
 class ProgramEngine {
   static getTodayName() {
@@ -114,7 +115,7 @@ class ProgramEngine {
       ];
     }
 
-    return profile.equipment;
+    return EquipmentEngine.normalizeEquipmentList(profile.equipment);
   }
 
   static normalizeFocus(focus) {

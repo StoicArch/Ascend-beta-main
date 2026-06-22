@@ -102,6 +102,122 @@ class ProgressiveOverloadEngine {
     };
   }
 
+  static getEstimatedOneRepMax(weight, reps) {
+    const safeWeight = Number(weight || 0);
+    const safeReps = Number(reps || 0);
+
+    if (safeWeight <= 0 || safeReps <= 0) return 0;
+
+    return Number((safeWeight * (1 + safeReps / 30)).toFixed(1));
+  }
+
+  static getSessionVolume(session) {
+    return (session?.sets || []).reduce(
+      (total, set) =>
+        total + Number(set.weight || 0) * Number(set.reps || 0),
+      0
+    );
+  }
+
+  static getBestMetrics(exerciseName) {
+    const history = this.getExerciseHistory(exerciseName);
+
+    return history.reduce(
+      (best, session) => {
+        const sessionVolume = this.getSessionVolume(session);
+
+        if (sessionVolume > best.volume) {
+          best.volume = sessionVolume;
+        }
+
+        (session.sets || []).forEach((set) => {
+          const estimatedOneRepMax = this.getEstimatedOneRepMax(
+            set.weight,
+            set.reps
+          );
+
+          if (estimatedOneRepMax > best.estimatedOneRepMax) {
+            best.estimatedOneRepMax = estimatedOneRepMax;
+          }
+
+          if (Number(set.weight || 0) > best.setWeight) {
+            best.setWeight = Number(set.weight || 0);
+          }
+
+          if (Number(set.reps || 0) > best.setReps) {
+            best.setReps = Number(set.reps || 0);
+          }
+        });
+
+        return best;
+      },
+      {
+        estimatedOneRepMax: 0,
+        volume: 0,
+        setWeight: 0,
+        setReps: 0,
+      }
+    );
+  }
+
+  static getWorkoutMetrics(exerciseSession) {
+    const best = this.getBestMetrics(exerciseSession.exerciseName);
+    const volume = this.getSessionVolume(exerciseSession);
+    const estimatedOneRepMax = Math.max(
+      ...(exerciseSession.sets || []).map((set) =>
+        this.getEstimatedOneRepMax(set.weight, set.reps)
+      ),
+      0
+    );
+
+    return {
+      estimatedOneRepMax,
+      volume,
+      volumePR: volume >= best.volume && volume > 0,
+      setPR: estimatedOneRepMax >= best.estimatedOneRepMax && estimatedOneRepMax > 0,
+    };
+  }
+
+  static getWeeklyProgressionScore() {
+    const profile = UserProfileEngine.getProfile();
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const weeklyHistory = (profile.exerciseHistory || []).filter(
+      (item) => new Date(item.date) >= weekAgo
+    );
+
+    if (weeklyHistory.length === 0) return 0;
+
+    const scored = weeklyHistory.reduce((score, session) => {
+      const metrics = this.getWorkoutMetrics(session);
+      return score + (metrics.volumePR ? 12 : 4) + (metrics.setPR ? 8 : 0);
+    }, 0);
+
+    return Math.min(100, scored);
+  }
+
+  static getProgressSummary() {
+    const profile = UserProfileEngine.getProfile();
+    const names = [
+      ...new Set((profile.exerciseHistory || []).map((item) => item.exerciseName)),
+    ];
+
+    const metrics = names.map((name) => ({
+      name,
+      ...this.getBestMetrics(name),
+    }));
+
+    return {
+      weeklyProgressionScore: this.getWeeklyProgressionScore(),
+      exercisesTracked: names.length,
+      topEstimatedOneRepMax: metrics
+        .slice()
+        .sort((a, b) => b.estimatedOneRepMax - a.estimatedOneRepMax)[0],
+      topVolume: metrics.slice().sort((a, b) => b.volume - a.volume)[0],
+    };
+  }
+
   static getRecommendation(exerciseName) {
     const last = this.getLastPerformance(exerciseName);
 

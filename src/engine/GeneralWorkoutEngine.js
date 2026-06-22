@@ -1,5 +1,6 @@
 import UserProfileEngine from "./UserProfileEngine";
 import { EXERCISES } from "../Data/exercises";
+import EquipmentEngine from "./EquipmentEngine";
 
 
 class GeneralWorkoutEngine {
@@ -14,7 +15,7 @@ class GeneralWorkoutEngine {
       return ["Dumbbells", "Barbell", "Machine", "Cable", "Smith Machine"];
     }
 
-    return profile.equipment;
+    return EquipmentEngine.normalizeEquipmentList(profile.equipment);
   }
 
   static shouldExcludeBodyweight() {
@@ -168,9 +169,11 @@ class GeneralWorkoutEngine {
       musclesToMatch.includes(exercise.muscle);
 
     const equipmentMatch =
+      muscle === "Conditioning" ||
       equipment.includes(exercise.equipment);
 
     const bodyweightBlocked =
+      muscle !== "Conditioning" &&
       excludeBodyweight &&
       exercise.equipment === "Bodyweight";
 

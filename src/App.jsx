@@ -24,6 +24,10 @@ import Support from "./pages/Support/Support";
 import WeeklyReview from "./pages/WeeklyReview/WeeklyReview";
 import ProfileMigrationEngine from "./engine/ProfileMigrationEngine";
 import FoodScanTest from "./pages/FoodScanTest/FoodScanTest";
+import PrivacyPolicy from "./pages/Legal/PrivacyPolicy";
+import TermsOfUse from "./pages/Legal/TermsOfUse";
+import CookiePolicy from "./pages/Legal/CookiePolicy";
+import PWAInstallPrompt from "./components/PWAInstallPrompt";
 
 export default function App() {
   useEffect(() => {
@@ -199,6 +203,21 @@ export default function App() {
         />
 
         <Route
+          path="/privacy"
+          element={<PrivacyPolicy />}
+        />
+
+        <Route
+          path="/terms"
+          element={<TermsOfUse />}
+        />
+
+        <Route
+          path="/cookies"
+          element={<CookiePolicy />}
+        />
+
+        <Route
           path="/food-scan-test"
           element={<FoodScanTest />}
         />
@@ -210,6 +229,7 @@ export default function App() {
       </Routes>
 
       <MobileNav />
+      <PWAInstallPrompt />
     </AuthProvider>
   );
 }

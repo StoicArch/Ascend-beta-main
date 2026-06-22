@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./WeightTracker.css";
 import WeightEngine from "../../engine/WeightEngine";
+import ProgressiveOverloadEngine from "../../engine/ProgressiveOverloadEngine";
 
 export default function WeightTracker() {
   const [weight, setWeight] = useState("");
@@ -13,6 +14,7 @@ export default function WeightTracker() {
   const weightChange = WeightEngine.getWeightChange();
   const remainingWeight = WeightEngine.getRemainingToGoal();
   const goalDirection = WeightEngine.getGoalDirection();
+  const progression = ProgressiveOverloadEngine.getProgressSummary();
 
   const saveWeight = () => {
     if (!weight || Number(weight) <= 0) {
@@ -86,6 +88,28 @@ export default function WeightTracker() {
               : "Set a goal weight"}
           </p>
         </div>
+
+        <div className="weight-card">
+          <span>Weekly Progression Score</span>
+          <h2>{progression.weeklyProgressionScore}/100</h2>
+          <p>{progression.exercisesTracked} exercises tracked</p>
+        </div>
+      </div>
+
+      <div className="weight-input-card">
+        <h2>Strength Progress</h2>
+        <p>
+          Estimated 1RM Leader:{" "}
+          {progression.topEstimatedOneRepMax
+            ? `${progression.topEstimatedOneRepMax.name} (${progression.topEstimatedOneRepMax.estimatedOneRepMax}kg)`
+            : "--"}
+        </p>
+        <p>
+          Volume Leader:{" "}
+          {progression.topVolume
+            ? `${progression.topVolume.name} (${progression.topVolume.volume}kg)`
+            : "--"}
+        </p>
       </div>
 
       <div className="weight-input-card">
