@@ -28,6 +28,7 @@ import PrivacyPolicy from "./pages/Legal/PrivacyPolicy";
 import TermsOfUse from "./pages/Legal/TermsOfUse";
 import CookiePolicy from "./pages/Legal/CookiePolicy";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import TermsPopup from "./components/TermsPopup";
 
 export default function App() {
   useEffect(() => {
@@ -229,6 +230,7 @@ export default function App() {
       </Routes>
 
       <MobileNav />
+      <TermsPopup/>
       <PWAInstallPrompt />
     </AuthProvider>
   );

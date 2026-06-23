@@ -6,7 +6,7 @@ import UserProfileEngine from "../../engine/UserProfileEngine";
 import WorkoutEngine from "../../engine/WorkoutEngine";
 import ProgramEngine from "../../engine/ProgramEngine";
 import WeightEngine from "../../engine/WeightEngine";
-import ProgressEngine from "../../engine/ProgressEngine";
+
 import WeeklyReviewEngine from "../../engine/WeeklyReviewEngine";
 import GoalEngine from "../../engine/GoalEngine";
 import WorkoutSessionEngine from "../../engine/WorkoutSessionEngine";
@@ -47,8 +47,7 @@ useEffect(() => {
   const workoutCount = todayWorkout.length;
   const recovery = DashboardEngine.getRecoveryScore();
   const streak = DashboardEngine.getStreak();
-  const calories = DashboardEngine.getCalories();
-  const protein = DashboardEngine.getProtein();
+ 
   const todayCalories =
   FoodLogEngine.getTodayCalories();
 
@@ -62,7 +61,7 @@ const todayFat =
   FoodLogEngine.getTodayFat();
 
 
-  const sleep = DashboardEngine.getSleep();
+  
   const insight = DashboardEngine.getAIInsight();
 
   const coachMessage =
@@ -72,11 +71,7 @@ const todayFat =
   const currentProgram = programStatus.program;
 
   const currentWeight = WeightEngine.getCurrentWeight();
-  const weightChange = WeightEngine.getWeightChange();
-
-  const completedWorkouts = ProgressEngine.getCompletedCount();
-
-  const goalStatus = GoalEngine.getGoalStatus();
+  
 const goalMessage = GoalEngine.getGoalMessage();
 
   const latestReview =
@@ -230,71 +225,68 @@ const nutritionFocus =
   <button>View Review</button>
 </section>
 
-        <section className="metrics-grid">
-          
-         <div
-  id="tour-weight"
-  className="metric-card clickable"
-  onClick={() => navigate("/weight")}
->
-  <span>Weight</span>
-            <h2>{currentWeight ? `${currentWeight}kg` : "--"}</h2>
-            <p>
-              {currentWeight
-                ? `${weightChange > 0 ? "+" : ""}${weightChange}kg change`
-                : "Add your first weight entry."}
-            </p>
-          </div>
+      <section className="metrics-grid">
 
-          <div
-  className="metric-card clickable"
-  onClick={() => navigate("/weight")}
->
-  <span>Goal Progress</span>
+  <div
+    className="metric-card recovery hero-metric"
+  >
+    <span>Recovery Score</span>
 
-  <h2>{goalStatus.progressPercent}%</h2>
+    <h2>{recovery}%</h2>
 
-  <p>{goalMessage}</p>
-</div>
+    <p>
+      {recovery >= 80
+        ? "Recovery is high. Push progression today."
+        : "Recovery is low. Prioritize sleep and nutrition."}
+    </p>
+  </div>
 
-          <div className="metric-card">
-            <span>Completed</span>
-            <h2>{completedWorkouts}</h2>
-            <p>Workouts Finished</p>
-          </div>
+  <div
+    className="metric-card clickable"
+    onClick={() => navigate("/weight")}
+  >
+    <span>Current Weight</span>
 
-          <div
-  id="tour-recovery"
-  className="metric-card recovery"
->
-            <span>Recovery Score</span>
-            <h2>{recovery}%</h2>
-            <p>
-              {recovery >= 80
-                ? "Ready to push intensity today."
-                : "Manage intensity and recover well."}
-            </p>
-          </div>
+    <h2>
+      {currentWeight
+        ? `${currentWeight}kg`
+        : "--"}
+    </h2>
 
-          <div className="metric-card">
-            <span>Calories</span>
-            <h2>{calories}</h2>
-            <p>Daily nutrition target.</p>
-          </div>
+    <p>{goalMessage}</p>
+  </div>
 
-          <div className="metric-card">
-            <span>Protein</span>
-            <h2>{protein}g</h2>
-            <p>Muscle recovery target.</p>
-          </div>
+  <div className="metric-card">
 
-          <div className="metric-card">
-            <span>Sleep</span>
-            <h2>{sleep}h</h2>
-            <p>Sleep recovery target.</p>
-          </div>
-        </section>
-        
+    <span>Workout Streak</span>
+
+    <h2>{streak}</h2>
+
+    <p>Keep the momentum alive</p>
+
+  </div>
+
+  <div className="metric-card">
+
+    <span>Today's Mission</span>
+  <h2>
+  {[
+    workoutCount > 0 ? 1 : 0,
+    todayProtein >= profile.protein ? 1 : 0,
+    recovery >= 80 ? 1 : 0,
+  ].reduce((a, b) => a + b, 0)}
+  /3
+</h2>
+
+<p>
+  Complete today's targets
+</p>
+
+  </div>
+
+</section>
+
+
         <section className="nutrition-card">
 
           <div className="nutrition-coach">
@@ -433,11 +425,18 @@ const nutritionFocus =
 
   </div>
 </section>
+        
 
         <section className="dashboard-grid">
           <div className="dashboard-card workout-card">
             <div className="card-header">
               <h2>Today's Workout</h2>
+              <button
+  className="start-workout-inline"
+  onClick={() => navigate("/workout")}
+>
+  Start
+</button>
               <span>{workoutCount} Exercises</span>
             </div>
 
@@ -491,9 +490,6 @@ const nutritionFocus =
   {coachMessage.title}
 </h3>
 
-<p>
-  {coachMessage.message}
-</p>
 
 <p>
   {insight}

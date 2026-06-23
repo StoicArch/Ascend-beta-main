@@ -677,3 +677,60 @@
   background:#ff2d55;
   color:white;
 }
+.hero-metric{
+  background:
+  linear-gradient(
+    135deg,
+    rgba(255,45,85,.22),
+    rgba(255,45,85,.05)
+  );
+
+  border:1px solid
+  rgba(255,45,85,.25);
+}
+
+.hero-metric h2{
+  font-size:56px;
+}
+
+.start-workout-inline,
+.ai-action{
+  width:100%;
+  padding:14px 18px;
+  border:none;
+  border-radius:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s;
+  margin-top:12px;
+}
+
+.start-workout-inline{
+  background:#ff2d55;
+  color:white;
+  box-shadow:
+  0 10px 25px rgba(255,45,85,.25);
+}
+
+.ai-action{
+  background:#181818;
+  color:white;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.start-workout-inline:hover,
+.ai-action:hover{
+  transform:translateY(-2px);
+}
+
+.ai-action:hover{
+  border-color:#ff2d55;
+}
+.ai-action:last-child{
+  background:
+  linear-gradient(
+    135deg,
+    #ff2d55,
+    #ff6b35
+  );
+}
