@@ -30,7 +30,7 @@ useEffect(() => {
   }
 }, []);
 
-  const premiumNutrition = DashboardCoachEngine.getPremiumNutritionInsight();
+ 
   const [showTour, setShowTour] =
   React.useState(false);
 
@@ -63,6 +63,11 @@ useEffect(() => {
   const navigate = useNavigate();
 
   const profile = UserProfileEngine.getProfile();
+
+  const currentProgram = ProgramEngine.getCurrentProgram();
+
+const programStatus = ProgramEngine.getProgramStatus();
+
   const todayWorkout = WorkoutEngine.getOrCreateTodayWorkout();
 
   const workoutCount = todayWorkout.length;
@@ -75,11 +80,7 @@ useEffect(() => {
 const todayProtein =
   FoodLogEngine.getTodayProtein();
 
-const todayCarbs =
-  FoodLogEngine.getTodayCarbs();
 
-const todayFat =
-  FoodLogEngine.getTodayFat();
 
 
   
@@ -88,8 +89,8 @@ const todayFat =
   const coachMessage =
   DashboardCoachEngine.getDailyFocus();
 
-  const programStatus = ProgramEngine.getProgramStatus();
-  const currentProgram = programStatus.program;
+  
+  
 
   const currentWeight = WeightEngine.getCurrentWeight();
   
@@ -101,36 +102,11 @@ const goalMessage = GoalEngine.getGoalMessage();
 
 const hasWeeklyReviewAlert = true;
 
-const caloriePercent = Math.min(
-  100,
-  Math.round(
-    (todayCalories / profile.calories) * 100
-  )
-);
 
-const proteinPercent = Math.min(
-  100,
-  Math.round(
-    (todayProtein / profile.protein) * 100
-  )
-);
 
-const carbsPercent = Math.min(
-  100,
-  Math.round(
-    (todayCarbs / profile.carbs) * 100
-  )
-);
 
-const fatPercent = Math.min(
-  100,
-  Math.round(
-    (todayFat / profile.fat) * 100
-  )
-);
 
-const nutritionFocus =
-  DashboardCoachEngine.getDailyFocus();
+
 
 
 
@@ -186,85 +162,44 @@ const nutritionFocus =
           </div>
         </div>
 
-       <section
-  id="tour-program-card"
-  className="current-program-card"
->
-  {profile.weakMuscles &&
- profile.weakMuscles.length > 0 && (
+       <section className="dashboard-hero">
 
-  <section className="priority-muscles-card">
+  <div>
 
-    <span>
-      PRIORITY MUSCLES
+    <span className="hero-tag">
+      TODAY
     </span>
 
-    <h2>
-      Specialization Active
-    </h2>
+    <h1>
+      {recovery >= 80
+        ? "Ready to Progress"
+        : "Recovery First"}
+    </h1>
 
-    <div className="priority-muscles-grid">
+    <p>
+      {recovery >= 80
+        ? "Recovery is high. Push heavier weights today."
+        : "Recovery is low. Focus on quality training and nutrition."}
+    </p>
 
-      {profile.weakMuscles.map(
-        (muscle) => (
-          <div
-            key={muscle}
-            className="priority-muscle"
-          >
-            {muscle}
-          </div>
-        )
-      )}
+    <button
+      className="hero-btn"
+      onClick={() => navigate("/workout")}
+    >
+      Start Workout
+    </button>
 
-    </div>
+  </div>
 
-    <div className="priority-benefits">
+  <div className="hero-score">
 
-      <div>
-        ✓ Trained 2x weekly
-      </div>
+    <span>Recovery</span>
 
-      <div>
-        ✓ Minimum 10 sets weekly
-      </div>
+    <h2>{recovery}%</h2>
 
-      <div>
-        ✓ Prioritized first
-      </div>
+  </div>
 
-    </div>
-
-  </section>
-
-)}
-          <div>
-            <span>Current Program</span>
-
-            <h2>{currentProgram?.name || "No Program Selected"}</h2>
-
-            <p>
-              {currentProgram
-                ? `Week ${programStatus.week} • ${currentProgram.goal}`
-                : "Choose a program to begin your transformation."}
-            </p>
-
-            {currentProgram && (
-              <p>
-                {programStatus.isRestDay
-  ? `Today is recovery. Next workout: ${
-      programStatus.nextWorkout?.day || "Soon"
-    }`
-  : `Today: ${programStatus.todayWorkout.length} exercises`}
-              </p>
-            )}
-          </div>
-
-          <button
-            onClick={() => navigate(currentProgram ? "/program" : "/programs")}
-          >
-            {currentProgram ? "View Program" : "Choose Program"}
-          </button>
-        </section>
+</section>
 
         <section
   id="tour-weekly-review"
@@ -295,313 +230,227 @@ const nutritionFocus =
 </section>
 
 
-      <section className="metrics-grid">
+     <section className="quick-stats">
 
   <div
-  id="tour-recovery"
-  className="metric-card recovery hero-metric"
->
-    <span>Recovery Score</span>
-
-    <h2>{recovery}%</h2>
-
-    <p>
-      {recovery >= 80
-        ? "Recovery is high. Push progression today."
-        : "Recovery is low. Prioritize sleep and nutrition."}
-    </p>
-  </div>
-
-  <div
-  id="tour-weight"
-  className="metric-card clickable"
-  onClick={() => navigate("/weight")}
->
-    <span>Current Weight</span>
-
+    className="quick-card"
+    onClick={() => navigate("/weight")}
+  >
+    <span>Weight</span>
     <h2>
       {currentWeight
         ? `${currentWeight}kg`
         : "--"}
     </h2>
-
     <p>{goalMessage}</p>
   </div>
 
-  <div className="metric-card">
-
+  <div className="quick-card">
     <span>Workout Streak</span>
-
     <h2>{streak}</h2>
-
-    <p>Keep the momentum alive</p>
-
+    <p>Keep showing up.</p>
   </div>
 
-  <div className="metric-card">
+  <div className="quick-card">
+    <span>Today's Goal</span>
 
-    <span>Today's Mission</span>
-  <h2>
-  {[
-    workoutCount > 0 ? 1 : 0,
-    todayProtein >= profile.protein ? 1 : 0,
-    recovery >= 80 ? 1 : 0,
-  ].reduce((a, b) => a + b, 0)}
-  /3
-</h2>
+    <h2>
+      {[
+        workoutCount > 0 ? 1 : 0,
+        todayProtein >= profile.protein ? 1 : 0,
+        recovery >= 80 ? 1 : 0,
+      ].reduce((a, b) => a + b, 0)}
+      /3
+    </h2>
 
-<p>
-  Complete today's targets
-</p>
-
+    <p>Complete today's targets.</p>
   </div>
 
 </section>
 
+        <section className="nutrition-overview">
 
-        <section className="nutrition-card">
-
-          <div className="nutrition-coach">
-
-  <h3>
-    {nutritionFocus.title}
-  </h3>
-
-  <p>
-    {nutritionFocus.message}
-  </p>
-
-</div>
-
-  <h2>AI Nutrition Tracker</h2>
-
-  <div className="nutrition-grid">
-
+  <div className="nutrition-header">
     <div>
-  <span>Calories</span>
+      <span>Nutrition</span>
+      <h2>Today's Intake</h2>
+    </div>
 
-  <h3>
-    {todayCalories}/{profile.calories}
-  </h3>
-
-  <div className="nutrition-bar">
-    <div
-      className="nutrition-fill"
-      style={{
-        width: `${caloriePercent}%`
-      }}
-    />
+    <button
+      className="nutrition-open-btn"
+      onClick={() => navigate("/food-scan-test")}
+    >
+      Track Food
+    </button>
   </div>
 
-  <div className="premium-nutrition-card">
+  <div className="nutrition-stats">
 
-  {premiumNutrition.locked ? (
+    <div className="nutrition-stat">
+      <span>Calories</span>
+      <h2>{todayCalories}</h2>
+      <p>/ {profile.calories}</p>
+    </div>
 
-    <>
-      <h3>
-        🔒 Premium Nutrition Insight
-      </h3>
+    <div className="nutrition-stat">
+      <span>Protein</span>
+      <h2>{todayProtein}g</h2>
+      <p>/ {profile.protein}g</p>
+    </div>
 
-      <div className="premium-blur">
+  </div>
 
-        Increase protein intake today.
+</section>
+        
 
-        Add a recovery meal before bed.
+        <section className="dashboard-panels">
 
-        Nutrition timing recommendations.
+  <div className="today-workout-panel">
 
-        Muscle gain optimization strategy.
+    <div className="panel-header">
+
+      <div>
+
+        <span>Today's Workout</span>
+
+        <h2>
+          {workoutCount > 0
+            ? `${workoutCount} Exercises`
+            : "Recovery Day"}
+        </h2>
 
       </div>
 
       <button
-        onClick={() => navigate("/premium")}
+        className="panel-btn"
+        onClick={() => navigate("/workout")}
       >
-        Unlock Premium
+        Open
       </button>
-    </>
 
-  ) : (
+    </div>
 
-    <>
-      <h3>
-        {premiumNutrition.title}
-      </h3>
+    {todayWorkout.length > 0 ? (
 
-      <p>
-        {premiumNutrition.message}
+      <div className="exercise-preview">
+
+        {todayWorkout.slice(0,4).map((exercise,index)=>(
+
+          <div
+            className="exercise-row"
+            key={index}
+          >
+
+            <div>
+
+              <h3>{exercise.name}</h3>
+
+              <p>{exercise.muscle}</p>
+
+            </div>
+
+            <strong>
+              {exercise.sets || 3} × {exercise.reps || 10}
+            </strong>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    ) : (
+
+      <p className="rest-day">
+        Recover today. Your next workout will be ready tomorrow.
       </p>
-    </>
 
-  )}
-
-</div>
-
-</div>
-
-    <div>
-  <span>Protein</span>
-
-  <h3>
-    {todayProtein}/{profile.protein}g
-  </h3>
-
-  <div className="nutrition-bar">
-    <div
-      className="nutrition-fill"
-      style={{
-        width: `${proteinPercent}%`
-      }}
-    />
-  </div>
-
-</div>
-
-
-
-    <div>
-  <span>Carbs</span>
-
-  <h3>
-    {todayCarbs}/{profile.carbs}g
-  </h3>
-
-  <div className="nutrition-bar">
-    <div
-      className="nutrition-fill"
-      style={{
-        width: `${carbsPercent}%`
-      }}
-    />
-  </div>
-
-</div>
-
-    <div>
-  <span>Fat</span>
-
-  <h3>
-    {todayFat}/{profile.fat}g
-  </h3>
-
-  <div className="nutrition-bar">
-    <div
-      className="nutrition-fill"
-      style={{
-        width: `${fatPercent}%`
-      }}
-    />
-  </div>
-
-</div>
+    )}
 
   </div>
+
+  <div className="coach-panel">
+
+    <span>AI Coach</span>
+
+    <h2>{coachMessage.title}</h2>
+
+    <p>{insight}</p>
+
+    <button
+      className="panel-btn"
+      onClick={() => navigate("/ai-coach")}
+    >
+      Open Coach
+    </button>
+
+  </div>
+
 </section>
-        
-
-        <section className="dashboard-grid">
-          <div className="dashboard-card workout-card">
-            <div className="card-header">
-              <h2>Today's Workout</h2>
-              <button
-  className="start-workout-inline"
-  onClick={() => navigate("/workout")}
->
-  Start
-</button>
-              <span>{workoutCount} Exercises</span>
-            </div>
-
-            {todayWorkout.length === 0 ? (
-              <div className="empty-workout">
-                <p>
-                  Today is a recovery day or no workout has been generated yet.
-                </p>
-                <button onClick={() => navigate("/workout")}>
-                  Open Workout
-                </button>
-              </div>
-            ) : (
-              <div className="exercise-list">
-                {todayWorkout.slice(0, 5).map((exercise, index) => (
-                  <div className="exercise" key={index}>
-                    <div>
-                      <h3>{exercise.name}</h3>
-                      <p>{exercise.muscle || "Training"} • Today</p>
-                    </div>
-
-                    <span>
-                      {exercise.sets || 3} × {exercise.reps || 10}
-                    </span>
-                  </div>
-                ))}
-
-                {todayWorkout.length > 5 && (
-                  <button
-                    className="view-more-workout"
-                    onClick={() => navigate("/workout")}
-                  >
-                    View full workout
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-         <div
-  id="tour-ai-coach"
-  className="dashboard-card ai-card"
->
-            <div className="card-header">
-              <h2>AI Coach</h2>
-              <span>Adaptive Intelligence</span>
-            </div>
-
-            <div className="ai-message">
-              <h3>
-  {coachMessage.title}
-</h3>
-
-
-<p>
-  {insight}
-</p>
-              <button
-                className="ai-action"
-                onClick={() => navigate("/ai-coach")}
-              >
-                Ask AI Coach
-              </button>
-
-              <button
-  id="tour-nutrition"
-  className="ai-action"
-  onClick={() => navigate("/food-scan-test")}
->
-  AI MEAL TRACKER
-</button>
-            </div>
-
-            <div className="ai-stats">
-              <div>
-                <h3>Volume</h3>
-                <p>{workoutCount * 3} sets</p>
-              </div>
-
-              <div>
-                <h3>Streak</h3>
-                <p>{streak}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
        
 
-        <section className="quote-section">
-          <p>“Whatever you do, work at it with all your heart.”</p>
-          <span>Colossians 3:23</span>
-        </section>
+        <section className="bottom-grid">
+
+  <div className="program-summary">
+
+    <span>Current Program</span>
+
+    <h2>
+      {currentProgram?.name || "No Program"}
+    </h2>
+
+    <p>
+      {currentProgram
+        ? `Week ${programStatus.week}`
+        : "Choose a program to begin."
+      }
+    </p>
+
+    <button
+      className="panel-btn"
+      onClick={() =>
+        navigate(
+          currentProgram
+            ? "/program"
+            : "/programs"
+        )
+      }
+    >
+      View Program
+    </button>
+
+  </div>
+
+  <div className="priority-summary">
+
+    <span>Priority Muscles</span>
+
+    {profile.weakMuscles?.length ? (
+
+      <div className="priority-list">
+
+        {profile.weakMuscles.map((muscle) => (
+
+          <div
+            key={muscle}
+            className="priority-pill"
+          >
+            ⭐ {muscle}
+          </div>
+
+        ))}
+
+      </div>
+
+    ) : (
+
+      <p>No specialization active.</p>
+
+    )}
+
+  </div>
+
+</section>
       </main>
 
       {showUpdateModal && (
