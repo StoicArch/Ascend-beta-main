@@ -1011,3 +1011,22 @@ grid-template-columns:1fr;
 }
 
 }
+
+@media (max-width:768px){
+
+.dashboard-hero{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.hero-score{
+width:100%;
+align-items:flex-start;
+margin-top:24px;
+}
+
+.hero-score h2{
+font-size:56px;
+}
+
+}
