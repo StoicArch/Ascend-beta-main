@@ -37,6 +37,7 @@ programHistory: [],
     workoutsCompleted: 0,
     prsHit: 0,
   },
+  weakMuscles: [],
 };
 
   static getProfile() {

@@ -298,16 +298,105 @@ Abs: [
       },
     ];
   }
+  static applyWeakMusclePriority(focusList = []) {
+  const profile =
+    UserProfileEngine.getProfile();
 
-  static generateWorkout(focusList = []) {
-    const focus = Array.isArray(focusList) ? focusList : [focusList];
+  const weakMuscles =
+    profile.weakMuscles || [];
 
-    const targetPlan = focus.flatMap((muscle) =>
+  const focus =
+    [...focusList];
+
+  weakMuscles.forEach((muscle) => {
+    if (focus.includes(muscle)) {
+      focus.splice(
+        focus.indexOf(muscle),
+        1
+      );
+
+      focus.unshift(muscle);
+    }
+  });
+
+  return focus;
+}
+static generateWorkout(focusList = []) {
+  const profile =
+    UserProfileEngine.getProfile();
+
+  const weakMuscles =
+    profile.weakMuscles || [];
+
+  const workout = [];
+  const usedIds = [];
+
+  weakMuscles.forEach((muscle) => {
+    const options =
+      this.getExercisesByTarget(muscle);
+
+    const selected =
+      this.pickExercise(options);
+
+    if (selected) {
+      usedIds.push(selected.id);
+
+      workout.push({
+        ...selected,
+        sets: 5,
+        priority: true,
+        role: "Priority Muscle",
+      });
+    }
+  });
+
+  const normalizedFocus =
+    Array.isArray(focusList)
+      ? focusList
+      : [focusList];
+
+  const targetPlan =
+    normalizedFocus.flatMap((muscle) =>
       this.getPlanForMuscle(muscle)
     );
 
-    return this.buildFromTargets(targetPlan);
-  }
+  targetPlan.forEach((item) => {
+    for (let i = 0; i < item.count; i++) {
+      let options =
+        this.getExercisesByTarget(
+          item.target,
+          usedIds
+        );
+
+      if (
+        options.length === 0 &&
+        item.fallbackMuscle
+      ) {
+        options =
+          this.getExercisesByMuscle(
+            item.fallbackMuscle,
+            usedIds
+          );
+      }
+
+      const selected =
+        this.pickExercise(options);
+
+      if (selected) {
+        usedIds.push(selected.id);
+
+        workout.push({
+          ...selected,
+          role:
+            item.role ||
+            item.target,
+        });
+      }
+    }
+  });
+
+  return workout;
+}
 }
 
 export default WorkoutPlannerEngine;

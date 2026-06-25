@@ -29,7 +29,6 @@ export const GOALS = [
   "Muscle Gain",
   "Fat Loss",
   "Strength",
-  "Athleticism",
   "Maintenance",
 ];
 

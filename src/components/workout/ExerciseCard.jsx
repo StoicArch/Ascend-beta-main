@@ -17,9 +17,9 @@ export default function ExerciseCard({
     <div className="workout-card">
       <div className="card-top">
         <div>
-          <h2>{exercise.name}</h2>
-          <span>{exercise.muscle}</span>
-        </div>
+  <h2>{exercise.name}</h2>
+  <span>{exercise.muscle}</span>
+</div>
 
         <button onClick={onRemove}>✕</button>
       </div>

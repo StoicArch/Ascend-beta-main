@@ -6,6 +6,7 @@ import UserProfileEngine from "../../engine/UserProfileEngine";
 import StepHeader from "./components/StepHeader";
 import GoalCard from "./components/GoalCard";
 import ExperienceCard from "./components/ExperienceCard";
+import NutritionEngine from "../../engine/NutritionEngine";
 
 import {
   EXPERIENCE_LEVELS,
@@ -19,15 +20,18 @@ export default function Onboarding() {
 
   const navigate = useNavigate();
 
-  const TOTAL_STEPS = 10;
+  const TOTAL_STEPS = 12;
 
   const [step, setStep] = useState(1);
 
 
   const [data, setData] = useState({
-    name: "",
-    gender: "",
-    goal: "",
+  name: "",
+  gender: "",
+  age: "",
+  weight: "",
+  goalWeight: "",
+  goal: "",
     experience: "",
     location: "",
     equipment: [],
@@ -36,6 +40,7 @@ export default function Onboarding() {
     stress: "",
     sleepQuality: "",
     weeklyPlan: {},
+    weakMuscles: [],
   });
 
 
@@ -43,16 +48,24 @@ export default function Onboarding() {
   if (step === 1) return data.name.trim().length > 1;
   if (step === 2) return data.gender;
   if (step === 3) return data.goal;
-  if (step === 4) return data.experience;
-  if (step === 5) return data.location;
-  if (step === 6) return data.equipment.length > 0;
-  if (step === 7) return data.splitMode;
+  if (step === 4)
+  return (
+    data.age > 0 &&
+    data.weight > 0
+  );
 
-  if (step === 8 && data.splitMode === "Custom") {
+if (step === 5)
+  return data.goalWeight > 0;
+  if (step === 6) return data.experience;
+  if (step === 7) return data.location;
+  if (step === 8) return data.equipment.length > 0;
+  if (step === 9) return data.splitMode;
+
+  if (step === 10 && data.splitMode === "Custom") {
     return Object.keys(data.weeklyPlan).length > 0;
   }
 
-  if (step === 9) return data.recovery;
+ if (step === 11) return true;
 
   return true;
 };
@@ -60,15 +73,18 @@ export default function Onboarding() {
   // =========================
   // NAVIGATION
   // =========================
-
+ 
   const next = () => {
   if (!isStepValid()) {
     alert("Please complete this step before continuing.");
     return;
   }
 
-  if (step === 7 && data.splitMode === "AI") {
-    setStep(9);
+  if (
+    step === 9 &&
+    data.splitMode === "AI"
+  ) {
+    setStep(11);
     return;
   }
 
@@ -78,10 +94,12 @@ export default function Onboarding() {
 };
 
   const back = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
+
+  
+  if (step > 1) {
+    setStep(step - 1);
+  }
+};
 
   // =========================
   // EQUIPMENT TOGGLE
@@ -191,66 +209,71 @@ export default function Onboarding() {
   // =========================
 // AI PLAN GENERATOR
 // =========================
-
 const generatePlan = () => {
-  if (data.splitMode !== "AI") {
-    return data.weeklyPlan;
-  }
+  const weak = data.weakMuscles || [];
 
-  if (data.goal === "Muscle Gain" || data.goal === "Build Muscle") {
+  const focusMap = {
+    "Upper Chest": "Chest",
+    "Mid Chest": "Chest",
+    "Lower Chest": "Chest",
+
+    "Lats": "Back",
+    "Upper Back": "Back",
+    "Lower Back": "Back",
+    "Traps": "Back",
+
+    "Front Delts": "Shoulders",
+    "Side Delts": "Shoulders",
+    "Rear Delts": "Shoulders",
+
+    "Biceps": "Biceps",
+    "Triceps": "Triceps",
+    "Forearms": "Forearms",
+
+    "Quads": "Legs",
+    "Hamstrings": "Legs",
+    "Glutes": "Legs",
+    "Calves": "Legs",
+
+    "Abs": "Abs",
+    "Obliques": "Abs",
+    "Neck": "Neck",
+  };
+
+  const priorityFocus = [
+    ...new Set(
+      weak
+        .map((muscle) => focusMap[muscle])
+        .filter(Boolean)
+    ),
+  ];
+
+  if (priorityFocus.length === 0) {
     return {
       Monday: {
-        Chest: ["Upper Chest"],
-        Shoulders: ["Front Delts", "Side Delts"],
-        Triceps: ["Long Head"],
+        focus: ["Chest", "Triceps"],
       },
-      Tuesday: {
-        Back: ["Lats", "Upper Back"],
-        Biceps: ["Long Head"],
-      },
-      Wednesday: {
-        Legs: ["Quads", "Hamstrings"],
-        Abs: ["Abs"],
-      },
-      Thursday: {
-        rest: true,
-      },
-      Friday: {
-        Chest: ["Lower Chest"],
-        Shoulders: ["Side Delts"],
-        Triceps: ["Short Head"],
-      },
-      Saturday: {
-        Back: ["Lats"],
-        Biceps: ["Short Head"],
-        Legs: ["Glutes", "Calfs"],
-      },
-      Sunday: {
-        rest: true,
-      },
-    };
-  }
 
-  if (data.goal === "Fat Loss" || data.goal === "Lose Fat") {
-    return {
-      Monday: {
-        FullBody: ["Chest", "Back", "Legs"],
-      },
       Tuesday: {
-        Cardio: ["Conditioning"],
+        focus: ["Back", "Biceps"],
       },
+
       Wednesday: {
-        rest: true,
+        focus: ["Legs"],
       },
+
       Thursday: {
-        FullBody: ["Shoulders", "Legs", "Abs"],
+        focus: ["Shoulders", "Abs"],
       },
+
       Friday: {
-        Cardio: ["Conditioning"],
+        focus: ["Chest", "Back"],
       },
+
       Saturday: {
-        FullBody: ["Chest", "Back", "Abs"],
+        focus: ["Arms", "Abs"],
       },
+
       Sunday: {
         rest: true,
       },
@@ -259,42 +282,47 @@ const generatePlan = () => {
 
   return {
     Monday: {
-      Chest: ["Upper Chest"],
-      Back: ["Lats"],
+      focus: priorityFocus,
     },
+
     Tuesday: {
-      rest: true,
+      focus: ["Back", "Biceps"],
     },
+
     Wednesday: {
-      Legs: ["Quads", "Hamstrings"],
+      focus: ["Legs"],
     },
+
     Thursday: {
-      rest: true,
+      focus: priorityFocus,
     },
+
     Friday: {
-      Shoulders: ["Side Delts"],
-      Biceps: ["Biceps"],
-      Triceps: ["Triceps"],
+      focus: ["Chest", "Shoulders", "Triceps"],
     },
+
     Saturday: {
-      Abs: ["Abs"],
+      focus: ["Back", "Abs"],
     },
+
     Sunday: {
       rest: true,
     },
   };
 };
 
-
   // =========================
   // FINISH
   // =========================
 const finish = () => {
+  const generatedPlan =
+    data.splitMode === "AI"
+      ? generatePlan()
+      : data.weeklyPlan;
 
-  const weeklyPlan =
-    data.splitMode === "AI" ? generatePlan() : data.weeklyPlan;
-
-  const trainingDays = Object.values(weeklyPlan).filter(
+  const trainingDays = Object.values(
+    generatedPlan
+  ).filter(
     (day) => day && !day.rest
   ).length;
 
@@ -308,66 +336,127 @@ const finish = () => {
   const finalData = {
     ...data,
     goal: normalizedGoal,
-    weeklyPlan,
+    weeklyPlan: generatedPlan,
   };
+
+  const nutrition =
+    NutritionEngine.getProgramNutrition({
+      goal: normalizedGoal,
+      weight: Number(data.weight),
+      goalWeight: Number(
+        data.goalWeight
+      ),
+      trainingDays,
+    });
 
   const profile = {
     name: data.name || "",
     goal: normalizedGoal,
-    weight: 70,
+
+    age: Number(data.age),
+
+    weight: Number(data.weight),
+
+    goalWeight: Number(
+      data.goalWeight
+    ),
+
     trainingDays,
+
     sleep:
       data.sleepQuality === "Poor"
         ? 5
-        : data.sleepQuality === "Average"
+        : data.sleepQuality ===
+          "Average"
         ? 7
         : 8,
-    calories: 2400,
-    protein: 160,
+
+    calories: nutrition.calories,
+    protein: nutrition.protein,
+    carbs: nutrition.carbs,
+    fat: nutrition.fat,
+
+    nutritionPhase:
+      nutrition.nutritionPhase,
+
+    nutritionNote:
+      nutrition.nutritionNote,
+
+    weeklyTargetChange:
+      nutrition.weeklyTargetChange,
+
+    estimatedWeeksToGoal:
+      nutrition.estimatedWeeksToGoal,
+
+    maintenanceCalories:
+      nutrition.maintenanceCalories,
+
     gender: data.gender,
     experience: data.experience,
     location: data.location,
     equipment: data.equipment,
+
     recovery: data.recovery,
     stress: data.stress,
-    sleepQuality: data.sleepQuality,
+    sleepQuality:
+      data.sleepQuality,
+
     splitMode: data.splitMode,
-    weeklyPlan,
+
+    weeklyPlan: generatedPlan,
+
+    weakMuscles:
+      data.weakMuscles || [],
   };
 
-  UserProfileEngine.saveProfile(profile);
+  UserProfileEngine.saveProfile(
+    profile
+  );
 
-  localStorage.setItem("ascend-user", JSON.stringify(finalData));
-  localStorage.setItem("onboardingCompleted", "true");
+  localStorage.setItem(
+    "ascend-user",
+    JSON.stringify(finalData)
+  );
 
-  localStorage.removeItem("workout");
-  localStorage.removeItem("workoutDate");
+  localStorage.setItem(
+    "onboardingCompleted",
+    "true"
+  );
 
- setTimeout(() => {
+  localStorage.removeItem(
+    "workout"
+  );
 
-  const pendingProgram =
-    localStorage.getItem(
-      "pendingProgram"
-    );
+  localStorage.removeItem(
+    "workoutDate"
+  );
 
-  if (pendingProgram) {
+  setTimeout(() => {
+    const pendingProgram =
+      localStorage.getItem(
+        "pendingProgram"
+      );
 
-    localStorage.removeItem(
-      "pendingProgram"
-    );
+    if (pendingProgram) {
+      localStorage.removeItem(
+        "pendingProgram"
+      );
 
-    navigate(
-      `/program-setup/${pendingProgram}`
-    );
+      navigate(
+        `/program-setup/${pendingProgram}`
+      );
 
-    return;
-  }
+      return;
+    }
 
-  navigate("/dashboard");
-
-}, 1200);
+    navigate("/dashboard");
+  }, 1200);
 };
 
+const previewPlan =
+  data.splitMode === "AI"
+    ? generatePlan()
+    : data.weeklyPlan;
 
   return (
 
@@ -527,12 +616,101 @@ const finish = () => {
 
         </div>
       )}
-
-      {/* ========================= */}
-      {/* STEP 4 */}
-      {/* ========================= */}
-
       {step === 4 && (
+
+<div className="screen fade-in">
+
+<h1>Your Body Stats</h1>
+
+<p>
+Used to calculate calories,
+protein and progress.
+</p>
+
+<input
+type="number"
+placeholder="Age"
+value={data.age}
+onChange={(e)=>
+setData({
+...data,
+age:e.target.value
+})
+}
+/>
+
+<input
+type="number"
+placeholder="Current Weight (kg)"
+value={data.weight}
+onChange={(e)=>
+setData({
+...data,
+weight:e.target.value
+})
+}
+/>
+
+<div className="buttons">
+
+<button onClick={back}>
+Back
+</button>
+
+<button onClick={next}>
+Continue
+</button>
+
+</div>
+
+</div>
+
+)}
+
+{step === 5 && (
+
+<div className="screen fade-in">
+
+<h1>Your Target Weight</h1>
+
+<p>
+What weight are you trying
+to reach?
+</p>
+
+<input
+type="number"
+placeholder="Goal Weight (kg)"
+value={data.goalWeight}
+onChange={(e)=>
+setData({
+...data,
+goalWeight:e.target.value
+})
+}
+/>
+
+<div className="buttons">
+
+<button onClick={back}>
+Back
+</button>
+
+<button onClick={next}>
+Continue
+</button>
+
+</div>
+
+</div>
+
+)}
+
+      {/* ========================= */}
+      {/* STEP 6 */}
+      {/* ========================= */}
+
+      {step === 6 && (
 
         <div className="screen fade-in">
 
@@ -586,10 +764,10 @@ const finish = () => {
       )}
 
       {/* ========================= */}
-      {/* STEP 5 */}
+      {/* STEP 7 */}
       {/* ========================= */}
 
-      {step === 5 && (
+      {step === 7 && (
 
         <div className="screen fade-in">
 
@@ -639,10 +817,10 @@ const finish = () => {
       )}
 
       {/* ========================= */}
-      {/* STEP 6 */}
+      {/* STEP 8 */}
       {/* ========================= */}
 
-      {step === 6 && (
+      {step === 8 && (
 
         <div className="screen fade-in">
 
@@ -700,10 +878,10 @@ const finish = () => {
       )}
 
       {/* ========================= */}
-      {/* STEP 7 */}
+      {/* STEP 9 */}
       {/* ========================= */}
 
-      {step === 7 && (
+      {step === 9 && (
 
         <div className="screen fade-in">
 
@@ -758,10 +936,11 @@ const finish = () => {
       )}
 
      {/* ========================= */}
-{/* STEP 8 */}
+{/* STEP 10 */}
 {/* ========================= */}
 
-{step === 8 && (
+{step === 10 &&
+ data.splitMode === "Custom" && (
 
   <div className="screen fade-in split-builder">
 
@@ -981,105 +1160,272 @@ const finish = () => {
 
 )}
 
+     {step === 11 && (
+
+<div className="screen fade-in">
+
+  <h1>
+    Which Muscles Need The Most Work?
+  </h1>
+
+  <p className="weak-muscle-subtitle">
+    ASCEND will prioritize these muscles first,
+    train them twice weekly minimum,
+    and increase their volume.
+  </p>
+
+  <div className="goal-grid">
+
+    {[
+  "Upper Chest",
+  "Mid Chest",
+  "Lower Chest",
+
+  "Lats",
+  "Upper Back",
+  "Lower Back",
+  "Traps",
+
+  "Front Delts",
+  "Side Delts",
+  "Rear Delts",
+
+  "Biceps",
+  "Triceps",
+  "Forearms",
+
+  "Quads",
+  "Hamstrings",
+  "Glutes",
+  "Calves",
+
+  "Abs",
+  "Obliques",
+  "Neck",
+].map((muscle) => (
+
+      <GoalCard
+        key={muscle}
+        title={muscle}
+        active={
+          data.weakMuscles?.includes(muscle)
+        }
+        onClick={() => {
+
+          const exists =
+            data.weakMuscles?.includes(muscle);
+
+          setData({
+            ...data,
+            weakMuscles: exists
+              ? data.weakMuscles.filter(
+                  (m) => m !== muscle
+                )
+              : [
+                  ...(data.weakMuscles || []),
+                  muscle,
+                ],
+          });
+        }}
+      />
+
+    ))}
+
+  </div>
+
+  <div className="buttons">
+    <button onClick={back}>
+      Back
+    </button>
+
+    <button onClick={next}>
+      Continue
+    </button>
+  </div>
+
+</div>
+
+)}
       {/* ========================= */}
-      {/* STEP 9 */}
+      {/* STEP 12 */}
       {/* ========================= */}
 
-      {step === 9 && (
+      {step === 12 && (
 
-        <div className="screen fade-in">
+  <div className="screen fade-in">
 
-          <h1>
-            Recovery Profile
-          </h1>
+    <h1>
+      Your System Is Ready
+    </h1>
 
-          <div className="goal-grid">
+    <div className="summary-card">
 
-            {[
-              "Poor Recovery",
-              "Average Recovery",
-              "Elite Recovery",
-            ].map((item) => (
+      <h2>{data.name}</h2>
 
-              <GoalCard
-                key={item}
-                title={item}
-                active={
-                  data.recovery ===
-                  item
-                }
-                onClick={() =>
-                  setData({
-                    ...data,
-                    recovery: item,
-                  })
-                }
-              />
+      <p><strong>Goal:</strong> {data.goal}</p>
 
+      <p>
+        <strong>Current Weight:</strong>{" "}
+        {data.weight} kg
+      </p>
+
+      <p>
+        <strong>Goal Weight:</strong>{" "}
+        {data.goalWeight} kg
+      </p>
+
+      <p>
+        <strong>Gender:</strong>{" "}
+        {data.gender}
+      </p>
+
+      <p>
+        <strong>Experience:</strong>{" "}
+        {data.experience}
+      </p>
+
+      <p>
+        <strong>Training Location:</strong>{" "}
+        {data.location}
+      </p>
+
+      <p>
+        <strong>Split Type:</strong>{" "}
+        {data.splitMode === "AI"
+          ? "AI Generated"
+          : "Custom Split"}
+      </p>
+
+      <p>
+        <strong>Equipment:</strong>{" "}
+        {data.equipment.join(", ")}
+      </p>
+
+      <br />
+
+      <h3>Priority Muscles</h3>
+
+      {data.weakMuscles?.length > 0 ? (
+        <ul>
+          {data.weakMuscles.map((muscle) => (
+            <li key={muscle}>
+              {muscle}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No priority muscles selected.</p>
+      )}
+
+      <br />
+
+      <div className="priority-system-card">
+  <h3>Priority Muscle System</h3>
+
+  <div className="priority-rule">
+    <span>2×</span>
+    <div>
+      <h4>Higher Frequency</h4>
+      <p>Priority muscles are trained at least twice per week.</p>
+    </div>
+  </div>
+
+  <div className="priority-rule">
+    <span>10</span>
+    <div>
+      <h4>Minimum Weekly Sets</h4>
+      <p>Each priority muscle receives at least 10 sets weekly.</p>
+    </div>
+  </div>
+
+  <div className="priority-rule">
+    <span>#1</span>
+    <div>
+      <h4>Workout Priority</h4>
+      <p>Priority muscles appear first when energy and performance are highest.</p>
+    </div>
+  </div>
+</div>
+
+      <br />
+
+     
+      <div className="summary-card">
+  <h2>Your Training Split</h2>
+
+  {Object.entries(previewPlan).map(([day, plan]) => (
+    <div key={day} className="summary-day">
+
+      <h3>{day}</h3>
+
+      {plan.rest ? (
+        <p>Rest Day</p>
+      ) : (
+        <div className="summary-muscles">
+
+          {Object.entries(plan)
+            .filter(([key]) => key !== "rest")
+            .map(([muscle, values]) => (
+              <div
+                key={muscle}
+                className="summary-muscle"
+              >
+                <strong>{muscle}</strong>
+
+                {Array.isArray(values) &&
+                  values.length > 0 && (
+                    <span>
+                      {values.join(", ")}
+                    </span>
+                  )}
+              </div>
             ))}
-
-          </div>
-
-          <div className="buttons">
-
-            <button onClick={back}>
-              Back
-            </button>
-
-            <button onClick={next}>
-              Continue
-            </button>
-
-          </div>
-
         </div>
       )}
 
-      {/* ========================= */}
-      {/* STEP 10 */}
-      {/* ========================= */}
+    </div>
+  ))}
+</div>
+    </div>
 
-      {step === 10 && (
+    <div className="buttons">
 
-        <div className="screen fade-in">
+      <button
+        onClick={() => setStep(3)}
+      >
+        Edit Goal
+      </button>
 
-          <h1>
-            Your System Is Ready
-          </h1>
+      <button
+        onClick={() => setStep(4)}
+      >
+        Edit Stats
+      </button>
 
-          <div className="summary-card">
+      <button
+        onClick={() => setStep(9)}
+      >
+        Edit Split
+      </button>
 
-            <h2>{data.name}</h2>
+      <button
+        onClick={() => setStep(11)}
+      >
+        Edit Priority Muscles
+      </button>
 
-            <p>
-              Goal:
-              {" "}
-              {data.goal}
-            </p>
+    </div>
 
-            <p>
-              Experience:
-              {" "}
-              {data.experience}
-            </p>
+    <button
+      className="finish-btn"
+      onClick={finish}
+    >
+      Enter ASCEND
+    </button>
 
-            <p>
-              Training:
-              {" "}
-              {data.location}
-            </p>
+  </div>
 
-          </div>
-
-          <button
-            className="finish-btn"
-            onClick={finish}
-          >
-            Enter ASCEND
-          </button>
-
-        </div>
-      )}
+)}
 
     </div>
   );

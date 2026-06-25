@@ -734,3 +734,117 @@
     #ff6b35
   );
 }
+
+.update-modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(10px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:5000;
+  padding:20px;
+}
+
+.update-modal{
+  width:100%;
+  max-width:520px;
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:28px;
+  padding:32px;
+}
+
+.update-tag{
+  color:#8b5cf6;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.update-modal h2{
+  margin-top:12px;
+  margin-bottom:12px;
+}
+
+.update-modal p{
+  color:#9b9b9b;
+  line-height:1.7;
+}
+
+.update-list{
+  margin-top:24px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.update-list div{
+  background:#151515;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:14px;
+  padding:14px;
+}
+
+.update-modal button{
+  width:100%;
+  margin-top:24px;
+  padding:16px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(
+    135deg,
+    #8b5cf6,
+    #6366f1
+  );
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+.priority-muscles-card{
+  margin:20px 0;
+  padding:24px;
+  border-radius:24px;
+  background:linear-gradient(
+    135deg,
+    #111827,
+    #0f172a
+  );
+  border:1px solid #1e293b;
+}
+
+.priority-muscles-card span{
+  color:#8b5cf6;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.priority-muscles-card h2{
+  margin-top:8px;
+  margin-bottom:18px;
+}
+
+.priority-muscles-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.priority-muscle{
+  padding:10px 14px;
+  border-radius:999px;
+  background:#1e1b4b;
+  border:1px solid #4338ca;
+  color:white;
+  font-weight:600;
+}
+
+.priority-benefits{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  color:#cbd5e1;
+}

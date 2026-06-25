@@ -69,13 +69,17 @@ export default function AppTour({onFinish}) {
 );
 
     if (!target) {
-      console.log(
-        "Tour target missing:",
-        steps[step]?.target
-      );
-      return;
-    }
+  console.log(
+    "Tour target missing:",
+    steps[step]?.target
+  );
 
+  if (step < steps.length - 1) {
+    setStep((s) => s + 1);
+  }
+
+  return;
+}
     target.classList.add("tour-highlight");
 
     if (

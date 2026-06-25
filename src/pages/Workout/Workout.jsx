@@ -20,6 +20,7 @@ import {EXERCISES} from "../../Data/exercises";
 import ProgramEngine from "../../engine/ProgramEngine";
 import ProgressEngine from "../../engine/ProgressEngine";
 
+
 export default function Workout() {
   const activeSession =
   !ProgressEngine.isTodayCompleted()
@@ -42,6 +43,10 @@ const [completedToday, setCompletedToday] = useState(
   const [workout, setWorkout] =
     useState([]);
 
+    const [profile, setProfile] = useState(
+  JSON.parse(localStorage.getItem("profile")) || {}
+);
+
   const [active, setActive] = useState(false);
 
 const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,7 +64,12 @@ const [restTime, setRestTime] = useState(60);
     useState(
       "Your workout is optimized for today's recovery."
     );
-
+ 
+ useEffect(() => {
+  setProfile(
+    JSON.parse(localStorage.getItem("profile")) || {}
+  );
+}, []);
  useEffect(() => {
   const loadWorkout = () => {
     setWorkout(
@@ -301,6 +311,38 @@ if (active && workout.length > 0) {
       <AIInsightCard
         message={aiMessage}
       />
+     {profile?.weakMuscles?.length > 0 && (
+  <div className="priority-focus-card">
+
+    <span>
+      PRIORITY FOCUS
+    </span>
+
+    <h2>
+      Specialized Muscle Groups
+    </h2>
+
+    <div className="priority-focus-grid">
+
+      {profile?.weakMuscles?.map((muscle) => (
+  <div
+    key={muscle}
+    className="priority-focus-item"
+  >
+    {muscle}
+  </div>
+))}
+
+    </div>
+
+    <p>
+      These muscles are trained twice
+      weekly and prioritized first.
+    </p>
+
+  </div>
+
+)}
 
       {/* EMPTY */}
 

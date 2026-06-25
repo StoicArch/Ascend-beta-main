@@ -16,13 +16,34 @@ import DashboardCoachEngine from "../../engine/DashboardCoachEngine";
 
 export default function Dashboard() {
 
+  const [showUpdateModal, setShowUpdateModal] =
+  React.useState(false);
+
+useEffect(() => {
+  const version =
+    localStorage.getItem(
+      "ascendUpdateVersion"
+    );
+
+  if (version !== "2") {
+    setShowUpdateModal(true);
+  }
+}, []);
+
   const premiumNutrition = DashboardCoachEngine.getPremiumNutritionInsight();
   const [showTour, setShowTour] =
-  React.useState(
-    !localStorage.getItem(
+  React.useState(false);
+
+useEffect(() => {
+  const completed =
+    localStorage.getItem(
       "ascendTourCompleted"
-    )
-  );
+    );
+
+  if (completed !== "true") {
+    setShowTour(true);
+  }
+}, []);
 
 
 const [missedWorkoutNotice, setMissedWorkoutNotice] = React.useState(null);
@@ -169,6 +190,53 @@ const nutritionFocus =
   id="tour-program-card"
   className="current-program-card"
 >
+  {profile.weakMuscles &&
+ profile.weakMuscles.length > 0 && (
+
+  <section className="priority-muscles-card">
+
+    <span>
+      PRIORITY MUSCLES
+    </span>
+
+    <h2>
+      Specialization Active
+    </h2>
+
+    <div className="priority-muscles-grid">
+
+      {profile.weakMuscles.map(
+        (muscle) => (
+          <div
+            key={muscle}
+            className="priority-muscle"
+          >
+            {muscle}
+          </div>
+        )
+      )}
+
+    </div>
+
+    <div className="priority-benefits">
+
+      <div>
+        ✓ Trained 2x weekly
+      </div>
+
+      <div>
+        ✓ Minimum 10 sets weekly
+      </div>
+
+      <div>
+        ✓ Prioritized first
+      </div>
+
+    </div>
+
+  </section>
+
+)}
           <div>
             <span>Current Program</span>
 
@@ -203,6 +271,7 @@ const nutritionFocus =
   className="weekly-review-banner"
   onClick={() => navigate("/weekly-review")}
 >
+  
   <div>
     <span>Weekly Review</span>
 
@@ -225,11 +294,13 @@ const nutritionFocus =
   <button>View Review</button>
 </section>
 
+
       <section className="metrics-grid">
 
   <div
-    className="metric-card recovery hero-metric"
-  >
+  id="tour-recovery"
+  className="metric-card recovery hero-metric"
+>
     <span>Recovery Score</span>
 
     <h2>{recovery}%</h2>
@@ -242,9 +313,10 @@ const nutritionFocus =
   </div>
 
   <div
-    className="metric-card clickable"
-    onClick={() => navigate("/weight")}
-  >
+  id="tour-weight"
+  className="metric-card clickable"
+  onClick={() => navigate("/weight")}
+>
     <span>Current Weight</span>
 
     <h2>
@@ -532,7 +604,59 @@ const nutritionFocus =
         </section>
       </main>
 
-      
+      {showUpdateModal && (
+  <div className="update-modal-overlay">
+    <div className="update-modal">
+
+      <span className="update-tag">
+        ASCEND UPDATE
+      </span>
+
+      <h2>
+        Priority Muscle System
+      </h2>
+
+      <p>
+        ASCEND can now prioritize weak muscles
+        during program generation.
+      </p>
+
+      <div className="update-list">
+
+        <div>
+          ✅ Priority muscles trained twice weekly
+        </div>
+
+        <div>
+          ✅ Minimum 10 weekly sets
+        </div>
+
+        <div>
+          ✅ Priority muscles placed first
+        </div>
+
+        <div>
+          ✅ Better specialization
+        </div>
+
+      </div>
+
+      <button
+        onClick={() => {
+          localStorage.setItem(
+            "ascendUpdateVersion",
+            "2"
+          );
+
+          setShowUpdateModal(false);
+        }}
+      >
+        Got It
+      </button>
+
+    </div>
+  </div>
+)}
 
       {showTour && (
   <AppTour
