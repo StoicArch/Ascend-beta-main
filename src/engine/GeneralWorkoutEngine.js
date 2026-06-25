@@ -1,6 +1,7 @@
 import UserProfileEngine from "./UserProfileEngine";
 import { EXERCISES } from "../Data/exercises";
 import EquipmentEngine from "./EquipmentEngine";
+import WorkoutPlannerEngine from "./WorkoutPlannerEngine";
 
 
 class GeneralWorkoutEngine {
@@ -271,8 +272,8 @@ class GeneralWorkoutEngine {
   }
 
   static getTodayWorkout() {
-    const focus = this.getTodayFocus();
-    return this.generateWorkoutFromFocus(focus);
+   const focus = this.getTodayFocus();
+return WorkoutPlannerEngine.generateWorkout(focus);
   }
 }
 
