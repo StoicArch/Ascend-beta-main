@@ -102,13 +102,79 @@ const goalMessage = GoalEngine.getGoalMessage();
 
 const hasWeeklyReviewAlert = true;
 
+const [canInstall, setCanInstall] =
+React.useState(false);
 
+useEffect(() => {
 
+  const installed =
+    window.matchMedia(
+      "(display-mode: standalone)"
+    ).matches ||
+    localStorage.getItem(
+      "ascendInstalled"
+    ) === "true";
 
+  setCanInstall(
+    !!window.deferredInstallPrompt &&
+    !installed
+  );
 
+  const ready = () => setCanInstall(true);
 
+  const installedListener = () =>
+    setCanInstall(false);
 
+  window.addEventListener(
+    "ascend-install-ready",
+    ready
+  );
 
+  window.addEventListener(
+    "ascend-installed",
+    installedListener
+  );
+
+  return () => {
+
+    window.removeEventListener(
+      "ascend-install-ready",
+      ready
+    );
+
+    window.removeEventListener(
+      "ascend-installed",
+      installedListener
+    );
+
+  };
+
+}, []);
+
+const installAscend = async () => {
+
+  if (!window.deferredInstallPrompt)
+    return;
+
+  window.deferredInstallPrompt.prompt();
+
+  const result =
+    await window.deferredInstallPrompt.userChoice;
+
+  if (result.outcome === "accepted") {
+
+    localStorage.setItem(
+      "ascendInstalled",
+      "true"
+    );
+
+    setCanInstall(false);
+
+  }
+
+  window.deferredInstallPrompt = null;
+
+};
 
   return (
     <div className="dashboard-main app-page">
@@ -162,6 +228,7 @@ const hasWeeklyReviewAlert = true;
           </div>
         </div>
 
+
        <section className="dashboard-hero">
 
   <div>
@@ -200,6 +267,51 @@ const hasWeeklyReviewAlert = true;
   </div>
 
 </section>
+
+{canInstall && (
+
+<section className="install-card">
+
+<div>
+
+<span className="install-tag">
+APP EXPERIENCE
+</span>
+
+<div className="install-content">
+
+<h2>
+Install ASCEND
+</h2>
+
+<p>
+Train faster with offline workouts, instant launches,
+and automatic updates.
+</p>
+
+<div className="install-features">
+
+<div>⚡ Instant Launch</div>
+
+<div>📶 Offline Workouts</div>
+
+<div>🚀 Auto Updates</div>
+
+</div>
+
+</div>
+</div>
+
+<button
+className="install-btn"
+onClick={installAscend}
+>
+Install
+</button>
+
+</section>
+
+)}
 
         <section
   id="tour-weekly-review"
@@ -458,49 +570,50 @@ const hasWeeklyReviewAlert = true;
     <div className="update-modal">
 
       <span className="update-tag">
-        ASCEND UPDATE
+        WHAT'S NEW
       </span>
 
       <h2>
-        Priority Muscle System
+        Welcome to a better ASCEND
       </h2>
 
       <p>
-        ASCEND can now prioritize weak muscles
-        during program generation.
+        Your training experience just got smarter.
       </p>
 
       <div className="update-list">
 
-        <div>
-          ✅ Priority muscles trained twice weekly
-        </div>
+        <div>✨ Priority Muscle Specialization</div>
 
-        <div>
-          ✅ Minimum 10 weekly sets
-        </div>
+        <div>📈 Better Dashboard</div>
 
-        <div>
-          ✅ Priority muscles placed first
-        </div>
+        <div>⚡ Faster Performance</div>
 
-        <div>
-          ✅ Better specialization
-        </div>
+        <div>🔧 Bug Fixes & Improvements</div>
 
       </div>
 
+      {!localStorage.getItem("token") && (
+        <button
+          className="update-google-btn"
+          onClick={() => navigate("/auth")}
+        >
+          Continue with Google
+        </button>
+      )}
+
       <button
+        className="update-continue-btn"
         onClick={() => {
           localStorage.setItem(
             "ascendUpdateVersion",
-            "2"
+            "3"
           );
 
           setShowUpdateModal(false);
         }}
       >
-        Got It
+        Continue
       </button>
 
     </div>

@@ -482,74 +482,87 @@
     #ff6b35
   );
 }
-
 .update-modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  backdrop-filter:blur(10px);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:5000;
-  padding:20px;
+position:fixed;
+inset:0;
+background:rgba(3,7,18,.72);
+backdrop-filter:blur(12px);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:24px;
+z-index:9999;
 }
 
 .update-modal{
-  width:100%;
-  max-width:520px;
-  background:#0f0f0f;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:28px;
-  padding:32px;
+width:100%;
+max-width:500px;
+background:#fff;
+border-radius:30px;
+padding:34px;
+color:#111827;
+box-shadow:0 30px 80px rgba(0,0,0,.35);
 }
 
 .update-tag{
-  color:#8b5cf6;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:2px;
+display:inline-flex;
+padding:8px 14px;
+border-radius:999px;
+background:#f3f4f6;
+font-size:12px;
+font-weight:700;
+letter-spacing:.08em;
+margin-bottom:18px;
 }
 
 .update-modal h2{
-  margin-top:12px;
-  margin-bottom:12px;
+font-size:32px;
+margin-bottom:10px;
 }
 
 .update-modal p{
-  color:#9b9b9b;
-  line-height:1.7;
+color:#6b7280;
+line-height:1.7;
+margin-bottom:26px;
 }
 
 .update-list{
-  margin-top:24px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+display:flex;
+flex-direction:column;
+gap:14px;
+margin-bottom:30px;
 }
 
 .update-list div{
-  background:#151515;
-  border:1px solid rgba(255,255,255,.05);
-  border-radius:14px;
-  padding:14px;
+padding:15px 18px;
+background:#f9fafb;
+border-radius:16px;
+font-weight:600;
+border:1px solid #eceff3;
 }
 
-.update-modal button{
-  width:100%;
-  margin-top:24px;
-  padding:16px;
-  border:none;
-  border-radius:16px;
-  background:linear-gradient(
-    135deg,
-    #8b5cf6,
-    #6366f1
-  );
-  color:white;
-  font-weight:700;
-  cursor:pointer;
+.update-google-btn,
+.update-continue-btn{
+width:100%;
+padding:16px;
+border:none;
+border-radius:16px;
+font-size:15px;
+font-weight:700;
+cursor:pointer;
 }
+
+.update-google-btn{
+background:#111827;
+color:#fff;
+margin-bottom:12px;
+}
+
+.update-continue-btn{
+background:#ef4444;
+color:#fff;
+}
+
 .priority-muscles-card{
   margin:20px 0;
   padding:24px;
@@ -1028,5 +1041,144 @@ margin-top:24px;
 .hero-score h2{
 font-size:56px;
 }
+
+}
+
+.install-card{
+
+margin-top:26px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:28px 32px;
+
+border-radius:26px;
+
+background:#101010;
+
+border:1px solid rgba(255,255,255,.06);
+
+}
+
+.install-tag{
+
+font-size:12px;
+
+font-weight:700;
+
+letter-spacing:2px;
+
+color:#8b8b8b;
+
+}
+
+.install-card h2{
+
+margin:8px 0;
+
+font-size:30px;
+
+}
+
+.install-card p{
+
+color:#9d9d9d;
+
+max-width:420px;
+
+}
+
+.install-btn{
+
+padding:16px 28px;
+
+border:none;
+
+border-radius:16px;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+background:#fff;
+
+color:#111;
+
+transition:.25s;
+
+}
+
+.install-btn:hover{
+
+transform:translateY(-2px);
+
+}
+
+@media(max-width:768px){
+
+.install-card{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:22px;
+
+}
+
+.install-btn{
+
+padding:18px 34px;
+
+font-size:17px;
+
+min-width:170px;
+
+box-shadow:
+0 12px 30px rgba(255,255,255,.12);
+}
+
+}
+.install-content{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.install-features{
+
+display:flex;
+
+gap:12px;
+
+flex-wrap:wrap;
+
+margin-top:18px;
+
+}
+
+.install-features div{
+
+padding:10px 14px;
+
+border-radius:999px;
+
+background:#181818;
+
+border:1px solid rgba(255,255,255,.06);
+
+font-size:13px;
+
+font-weight:600;
+
+color:#d6d6d6;
 
 }

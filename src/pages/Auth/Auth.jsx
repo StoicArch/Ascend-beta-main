@@ -2,6 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 
+import {
+  signInWithPopup,
+} from "firebase/auth";
+
+import {
+  auth,
+  googleProvider,
+} from "../../firebase";
+
+
 export default function Auth() {
   const navigate = useNavigate();
 
@@ -45,6 +55,82 @@ export default function Auth() {
     }
   }
 }, [navigate]);
+
+const handleGoogleLogin = async () => {
+  try {
+    setLoading(true);
+    setError("");
+
+    const result = await signInWithPopup(
+      auth,
+      googleProvider
+    );
+
+    const firebaseUser = result.user;
+
+    const idToken =
+      await firebaseUser.getIdToken();
+
+    const response = await fetch(
+      "https://ascend-backend-v27s.onrender.com/users/google-login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify({
+          idToken,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Google login failed"
+      );
+    }
+
+    localStorage.setItem(
+      "token",
+      data.token
+    );
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data.user)
+    );
+
+    localStorage.setItem(
+      "lastLogin",
+      String(Date.now())
+    );
+
+    const redirectProgram =
+      localStorage.getItem(
+        "pendingProgram"
+      );
+
+    if (redirectProgram) {
+      navigate(
+        `/program-setup/${redirectProgram}`,
+        {
+          replace: true,
+        }
+      );
+    } else {
+      navigate("/dashboard", {
+        replace: true,
+      });
+    }
+  } catch (err) {
+    setError(err.message);
+  }
+
+  setLoading(false);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,6 +232,18 @@ if (mode === "signup") {
               ? "Login"
               : "Start Free Journey"}
           </button>
+          <button
+  type="button"
+  className="google-btn"
+  onClick={handleGoogleLogin}
+  disabled={loading}
+>
+  <img
+    src="https://www.svgrepo.com/show/475656/google-color.svg"
+    alt="Google"
+  />
+  Continue with Google
+</button>
         </form>
 
         <p

@@ -1,125 +1,44 @@
-import React, { useEffect, useState } from "react";
-
-const REMIND_AFTER_DAYS = 3;
+import { useEffect } from "react";
 
 export default function PWAInstallPrompt() {
-  const [promptEvent, setPromptEvent] = useState(null);
-  const [hidden, setHidden] = useState(true);
-
   useEffect(() => {
-    const handlePrompt = (event) => {
-      event.preventDefault();
+    const handler = (e) => {
+      e.preventDefault();
 
-      const dismissedUntil = Number(
-        localStorage.getItem("ascendInstallDismissedUntil") || 0
+      window.deferredInstallPrompt = e;
+
+      window.dispatchEvent(
+        new Event("ascend-install-ready")
       );
-
-      const shouldShow = Date.now() > dismissedUntil;
-
-      setPromptEvent(event);
-      setHidden(!shouldShow);
     };
 
     window.addEventListener(
       "beforeinstallprompt",
-      handlePrompt
+      handler
     );
 
-    return () => {
+    window.addEventListener(
+      "appinstalled",
+      () => {
+        localStorage.setItem(
+          "ascendInstalled",
+          "true"
+        );
+
+        window.dispatchEvent(
+          new Event("ascend-installed")
+        );
+
+        window.deferredInstallPrompt = null;
+      }
+    );
+
+    return () =>
       window.removeEventListener(
         "beforeinstallprompt",
-        handlePrompt
+        handler
       );
-    };
   }, []);
 
-  const installApp = async () => {
-    if (!promptEvent) return;
-
-    promptEvent.prompt();
-
-    const result = await promptEvent.userChoice;
-
-    if (result.outcome === "accepted") {
-      localStorage.setItem(
-        "ascendInstalled",
-        "true"
-      );
-    }
-
-    setHidden(true);
-  };
-
-  const remindLater = () => {
-    const nextReminder =
-      Date.now() +
-      REMIND_AFTER_DAYS *
-        24 *
-        60 *
-        60 *
-        1000;
-
-    localStorage.setItem(
-      "ascendInstallDismissedUntil",
-      String(nextReminder)
-    );
-
-    setHidden(true);
-  };
-
-  if (
-    !promptEvent ||
-    hidden ||
-    localStorage.getItem("ascendInstalled") === "true"
-  ) {
-    return null;
-  }
-
-  return (
-  <div className="pwa-overlay">
-    <div className="pwa-modal">
-
-      <h2>Install ASCEND</h2>
-
-      <p>
-        Users who install ASCEND complete more workouts,
-        log more meals, and stay more consistent.
-      </p>
-
-      <p>
-        Install ASCEND for faster loading,
-        offline workouts, and a real app experience.
-      </p>
-
-      <button
-        className="pwa-install-btn"
-        onClick={installApp}
-      >
-        Install ASCEND
-      </button>
-
-      <button
-        className="pwa-secondary-btn"
-        onClick={() => {
-          localStorage.setItem(
-            "ascendInstalled",
-            "true"
-          );
-
-          setHidden(true);
-        }}
-      >
-        I've Already Installed It
-      </button>
-
-      <button
-        className="pwa-later-btn"
-        onClick={remindLater}
-      >
-        Continue In Browser
-      </button>
-
-    </div>
-  </div>
-);
+  return null;
 }
