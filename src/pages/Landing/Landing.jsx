@@ -25,10 +25,10 @@ export default function LandingPage() {
           </div>
 
           <h1>
-            Stop Thinking 
-            <br />
-            in the gym
-          </h1>
+Train without
+<br />
+Thinking<span className="hero-dot">.</span>
+</h1>
 
        <p>
 ASCEND generates your workouts, tracks your nutrition,

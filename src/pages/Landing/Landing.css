@@ -567,3 +567,29 @@ padding:14px 16px;
     padding:8px;
   }
 }
+
+.hero-social-proof{
+display:flex;
+gap:32px;
+margin-top:38px;
+flex-wrap:wrap;
+}
+
+.hero-social-proof div{
+display:flex;
+flex-direction:column;
+gap:4px;
+}
+
+.hero-social-proof strong{
+font-size:26px;
+font-weight:800;
+}
+
+.hero-social-proof span{
+font-size:14px;
+color:#9ca3af;
+}
+.hero-dot{
+color:#ff2d55;
+}
