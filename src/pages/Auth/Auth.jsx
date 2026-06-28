@@ -195,11 +195,20 @@ if (mode === "signup") {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1 className="auth-title">
-          {mode === "login" ? "Welcome Back" : "Create Your Body System"}
-        </h1>
+        <span className="auth-badge">
+  AI FITNESS SYSTEM
+</span>
 
-        <p className="auth-subtitle">ASCEND — AI fitness that adapts to you</p>
+<h1 className="auth-title">
+  Train Smarter.
+  <br />
+  Progress Faster.
+</h1>
+
+<p className="auth-subtitle">
+  Personalized workouts, adaptive progression,
+  nutrition tracking and AI coaching.
+</p>
 
         <form onSubmit={handleSubmit} className="auth-form">
           {mode === "signup" && (
