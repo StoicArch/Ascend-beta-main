@@ -40,36 +40,36 @@ and tells you exactly what to do next.
 
           <div className="hero-buttons">
 
-            <button
-              className="primary-btn"
-              onClick={() => navigate("/auth")}
-            >
-              Start Free
-            </button>
+  <button
+    className="primary-btn"
+    onClick={() => navigate("/auth")}
+  >
+    Get Started Free
+  </button>
 
-            
+  <button
+    className="secondary-btn"
+    onClick={() => navigate("/programs")}
+  >
+    Explore Programs
+  </button>
 
-          </div>
+</div>
 
-          <div className="hero-stats">
+          <div className="stat">
+  <h2>Adaptive AI</h2>
+  <span>Adjusts every week based on your progress.</span>
+</div>
 
-            <div className="stat">
-              <h2>AI</h2>
-<span>Coach, Nutrition & Recovery</span>
-            </div>
+<div className="stat">
+  <h2>Evidence Based</h2>
+  <span>Progressive overload built into every program.</span>
+</div>
 
-            <div className="stat">
-             <h2>Programs</h2>
-<span>Structured Transformations</span>
-            </div>
-
-            <div className="stat">
-             <h2>Weekly</h2>
-<span>Progress Reviews</span>
-            </div>
-
-          </div>
-
+<div className="stat">
+  <h2>Everything Together</h2>
+  <span>Workouts, nutrition and recovery in one system.</span>
+</div>
         </div>
 
         <div className="hero-right">
@@ -117,15 +117,24 @@ and tells you exactly what to do next.
                 </div>
 
               </div>
+<div className="preview-card ai-card">
 
-              <div className="preview-card ai-card">
-                <h3>AI Coach</h3>
+  <div className="preview-ai-top">
+    <span>ASCEND AI</span>
+    <div className="online-dot"></div>
+  </div>
 
-                <p>
-                  “Push your final set harder today.
-                  Last session moved too easily.”
-                </p>
-              </div>
+  <h3>
+    Weekly Insight
+  </h3>
+
+  <p>
+    Strength is increasing faster than bodyweight.
+    Keep calories the same and add one rep to your
+    final incline press set next session.
+  </p>
+
+</div>
 
             </div>
 

@@ -29,6 +29,7 @@ import TermsOfUse from "./pages/Legal/TermsOfUse";
 import CookiePolicy from "./pages/Legal/CookiePolicy";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import TermsPopup from "./components/TermsPopup";
+import { Navigate } from "react-router-dom";
 
 export default function App() {
   useEffect(() => {
@@ -78,7 +79,14 @@ export default function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+       <Route
+  path="/"
+  element={
+    localStorage.getItem("token")
+      ? <Navigate to="/dashboard" replace />
+      : <LandingPage />
+  }
+/>
         <Route path="/auth" element={<Auth />} />
 
         <Route
@@ -223,10 +231,14 @@ export default function App() {
           element={<FoodScanTest />}
         />
 
-        <Route
-          path="*"
-          element={<LandingPage />}
-        />
+       <Route
+  path="*"
+  element={
+    localStorage.getItem("token")
+      ? <Navigate to="/dashboard" replace />
+      : <LandingPage />
+  }
+/>
       </Routes>
 
       <MobileNav />

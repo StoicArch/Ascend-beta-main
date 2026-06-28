@@ -593,3 +593,24 @@ color:#9ca3af;
 .hero-dot{
 color:#ff2d55;
 }
+.preview-ai-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:16px;
+}
+
+.preview-ai-top span{
+font-size:12px;
+font-weight:700;
+letter-spacing:.08em;
+color:#cbd5e1;
+}
+
+.online-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+background:#22c55e;
+box-shadow:0 0 12px #22c55e;
+}
