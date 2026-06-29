@@ -54,6 +54,16 @@ export default function ProgramSetup() {
   const isHomeChestBuilder =
     program.id === "home-chest-builder";
 
+    const bodyDone =
+  currentWeight &&
+  goalWeight;
+
+const scheduleDone =
+  track > 0;
+
+const workoutDone =
+  selectedDays.length === track;
+
   const toggleDay = (day) => {
     if (selectedDays.includes(day)) {
       setSelectedDays(selectedDays.filter((d) => d !== day));
@@ -193,32 +203,97 @@ navigate("/program");
     
     <div className="program-setup-page app-page">
       <div className="program-setup-header">
-        <span>Start Program</span>
+        <span className="setup-tag">
+ASCEND PROGRAM
+</span>
         <h1>{program.name}</h1>
-        <p>{program.description}</p>
+        <p>
+{program.description}
+</p>
+
+<div className="setup-progress">
+
+  <div className={`progress-step ${bodyDone ? "done" : "active"}`}>
+    {bodyDone ? "✓" : "1"}
+  </div>
+
+  <div className={`progress-line ${bodyDone ? "done" : ""}`}></div>
+
+  <div
+    className={`progress-step ${
+      scheduleDone
+        ? "done"
+        : bodyDone
+        ? "active"
+        : ""
+    }`}
+  >
+    {scheduleDone ? "✓" : "2"}
+  </div>
+
+  <div className={`progress-line ${workoutDone ? "done" : ""}`}></div>
+
+  <div
+    className={`progress-step ${
+      workoutDone ? "done" : ""
+    }`}
+  >
+    {workoutDone ? "✓" : "3"}
+  </div>
+
+</div>
+
+<div className="setup-checklist">
+
+  <div className="setup-item">
+    <span>{bodyDone ? "✓" : "○"} Body Metrics</span>
+  </div>
+
+  <div className="setup-item">
+    <span>{scheduleDone ? "✓" : "○"} Training Schedule</span>
+  </div>
+
+  <div className="setup-item">
+    <span>{workoutDone ? "✓" : "○"} Workout Days</span>
+  </div>
+
+</div>
+
       </div>
 
       <div className="setup-card">
-  <h2>Set Your Bodyweight Goal</h2>
+  <h2>Body Metrics</h2>
+
+<span className="card-step">
+Step 1 of 3
+</span>
   <p>ASCEND will calculate your calories, protein, carbs, and fats from this.</p>
 
-  <input
-    type="number"
-    placeholder="Current weight in kg"
+ <label>Current Weight (kg)</label>
+
+<input
+  type="number"
+  placeholder="e.g. 72"
     value={currentWeight}
     onChange={(e) => setCurrentWeight(e.target.value)}
   />
 
-  <input
-    type="number"
-    placeholder="Goal weight in kg"
+ <label>Goal Weight (kg)</label>
+
+<input
+  type="number"
+  placeholder="e.g. 80"
     value={goalWeight}
     onChange={(e) => setGoalWeight(e.target.value)}
   />
 </div>
 
       <div className="setup-card">
-  <h2>Choose Training Version</h2>
+ <h2>Training Schedule</h2>
+
+<span className="card-step">
+Step 2 of 3
+</span>
 
   {isHomeChestBuilder ? (
     <>
@@ -257,7 +332,11 @@ navigate("/program");
 </div>
 
       <div className="setup-card">
-        <h2>Choose Workout Days</h2>
+       <h2>Workout Days</h2>
+
+<span className="card-step">
+Step 3 of 3
+</span>
         <p>Select exactly {track} days.</p>
 
         <div className="days-grid">
@@ -324,9 +403,12 @@ navigate("/program");
 )}
 
 
-      <button className="start-setup-btn" onClick={startProgram}>
-        Start {program.name}
-      </button>
+      <button
+  className="start-setup-btn"
+  onClick={startProgram}
+>
+  Begin Transformation →
+</button>
     </div>
   );
 }

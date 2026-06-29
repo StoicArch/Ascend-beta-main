@@ -59,52 +59,116 @@ if (!token) {
     <div className="programs-page app-page">
       <div className="programs-header">
         <span>ASCEND Programs</span>
-        <h1>Choose Your Path</h1>
-        <p>
-          Pick the result you want. ASCEND will handle the workouts, calories,
-          and progression (Your calories are modified based on the program you select).
-        </p>
+       
+        <h1>
+Choose your
+next physique.
+</h1>
+
+<p>
+Every program adapts your training,
+nutrition and progression to your goal.
+Choose the physique you want to build.
+</p>
       </div>
 
       <div className="programs-grid">
         {PROGRAMS.map((program) => (
           <div className="program-card" key={program.id}>
             <div className="program-card-top">
-             <span className={`access-badge ${program.access}`}>
- {program.access === "free"
-  ? "Free"
-  : program.id === "skinny-to-jacked"
-  ? "First 3 Workouts Free"
-  : program.access === "premium"
-  ? "Premium Only"
-  : "Premium"}
+            <span
+className={`access-badge ${program.access}`}
+>
+
+{program.access === "free" && "FREE"}
+
+{program.id === "skinny-to-jacked" &&
+"FREE PREVIEW"}
+
+{program.access === "premium" &&
+program.id !== "skinny-to-jacked" &&
+"PREMIUM"}
+
 </span>
               <span className={`status-badge ${program.status}`}>
                 {program.status === "available" ? "Available" : "Coming Soon"}
               </span>
             </div>
 
-            <h2>{program.name}</h2>
-            <p>{program.description}</p>
+           <h2>{program.name}</h2>
 
-            <div className="program-info">
-              <span>{program.duration}</span>
-              <span>{program.goal}</span>
-              <span>{program.type}</span>
-            </div>
+{program.status === "coming soon" && (
+  <div className="coming-soon-text">
+    Launching Soon
+  </div>
+)}
+
+<p className="program-description">
+{program.description}
+</p>
+
+<div className="program-level">
+
+<div className="level-header">
+
+<span className="level-label">
+Difficulty
+</span>
+
+<span className="level-text">
+{program.difficulty}
+</span>
+
+</div>
+
+<div className="level-bar">
+
+<div
+className={`level-fill ${
+program.difficulty === "Beginner"
+? "easy"
+: program.difficulty === "Intermediate"
+? "medium"
+: "hard"
+}`}
+/>
+
+</div>
+
+</div>
+            <div className="program-meta">
+
+<div className="program-duration">
+🕒 {program.duration}
+</div>
+
+<div className="program-goal">
+🎯 {program.goal}
+</div>
+
+<div className="program-type">
+⚡ {program.type}
+</div>
+
+</div>
 
             <div className="program-actions">
-              <button onClick={() => setSelectedProgram(program)}>
-                View Details
-              </button>
+             <button
+  className="view-details-btn"
+  onClick={() => setSelectedProgram(program)}
+>
+  View Details →
+</button>
 
               <button
-                className="start-program-btn"
-                disabled={program.status !== "available"}
-                onClick={() => startProgram(program)}
-              >
-                {program.status === "available" ? "Start Program" : "Locked"}
-              </button>
+  className="start-program-btn"
+  disabled={program.status !== "available"}
+  onClick={() => startProgram(program)}
+>
+  {program.status === "available"
+    ? "Begin Transformation →"
+    : "Coming Soon"}
+</button>
             </div>
           </div>
         ))}
@@ -124,8 +188,30 @@ if (!token) {
   : "Premium Program"}
             </span>
 
-            <h2>{selectedProgram.name}</h2>
-            <p>{selectedProgram.description}</p>
+           <h2>{selectedProgram.name}</h2>
+
+<div className="modal-stats">
+
+<div>
+<span>Duration</span>
+<strong>{selectedProgram.duration}</strong>
+</div>
+
+<div>
+<span>Difficulty</span>
+<strong>{selectedProgram.difficulty}</strong>
+</div>
+
+<div>
+<span>Goal</span>
+<strong>{selectedProgram.goal}</strong>
+</div>
+
+</div>
+
+<p className="program-description">
+{selectedProgram.description}
+</p>
 
             {selectedProgram.id === "skinny-to-jacked" && (
   <div className="modal-info">
@@ -155,7 +241,7 @@ if (!token) {
 
             {selectedProgram.bestFor && (
               <>
-                <h3>This is for you if:</h3>
+                <h3>This is for :</h3>
                 <ul>
                   {selectedProgram.bestFor.map((item) => (
                     <li key={item}>{item}</li>
@@ -166,7 +252,7 @@ if (!token) {
 
             {selectedProgram.notFor && (
               <>
-                <h3>This is not for you if:</h3>
+                <h3>This is not for :</h3>
                 <ul>
                   {selectedProgram.notFor.map((item) => (
                     <li key={item}>{item}</li>
@@ -186,14 +272,26 @@ if (!token) {
             </button>
 
             <button
-              className="modal-close-btn"
-              onClick={() => setSelectedProgram(null)}
-            >
-              Close
-            </button>
+className="modal-close-btn"
+onClick={() => setSelectedProgram(null)}
+>
+Back
+</button>
+
+
           </div>
         </div>
       )}
+      <div className="program-disclaimer">
+
+<strong>Disclaimer</strong>
+
+<p>
+ASCEND provides structured training, nutrition and recovery guidance. Results are never guaranteed and depend on your consistency, effort, nutrition, recovery, genetics and adherence to the program.
+</p>
+
+</div>
     </div>
+    
   );
 }

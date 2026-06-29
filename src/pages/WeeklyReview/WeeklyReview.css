@@ -178,3 +178,456 @@
   height: 220px;
   margin-top: 0.5rem;
 }
+.weekly-review-page{
+min-height:100vh;
+background:
+radial-gradient(circle at top right,#ff2d5522,transparent 30%),
+radial-gradient(circle at bottom left,#7c3aed22,transparent 30%),
+#050505;
+padding:28px 22px 120px;
+}
+
+.weekly-review-header{
+max-width:720px;
+margin-bottom:34px;
+}
+
+.weekly-review-header span{
+display:inline-block;
+padding:8px 14px;
+border-radius:999px;
+background:#111827;
+color:#ff2d55;
+font-weight:700;
+letter-spacing:.08em;
+margin-bottom:18px;
+}
+
+.weekly-review-header h1{
+font-size:52px;
+line-height:1.05;
+margin-bottom:14px;
+}
+
+.weekly-review-header p{
+font-size:17px;
+line-height:1.8;
+color:#9ca3af;
+max-width:560px;
+}
+
+@media(max-width:700px){
+
+.weekly-review-header h1{
+font-size:38px;
+}
+
+}
+.review-card-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:24px;
+}
+
+.review-label{
+display:inline-block;
+font-size:11px;
+font-weight:800;
+letter-spacing:.08em;
+color:#ff2d55;
+margin-bottom:8px;
+}
+
+.review-score{
+width:74px;
+height:74px;
+border-radius:50%;
+background:#111827;
+border:2px solid rgba(255,255,255,.08);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-size:24px;
+font-weight:800;
+}
+
+.review-score span{
+font-size:11px;
+color:#9ca3af;
+}
+.review-metrics{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+gap:18px;
+margin-top:10px;
+}
+
+.review-metrics>div{
+background:#111827;
+border:1px solid rgba(255,255,255,.06);
+border-radius:20px;
+padding:18px;
+transition:.2s;
+}
+
+.review-metrics>div:hover{
+transform:translateY(-3px);
+border-color:#ff2d55;
+}
+
+.review-metrics span{
+display:block;
+font-size:12px;
+letter-spacing:.08em;
+color:#9ca3af;
+margin-bottom:10px;
+}
+
+.review-metrics strong{
+font-size:30px;
+font-weight:800;
+}
+.review-card{
+background:rgba(17,24,39,.92);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:28px;
+padding:26px;
+box-shadow:0 20px 60px rgba(0,0,0,.28);
+transition:.25s;
+}
+
+.review-card:hover{
+transform:translateY(-4px);
+border-color:rgba(255,45,85,.25);
+}
+
+.review-card h2{
+font-size:28px;
+margin-bottom:18px;
+}
+
+.review-note{
+font-size:15px;
+line-height:1.8;
+color:#cbd5e1;
+}
+.weight-chart{
+margin-top:22px;
+padding:18px;
+background:#111827;
+border:1px solid rgba(255,255,255,.06);
+border-radius:22px;
+}
+
+.recharts-cartesian-axis-tick-value{
+fill:#9ca3af;
+font-size:12px;
+}
+
+.recharts-tooltip-wrapper{
+border-radius:14px;
+overflow:hidden;
+}
+
+.recharts-default-tooltip{
+background:#111827 !important;
+border:none !important;
+border-radius:14px !important;
+}
+.coach-summary{
+margin-top:24px;
+padding:20px;
+border-radius:20px;
+background:#111827;
+border:1px solid rgba(255,255,255,.06);
+}
+
+.coach-summary span{
+display:block;
+margin-bottom:10px;
+font-size:12px;
+font-weight:800;
+letter-spacing:.08em;
+color:#ff2d55;
+text-transform:uppercase;
+}
+
+.coach-summary p{
+color:#d1d5db;
+line-height:1.8;
+font-size:15px;
+}
+.review-section-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:22px;
+}
+
+.review-section-top h2{
+margin-top:6px;
+margin-bottom:0;
+}
+
+.review-section-top .review-label{
+display:inline-block;
+font-size:11px;
+font-weight:800;
+letter-spacing:.08em;
+color:#8b5cf6;
+text-transform:uppercase;
+}
+.weight-chart{
+position:relative;
+overflow:hidden;
+}
+
+.weight-chart::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:3px;
+background:linear-gradient(
+90deg,
+#ff2d55,
+#8b5cf6
+);
+}
+
+.weight-chart{
+padding-top:24px;
+}
+.premium-review-card{
+position:relative;
+overflow:hidden;
+}
+
+.premium-review-card::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:3px;
+background:linear-gradient(
+90deg,
+#f59e0b,
+#ff2d55
+);
+}
+
+.premium-review-card{
+padding-top:28px;
+}
+.refresh-review-btn{
+background:#ff2d55;
+color:#fff;
+border-radius:18px;
+padding:16px;
+font-size:15px;
+font-weight:700;
+transition:.2s;
+}
+
+.refresh-review-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 16px 36px rgba(255,45,85,.35);
+}
+.next-week-focus{
+margin-top:22px;
+padding:20px;
+border-radius:20px;
+background:linear-gradient(
+135deg,
+rgba(255,45,85,.12),
+rgba(139,92,246,.12)
+);
+border:1px solid rgba(255,255,255,.08);
+}
+
+.next-week-focus span{
+display:block;
+margin-bottom:10px;
+font-size:12px;
+font-weight:800;
+letter-spacing:.08em;
+color:#ff2d55;
+}
+
+.next-week-focus p{
+line-height:1.8;
+color:#d1d5db;
+}
+.review-card{
+position:relative;
+overflow:hidden;
+}
+
+.review-card::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:3px;
+background:linear-gradient(
+90deg,
+#ff2d55,
+#8b5cf6
+);
+opacity:0;
+transition:.25s;
+}
+
+.review-card:hover::before{
+opacity:1;
+}
+
+.review-card:hover{
+border-color:rgba(255,45,85,.25);
+}
+.review-insights{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:18px;
+margin-top:22px;
+}
+
+.review-insight{
+padding:20px;
+border-radius:20px;
+background:#111827;
+border:1px solid rgba(255,255,255,.06);
+}
+
+.review-insight h4{
+margin-bottom:10px;
+font-size:15px;
+}
+
+.review-insight p{
+line-height:1.8;
+color:#cbd5e1;
+}
+.review-card{
+transition:
+transform .25s,
+border-color .25s,
+box-shadow .25s;
+}
+
+.review-card:hover .review-score{
+transform:scale(1.05);
+border-color:#ff2d55;
+}
+
+.review-score{
+transition:.25s;
+}
+
+.review-card:hover .review-metrics>div{
+background:#161f31;
+}
+
+.review-metrics>div{
+transition:.25s;
+}
+.review-card h2{
+font-size:30px;
+font-weight:800;
+letter-spacing:-.02em;
+}
+
+.review-card p{
+font-size:15px;
+line-height:1.8;
+}
+
+.review-metrics strong{
+display:block;
+margin-top:6px;
+font-size:32px;
+font-weight:800;
+}
+
+.review-metrics span{
+text-transform:uppercase;
+letter-spacing:.08em;
+font-weight:700;
+}
+.positive-card{
+position:relative;
+overflow:hidden;
+}
+
+.positive-card::after{
+content:"";
+position:absolute;
+top:0;
+left:0;
+bottom:0;
+width:4px;
+background:#22c55e;
+border-radius:999px;
+}
+
+.positive-card strong{
+color:#fff;
+}
+.review-card:hover .coach-summary,
+.review-card:hover .next-week-focus,
+.review-card:hover .review-insight{
+border-color:rgba(255,45,85,.25);
+transform:translateY(-2px);
+}
+
+.coach-summary,
+.next-week-focus,
+.review-insight{
+transition:.25s;
+border:1px solid rgba(255,255,255,.06);
+}
+
+.review-card:hover .weight-chart{
+border-color:rgba(255,45,85,.25);
+}
+
+.weight-chart{
+transition:.25s;
+}
+.biggest-win-card{
+margin-bottom:24px;
+padding:24px;
+border-radius:24px;
+background:linear-gradient(
+135deg,
+rgba(250,204,21,.18),
+rgba(255,45,85,.12)
+);
+border:1px solid rgba(250,204,21,.25);
+}
+
+.biggest-win-card span{
+display:block;
+margin-bottom:10px;
+font-size:12px;
+font-weight:800;
+letter-spacing:.08em;
+color:#facc15;
+}
+
+.biggest-win-card h2{
+margin-bottom:12px;
+font-size:28px;
+font-weight:800;
+}
+
+.biggest-win-card p{
+color:#d1d5db;
+line-height:1.8;
+}

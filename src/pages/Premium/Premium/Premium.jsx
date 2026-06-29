@@ -60,9 +60,9 @@ export default function Premium() {
 
       <div>✓ Adaptive Progression</div>
 
-      <div>✓ Nutrition Tracking</div>
+      <div>✓ Unlimited AI calorie Tracking</div>
 
-      <div>✓ Recovery Tracking</div>
+      {/*<div>✓ Recovery Tracking</div> */}
 
       <div>✓ Weekly Reviews</div>
 
