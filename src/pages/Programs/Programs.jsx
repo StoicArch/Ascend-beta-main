@@ -34,6 +34,18 @@ if (profile.programId === program.id) {
 
   const premium = PremiumEngine.isPremium();
 
+  const token = localStorage.getItem("token");
+
+if (!token) {
+  localStorage.setItem(
+    "pendingProgram",
+    program.id
+  );
+
+  navigate("/auth");
+  return;
+}
+
   if (program.access === "premium" && !premium) {
     navigate("/premium");
     return;

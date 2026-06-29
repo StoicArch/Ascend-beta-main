@@ -20,14 +20,27 @@ export default function Dashboard() {
   React.useState(false);
 
 useEffect(() => {
+
+  const TODAY =
+    new Date().toISOString().split("T")[0];
+
   const version =
     localStorage.getItem(
       "ascendUpdateVersion"
     );
 
-  if (version !== "2") {
+  const lastShown =
+    localStorage.getItem(
+      "ascendUpdateLastShown"
+    );
+
+  if (
+    version !== "3" ||
+    lastShown !== TODAY
+  ) {
     setShowUpdateModal(true);
   }
+
 }, []);
 
  
@@ -605,13 +618,22 @@ Install
       <button
         className="update-continue-btn"
         onClick={() => {
-          localStorage.setItem(
-            "ascendUpdateVersion",
-            "3"
-          );
 
-          setShowUpdateModal(false);
-        }}
+  localStorage.setItem(
+    "ascendUpdateVersion",
+    "3"
+  );
+
+  localStorage.setItem(
+    "ascendUpdateLastShown",
+    new Date()
+      .toISOString()
+      .split("T")[0]
+  );
+
+  setShowUpdateModal(false);
+
+}}
       >
         Continue
       </button>

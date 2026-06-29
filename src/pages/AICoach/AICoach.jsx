@@ -120,67 +120,157 @@ export default function AICoach() {
     <div className="ai-page app-page">
       <div className="ai-header">
         <div>
-          <h1>AI Coach</h1>
-          <p>Ask about training, recovery, sleep, or nutrition.</p>
+          <span className="ai-tag">
+ASCEND AI
+</span>
 
-          <p className="ai-limit-text">
-            {isPremium
-              ? "Premium: Unlimited AI messages"
-              : `${remainingMessages} free AI messages left today`}
-          </p>
+<h1>
+Your personal
+fitness coach.
+</h1>
+
+<p>
+Ask about workouts, nutrition, recovery,
+sleep, injuries or your current program.
+</p>
+
+<div className="ai-plan">
+
+<span>
+{isPremium
+? "Unlimited AI"
+: `${remainingMessages} free messages today`}
+</span>
+
+</div>
         </div>
 
         {chat.length > 0 && (
-          <button className="clear-chat-btn" onClick={clearChat}>
-            Clear Chat
-          </button>
+          <button
+  className="clear-chat-btn"
+  onClick={clearChat}
+>
+  New Chat
+</button>
         )}
       </div>
 
       <div className="chat-window">
+
+<div className="chat-date">
+Today
+</div>
         {chat.length === 0 && (
-          <div className="empty-chat">
-            <h2>Start a conversation</h2>
-            <p>
-              Ask Ascend how to train today, improve recovery, or adjust your
-              nutrition.
-            </p>
-          </div>
+         <div className="empty-chat">
+
+  <h2>How can ASCEND help today?</h2>
+
+  <p>
+    Your AI coach has access to your workouts,
+    recovery, nutrition and progress.
+  </p>
+
+  <div className="suggestion-grid">
+
+    <button
+      onClick={() =>
+        setMessage("Review today's workout.")
+      }
+    >
+      Review today's workout
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage("How can I recover faster?")
+      }
+    >
+      Improve recovery
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage("Review my nutrition.")
+      }
+    >
+      Review my nutrition
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage("How do I build muscle faster?")
+      }
+    >
+      Build muscle faster
+    </button>
+
+  </div>
+
+</div>
         )}
 
-        {chat.map((item, index) => (
-          <div
-            key={index}
-            className={
-              item.role === "user" ? "chat-row user-row" : "chat-row ai-row"
-            }
-          >
-            <div
-              className={
-                item.role === "user"
-                  ? "chat-bubble user-bubble"
-                  : "chat-bubble ai-bubble"
-              }
-            >
-              {item.text}
-            </div>
-          </div>
-        ))}
+       {chat.map((item, index) => (
 
-        {loading && (
-          <div className="chat-row ai-row">
-            <div className="chat-bubble ai-bubble">Thinking...</div>
-          </div>
-        )}
+  <div
+    key={index}
+    className={
+      item.role === "user"
+        ? "chat-row user-row"
+        : "chat-row ai-row"
+    }
+  >
+
+    {item.role === "ai" && (
+      <div className="chat-avatar">
+        AI
+      </div>
+    )}
+
+    <div
+      className={
+        item.role === "user"
+          ? "chat-bubble user-bubble"
+          : "chat-bubble ai-bubble"
+      }
+    >
+      {item.text}
+    </div>
+
+  </div>
+
+))}
+
+       {loading && (
+  <div className="chat-row ai-row">
+
+    <div className="chat-avatar">
+      AI
+    </div>
+
+    <div className="chat-bubble ai-bubble thinking-bubble">
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+    </div>
+
+  </div>
+)}
       </div>
 
       <div className="chat-input-box">
-        <textarea
+
+  <div className="input-top">
+    ASCEND AI
+  </div>
+       <textarea
+  rows={1}
           placeholder={
-            isPremium
-              ? "Message your AI coach..."
-              : `${remainingMessages} messages left today...`
-          }
+  isPremium
+    ? "Ask anything about your training..."
+    : `Ask anything... (${remainingMessages} free left today)`
+}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
@@ -191,9 +281,13 @@ export default function AICoach() {
           }}
         />
 
-        <button onClick={askAI} disabled={loading}>
-          {loading ? "..." : "Send"}
-        </button>
+       <button
+  className="send-btn"
+  onClick={askAI}
+  disabled={loading || !message.trim()}
+>
+  ↑
+</button>
       </div>
     </div>
   );

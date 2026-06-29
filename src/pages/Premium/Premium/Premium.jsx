@@ -12,28 +12,68 @@ export default function Premium() {
 
   return (
     <div className="premium-page app-page">
-      <h1>ASCEND Premium</h1>
 
-      <p>
-        Unlock premium programs, structured training systems,
-        advanced progression tracking and future AI tools.
-      </p>
+  <div className="premium-hero">
 
-      <div className="premium-card">
-        <h2>$9.99/₦13,596/month</h2>
+    <span className="premium-tag">
+      ASCEND PREMIUM
+    </span>
 
-        <p>
-          Includes all premium ASCEND programs and future premium updates.
-        </p>
+    <h1>
+      Train with a complete
+      <br />
+      fitness system.
+    </h1>
 
-        <button onClick={pay}>
-          Start Premium Membership
-        </button>
+    <p>
+      Everything in Free, plus premium programs,
+      adaptive AI coaching, nutrition guidance,
+      recovery insights and every future premium release.
+    </p>
 
-        <small>
-          Secure recurring payments powered by Gumroad.
-        </small>
-      </div>
+  </div>
+
+  <div className="premium-card">
+
+    <div className="price-row">
+      <h2>$9.99</h2>
+      <span>/month</span>
     </div>
+
+    <button
+      className="premium-cta"
+      onClick={pay}
+    >
+      Upgrade to Premium
+    </button>
+
+    <small>
+      Secure payments powered by Gumroad.
+      Cancel anytime.
+    </small>
+
+    <div className="premium-features">
+
+      <div>✓ Premium Programs</div>
+
+      <div>✓ Unlimited AI Coach</div>
+
+      <div>✓ Adaptive Progression</div>
+
+      <div>✓ Nutrition Tracking</div>
+
+      <div>✓ Recovery Tracking</div>
+
+      <div>✓ Weekly Reviews</div>
+
+      <div>✓ Future Premium Features</div>
+
+      <div>✓ Priority Updates</div>
+
+    </div>
+
+  </div>
+
+</div>
   );
 }

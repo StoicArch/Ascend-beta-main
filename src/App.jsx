@@ -79,14 +79,7 @@ export default function App() {
   return (
     <AuthProvider>
       <Routes>
-       <Route
-  path="/"
-  element={
-    localStorage.getItem("token")
-      ? <Navigate to="/dashboard" replace />
-      : <LandingPage />
-  }
-/>
+       
         <Route path="/auth" element={<Auth />} />
 
         <Route
@@ -232,12 +225,17 @@ export default function App() {
         />
 
        <Route
-  path="*"
+  path="/"
   element={
     localStorage.getItem("token")
       ? <Navigate to="/dashboard" replace />
       : <LandingPage />
   }
+/>
+
+<Route
+  path="*"
+  element={<Navigate to="/" replace />}
 />
       </Routes>
 
