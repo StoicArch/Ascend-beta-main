@@ -61,23 +61,29 @@ const handleGoogleLogin = async () => {
     setLoading(true);
     setError("");
 
+    console.log("1️⃣ Starting Google login...");
+
     const result = await signInWithPopup(
       auth,
       googleProvider
     );
 
+    console.log("2️⃣ Google popup success");
+
     const firebaseUser = result.user;
 
-    const idToken =
-      await firebaseUser.getIdToken();
+    console.log("User:", firebaseUser.email);
+
+    const idToken = await firebaseUser.getIdToken();
+
+    console.log("3️⃣ Firebase token received");
 
     const response = await fetch(
       "https://ascend-backend-v27s.onrender.com/users/google-login",
       {
         method: "POST",
         headers: {
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           idToken,
@@ -85,13 +91,31 @@ const handleGoogleLogin = async () => {
       }
     );
 
-    const data = await response.json();
+    console.log("4️⃣ Response status:", response.status);
+
+    const text = await response.text();
+
+    console.log("5️⃣ Raw response:");
+    console.log(text);
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        "Backend returned HTML instead of JSON.\n\n" +
+        text.substring(0, 200)
+      );
+    }
 
     if (!response.ok) {
       throw new Error(
         data.error || "Google login failed"
       );
     }
+
+    console.log("6️⃣ Login successful");
 
     localStorage.setItem(
       "token",
@@ -109,16 +133,12 @@ const handleGoogleLogin = async () => {
     );
 
     const redirectProgram =
-      localStorage.getItem(
-        "pendingProgram"
-      );
+      localStorage.getItem("pendingProgram");
 
     if (redirectProgram) {
       navigate(
         `/program-setup/${redirectProgram}`,
-        {
-          replace: true,
-        }
+        { replace: true }
       );
     } else {
       navigate("/dashboard", {
@@ -126,10 +146,11 @@ const handleGoogleLogin = async () => {
       });
     }
   } catch (err) {
+    console.error(err);
     setError(err.message);
+  } finally {
+    setLoading(false);
   }
-
-  setLoading(false);
 };
 
   const handleSubmit = async (e) => {
