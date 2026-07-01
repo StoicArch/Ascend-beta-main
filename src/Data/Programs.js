@@ -943,6 +943,68 @@ export const PROGRAMS = [
   },
 },
 
+{
+  id: "capped-delts",
+  name: "Capped Delts",
+  description:
+    "Build wider, rounder shoulders with an 8-week specialization program focused on progressive overload.",
+  duration: "8 Weeks",
+  totalWeeks: 8,
+  goal: "Wider Shoulders",
+  type: "Lean Bulk",
+  difficulty: "Intermediate",
+  access: "premium",
+  status: "available",
+
+  tracks: {
+    4: {
+      weeks: Object.fromEntries(
+        Array.from({ length: 8 }, (_, i) => {
+          const week = i + 1;
+
+          return [
+            week,
+            {
+              workouts: [
+                {
+                  name: `Week ${week} Upper A (Shoulder Priority)`,
+                  focus: ["Shoulders", "Chest", "Triceps"],
+                },
+                {
+                  name: `Week ${week} Lower`,
+                  focus: ["Legs", "Abs"],
+                },
+                {
+                  name: `Week ${week} Upper B (Shoulder Priority)`,
+                  focus: ["Shoulders", "Back", "Biceps"],
+                },
+                {
+                  name: `Week ${week} Recovery Upper`,
+                  focus: ["Chest", "Back", "Arms"],
+                },
+              ],
+            },
+          ];
+        })
+      ),
+    },
+  },
+
+  bestFor: [
+    "Wider shoulders",
+    "Weak side delts",
+    "Motivated beginners",
+    "Intermediate lifters",
+    "Maintenance or surplus calories",
+  ],
+
+  notFor: [
+    "Balanced full-body development",
+    "People who can't train shoulders twice weekly",
+    "People who won't commit for 8 weeks",
+  ],
+},
+
   {
     id: "greek-god-physique",
     name: "Greek God Physique",

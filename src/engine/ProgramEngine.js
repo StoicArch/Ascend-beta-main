@@ -12,6 +12,42 @@ class ProgramEngine {
     });
   }
 
+  static applyShoulderSpecializationProgression(workout) {
+  const week = this.getCurrentWeek();
+
+  return workout.map((exercise) => {
+    const updated = { ...exercise };
+
+    const isPriority =
+      updated.target === "Side Delts";
+
+    if (isPriority) {
+      if (week <= 2) {
+        updated.sets = 3;
+        updated.rir = 2;
+      } else if (week <= 4) {
+        updated.sets = 4;
+        updated.rir = 1;
+      } else if (week <= 6) {
+        updated.sets = 5;
+        updated.rir = 1;
+      } else {
+        updated.sets = 5;
+        updated.rir = 0;
+      }
+
+      updated.note =
+        "Beat last week's reps or weight.";
+    } else {
+      updated.rir = 2;
+      updated.note =
+        "Maintain strength. Avoid unnecessary fatigue.";
+    }
+
+    return updated;
+  });
+}
+
   static getCurrentProgram() {
     const profile = UserProfileEngine.getProfile();
 
@@ -270,13 +306,52 @@ class ProgramEngine {
     const todayFocus = this.getTodayFocus();
 
     if (todayFocus.length > 0) {
-      return this.generateWorkoutFromFocus(
-        todayFocus
-      );
+     let workout =
+  this.generateWorkoutFromFocus(
+    todayFocus
+  );
+
+if (
+  program?.id === "capped-delts"
+) {
+  workout =
+    this.applyShoulderSpecializationProgression(
+      workout
+    );
+}
+
+return workout;
     }
 
     return this.getTemplateWorkout();
   }
+
+  static getProgramCoachMessage() {
+  const program =
+    this.getCurrentProgram();
+
+  const week =
+    this.getCurrentWeek();
+
+  if (
+    program?.id !== "capped-delts"
+  ) {
+    return null;
+  }
+
+  const messages = {
+    1: "Choose exercises you'll keep for all 8 weeks.",
+    2: "Small improvements compound. Beat last week.",
+    3: "Technique before weight.",
+    4: "Recovery matters as much as effort.",
+    5: "Your shoulders should feel noticeably stronger.",
+    6: "Keep progressing. Don't change exercises.",
+    7: "Push hard. You're close to finishing.",
+    8: "Final week. Compare your photos and strength."
+  };
+
+  return messages[week];
+}
 
   static isRestDay() {
     return this.getTodayWorkout().length === 0;

@@ -5,6 +5,8 @@ class UserProfileEngine {
     weight: 70,
     goalWeight: "",
     programTrack: 4,
+    programStartDate: "",
+programCommitment: false,
     programWorkoutDays: [],
     programSchedule: [],
     currentWeek: 1,

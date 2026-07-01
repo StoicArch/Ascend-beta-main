@@ -812,3 +812,24 @@ color:#d1d5db;
 .program-card:hover .program-meta div{
 background:#161f31;
 }
+
+.specialization-badge{
+    display:inline-block;
+    margin-left:10px;
+    padding:4px 10px;
+    border-radius:999px;
+    background:#6d28d9;
+    color:white;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.5px;
+}
+
+.program-highlight{
+    margin:16px 0;
+    padding:12px;
+    border-radius:12px;
+    background:#1b2433;
+    border:1px solid rgba(255,255,255,.08);
+    font-weight:600;
+}

@@ -95,7 +95,16 @@ program.id !== "skinny-to-jacked" &&
               </span>
             </div>
 
-           <h2>{program.name}</h2>
+            <h2>
+  {program.name}
+
+  {program.id === "capped-delts" && (
+    <span className="specialization-badge">
+      SPECIALIZATION
+    </span>
+  )}
+</h2>
+
 
 {program.status === "coming soon" && (
   <div className="coming-soon-text">
@@ -150,7 +159,23 @@ program.difficulty === "Beginner"
 ⚡ {program.type}
 </div>
 
+{program.id === "capped-delts" && (
+  <div className="program-type">
+    🎯 Shoulder Specialization
+  </div>
+)}
+
 </div>
+
+{program.id === "capped-delts" && (
+
+<div className="program-highlight">
+
+🔥 Shoulder specialization
+
+</div>
+
+)}
 
             <div className="program-actions">
              <button
@@ -213,6 +238,25 @@ program.difficulty === "Beginner"
 {selectedProgram.description}
 </p>
 
+{selectedProgram.id === "capped-delts" && (
+
+<div className="modal-info">
+
+<p><strong>Training Frequency:</strong> 2 shoulder sessions/week</p>
+
+<p><strong>Weekly Volume:</strong> 10 hard sets</p>
+
+<p><strong>Exercise Selection:</strong> Pick your own exercises once.</p>
+
+<p><strong>Progression:</strong> Same exercises for all 8 weeks.</p>
+
+<p><strong>Nutrition:</strong> Best performed while eating at maintenance or in a calorie surplus.</p>
+
+</div>
+
+)}
+
+
             {selectedProgram.id === "skinny-to-jacked" && (
   <div className="modal-info">
     <p><strong>Free Preview:</strong> First 3 workouts unlocked</p>
@@ -238,6 +282,38 @@ program.difficulty === "Beginner"
                 <strong>Nutrition Style:</strong> {selectedProgram.type}
               </p>
             </div>
+
+            {selectedProgram.id === "capped-delts" && (
+
+<>
+
+<h3>What You'll Build</h3>
+
+<ul>
+
+<li>✓ Wider shoulders</li>
+
+<li>✓ Rounder side delts</li>
+
+<li>✓ Better V-taper</li>
+
+<li>✓ Stronger pressing stability</li>
+
+<li>✓ Better progressive overload</li>
+
+</ul>
+
+<h3>Why ASCEND Doesn't Change Exercises</h3>
+
+<p>
+
+You'll use the same exercises for all 8 weeks so you can focus entirely on progressive overload instead of constantly changing movements.
+
+</p>
+
+</>
+
+)}
 
             {selectedProgram.bestFor && (
               <>

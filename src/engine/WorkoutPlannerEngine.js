@@ -298,8 +298,373 @@ Abs: [
       },
     ];
   }
-  
+
+  static shouldDeload() {
+  const profile = UserProfileEngine.getProfile();
+
+  const week = profile.currentWeek || 1;
+
+  return week === 5;
+}
+
+static getCappedDeltsMilestone() {
+  const week =
+    UserProfileEngine.getProfile().currentWeek || 1;
+
+  const milestones = {
+    1: {
+      title: "Foundation",
+      description:
+        "Learn perfect technique and establish baseline performance.",
+    },
+    2: {
+      title: "Consistency",
+      description:
+        "Beat last week's reps on every priority movement.",
+    },
+    3: {
+      title: "Volume Increase",
+      description:
+        "Extra shoulder volume begins. Recovery becomes more important.",
+    },
+    4: {
+      title: "Progress Check",
+      description:
+        "Compare your strength to Week 1.",
+    },
+    5: {
+      title: "Deload",
+      description:
+        "Recover so your shoulders can grow during the final phase.",
+    },
+    6: {
+      title: "Growth Phase",
+      description:
+        "Push progressive overload while maintaining excellent technique.",
+    },
+    7: {
+      title: "Peak Effort",
+      description:
+        "This is your hardest training week.",
+    },
+    8: {
+      title: "Graduation",
+      description:
+        "Take progress photos and compare them to Week 1.",
+    },
+  };
+
+  return milestones[week];
+}
+  static isProgramComplete() {
+  const profile = UserProfileEngine.getProfile();
+
+  return (profile.currentWeek || 1) >= 8;
+}
+static getGraduationSummary() {
+ 
+
+  return {
+    title: "Program Complete 🎉",
+    coach:
+      "You completed the 8-week Capped Delts Program. Compare your photos, celebrate your progress, and choose your next specialization.",
+    nextPrograms: [
+      "Skinny to Jacked",
+      "Upper Chest Specialization",
+      "Full Body Hypertrophy",
+    ],
+  };
+}
+
+ static generateCappedDeltsWorkout(focusList = []) {
+  const profile = UserProfileEngine.getProfile();
+
+  const spec = profile.specialization;
+
+  if (!spec || spec.type !== "capped-delts") {
+    return null;
+  }
+
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+  });
+
+  const workoutDays = profile.programWorkoutDays || [];
+  const shoulderDayIndex = workoutDays.indexOf(today);
+
+  const firstShoulderDay = shoulderDayIndex === 0;
+
+  const sideSets = firstShoulderDay ? 3 : 2;
+  const rearSets = firstShoulderDay ? 2 : 3;
+
+  const workout = firstShoulderDay
+  ? this.generateCappedDeltsWorkoutA()
+  : this.generateCappedDeltsWorkoutB();
+
+  const chosen = [];
+
+  if (spec.sideDeltExercise) {
+    const exercise = EXERCISES.find(
+      (e) => e.name === spec.sideDeltExercise
+    );
+
+    if (exercise) {
+      chosen.push({
+  ...exercise,
+  sets: sideSets,
+  priority: true,
+  specialization: true,
+  lockExercise: true,
+  programExercise: true,
+progressKey: exercise.id,
+  role: "Side Delt Specialization",
+});
+    }
+  }
+
+  if (spec.rearDeltExercise) {
+    const exercise = EXERCISES.find(
+      (e) => e.name === spec.rearDeltExercise
+    );
+
+    if (exercise) {
+      chosen.push({
+        ...exercise,
+        sets: rearSets,
+        priority: true,
+        programExercise: true,
+progressKey: exercise.id,
+        role: "Rear Delt Specialization",
+      });
+    }
+  }
+
+  if (spec.pressExercise) {
+    const exercise = EXERCISES.find(
+      (e) => e.name === spec.pressExercise
+    );
+
+    if (exercise) {
+      chosen.push({
+        ...exercise,
+        sets: 2,
+        priority: true,
+        programExercise: true,
+        progressKey: exercise.id,
+        role: "Optional Overhead Press",
+      });
+    }
+  }
+
+  const filteredWorkout = workout.filter((exercise) => {
+  if (
+    exercise.target === "Side Delts" ||
+    exercise.target === "Rear Delts" ||
+    exercise.target === "Front Delts"
+  ) {
+    return false;
+  }
+  const milestone =
+  this.getCappedDeltsMilestone();
+
+  const graduation =
+  this.isProgramComplete()
+    ? this.getGraduationSummary()
+    : null;
+
+  return progressedWorkout.map((exercise) => ({
+  ...exercise,
+  milestone: milestone.title,
+  milestoneDescription: milestone.description,
+  graduation,
+  coachTip:
+    exercise.priority
+      ? "Prioritize perfect form and beat last week's performance."
+      : "Train hard, but save your recovery for your shoulder specialization.",
+}));
+
+});
+
+const finalWorkout = [
+  ...chosen,
+  ...filteredWorkout,
+];
+
+const progressedWorkout =
+  this.applyCappedDeltsProgression(finalWorkout);
+
+return progressedWorkout.map((exercise) => ({
+  ...exercise,
+  coachTip:
+    exercise.priority
+      ? "Prioritize perfect form and beat last week's performance."
+      : "Train hard, but save your recovery for your shoulder specialization.",
+}));
+}
+
+static applyCappedDeltsProgression(workout) {
+  const profile = UserProfileEngine.getProfile();
+  const week = profile.currentWeek || 1;
+  const deload = this.shouldDeload();
+
+  return workout.map((exercise) => {
+    const updated = { ...exercise };
+
+    if (deload) {
+  updated.sets = Math.max(2, (updated.sets || 3) - 1);
+  updated.rir = 3;
+  updated.coachTip =
+    "Deload week. Reduce effort, focus on technique and recover for the final 3 weeks.";
+
+  return updated;
+}
+
+
+
+    updated.repGoal =
+  exercise.repRange ||
+  `${exercise.reps}-${exercise.reps + 2}`;
+
+updated.overloadRule =
+  "When every set reaches the top of the rep range with good form, increase the weight next workout.";
+
+    if (
+      updated.target === "Side Delts" ||
+      updated.target === "Rear Delts"
+    ) {
+      if (week <= 2) {
+        updated.sets = Math.max(updated.sets || 3, 3);
+        updated.rir = 2;
+      } else if (week <= 4) {
+        updated.sets = Math.max(updated.sets || 3, 4);
+        updated.rir = 1;
+      } else if (week <= 6) {
+        updated.sets = Math.max(updated.sets || 3, 5);
+        updated.rir = 1;
+      } else {
+        updated.sets = Math.max(updated.sets || 3, 5);
+        updated.rir = 0;
+      }
+
+      updated.progression =
+  "Hit the top of the rep range on every set. Then increase the weight by the smallest amount next session.";
+    } else {
+      updated.rir = 2;
+      updated.progression =
+  "Keep within 1-2 reps of your previous performance. This muscle is on maintenance volume.";
+    }
+
+    return updated;
+  });
+}
+static generateCappedDeltsWorkoutA() {
+  return this.buildFromTargets([
+    {
+      target: "Side Delts",
+      fallbackMuscle: "Shoulders",
+      count: 1,
+      role: "Side Delt Width",
+    },
+    {
+      target: "Rear Delts",
+      fallbackMuscle: "Shoulders",
+      count: 1,
+      role: "Rear Delt Builder",
+    },
+    {
+      target: "Front Delts",
+      fallbackMuscle: "Shoulders",
+      count: 1,
+      role: "Overhead Press",
+    },
+    {
+      target: "Upper Chest",
+      fallbackMuscle: "Chest",
+      count: 1,
+      role: "Upper Chest",
+    },
+    {
+      target: "Mid Chest",
+      fallbackMuscle: "Chest",
+      count: 1,
+      role: "Chest Press",
+    },
+    {
+      target: "Chest Isolation",
+      fallbackMuscle: "Chest",
+      count: 1,
+      role: "Chest Fly",
+    },
+    {
+      target: "Overhead Triceps",
+      fallbackMuscle: "Triceps",
+      count: 1,
+      role: "Long Head",
+    },
+    {
+      target: "Pushdown Triceps",
+      fallbackMuscle: "Triceps",
+      count: 1,
+      role: "Pushdown",
+    },
+  ]);
+}
+
+static generateCappedDeltsWorkoutB() {
+  return this.buildFromTargets([
+    {
+      target: "Side Delts",
+      fallbackMuscle: "Shoulders",
+      count: 1,
+      role: "Side Delt Width",
+    },
+    {
+      target: "Rear Delts",
+      fallbackMuscle: "Shoulders",
+      count: 1,
+      role: "Rear Delt Builder",
+    },
+    {
+      target: "Front Delts",
+      fallbackMuscle: "Shoulders",
+      count: 1,
+      role: "Overhead Press",
+    },
+    {
+      target: "Lats",
+      fallbackMuscle: "Back",
+      count: 2,
+      role: "Lat Builder",
+    },
+    {
+      target: "Upper Back",
+      fallbackMuscle: "Back",
+      count: 2,
+      role: "Upper Back",
+    },
+    {
+      target: "Bicep stretch",
+      fallbackMuscle: "Biceps",
+      count: 1,
+      role: "Stretch Curl",
+    },
+    {
+      target: "Bicep width",
+      fallbackMuscle: "Biceps",
+      count: 1,
+      role: "Width Curl",
+    },
+  ]);
+}
+
+
 static generateWorkout(focusList = []) {
+  const capped = this.generateCappedDeltsWorkout(focusList);
+
+if (capped) {
+  return capped;
+}
+
   const workout = [];
   const usedIds = [];
 
